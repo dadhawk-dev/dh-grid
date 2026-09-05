@@ -54,7 +54,7 @@ mvn install:install-file \
 
 ## 💡 Quick-Start Developer Examples
 
-### 🅰️ Vanilla JavaScript (Pure HTML5 + Web Components)
+### 🅰️ Vanilla JavaScript (Pure HTML5 + Web Components) &nbsp; [![▶ RUN Live Example](https://img.shields.io/badge/%E2%96%B6_RUN-Live_Example-28a745?style=for-the-badge)](https://dadhawk-dev.github.io/dh-grid/)
 
 ```html
 <!DOCTYPE html>
