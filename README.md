@@ -11,6 +11,8 @@
 
 It features intuitive inline editing, custom Web Component editor widgets (`<status-selector>`, `<rating-editor>`, `<priority-badge-editor>`), real-time reactive event streams, dynamic matrix expansion, and **Composite Parent-Child Tree Captions** with automatic `colspan` and `rowspan` grid calculation.
 
+[![DhGrid Web Component Showcase Live Demo](assets/demo-preview.png)](https://dadhawk-dev.github.io/dh-grid/)
+
 ---
 
 ## 🌟 Key Features & Highlights
@@ -21,7 +23,7 @@ It features intuitive inline editing, custom Web Component editor widgets (`<sta
 - ☕ **Native Jakarta Faces 4.0 JSF Integration**: Drop-in `<dh:dhGrid>` Facelets tag library with direct EL expression binding (`#{gridBean.content}`, `#{gridBean.captions}`).
 - 🎨 **Modern Dark/Light Aesthetics**: Stunning modern glassmorphism aesthetic built with CSS design tokens.
 - 📡 **Real-Time Reactive Event System**: Emits composed `cell-change` CustomEvents for instant client-side or server-side reactive sync.
-- 🚀 **Built-in Interactive Live Demo Modal**: Interactive `▶ RUN Live Example` preview modal directly in the documentation.
+- 🚀 **Built-in Interactive Live Demo Modal**: Interactive [`▶ RUN Live Example`](https://dadhawk-dev.github.io/dh-grid/) preview modal directly in the documentation.
 
 ---
 
