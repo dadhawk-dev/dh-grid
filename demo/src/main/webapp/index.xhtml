@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:dh="http://dadhawk.com/faces">
+<h:head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dadhawk DhGrid Component Showcase</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@600;700;800&amp;display=swap" rel="stylesheet" />
+
+    <!-- Custom Web Component Editors -->
+    <script src="#{request.contextPath}/resources/js/custom-editors.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #090d16;
+            --bg-card: rgba(15, 23, 42, 0.75);
+            --border-card: rgba(255, 255, 255, 0.08);
+            --accent-blue: #38bdf8;
+            --accent-indigo: #6366f1;
+            --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.12) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 32px 24px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-card);
+        }
+
+        .brand-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tag-badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        /* Stats Strip */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Main Workspace Grid Layout */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        /* Toolbar and Preset Buttons */
+        .preset-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-tab {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-card);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
+        .btn-tab.active {
+            background: var(--accent-gradient);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        /* Grid Wrapper Frame */
+        .grid-frame {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            overflow-x: auto;
+            min-height: 280px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Sidebar Panels */
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .event-log {
+            background: #090d16;
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 12px;
+            height: 180px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            color: #34d399;
+        }
+
+        .log-entry {
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .comp-tag {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: monospace;
+            margin: 2px;
+        }
+    </style>
+</h:head>
+<h:body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand-title">
+                ⚡ Dadhawk DhGrid
+                <span class="tag-badge">Jakarta Faces 4.0</span>
+            </div>
+            <div>
+                <a href="#{request.contextPath}/standalone-demo.html" class="btn-action" style="text-decoration: none;">
+                    🚀 Standalone Web Showcase
+                </a>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <h:panelGroup id="statsPanel" layout="block" class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Grid Dimensions</div>
+                <div class="stat-value">#{gridBean.rowCount} × #{gridBean.colCount}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Custom Web Components</div>
+                <div class="stat-value">#{gridBean.componentMap.size()} Mapped</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Cell Editing Mode</div>
+                <div class="stat-value" style="color: #34d399;">Double-Click</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Live Events Logged</div>
+                <div class="stat-value" id="eventCountStat">0</div>
+            </div>
+        </h:panelGroup>
+
+        <!-- Main Workspace -->
+        <div class="workspace">
+            <!-- Grid Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Interactive Matrix Canvas</div>
+                    <div style="display: flex; gap: 8px;">
+                        <h:form id="actionForm">
+                            <h:commandButton value="+ Row" action="#{gridBean.addRow}" class="btn-action">
+                                <f:ajax render=":gridForm:myGrid :actionForm :statsPanel" />
+                            </h:commandButton>
+                            &#160;
+                            <h:commandButton value="+ Col" action="#{gridBean.addColumn}" class="btn-action">
+                                <f:ajax render=":gridForm:myGrid :actionForm :statsPanel" />
+                            </h:commandButton>
+                        </h:form>
+                    </div>
+                </div>
+
+                <!-- Dataset Presets Toolbar -->
+                <h:form id="presetForm" style="margin-bottom: 20px;">
+                    <div class="preset-tabs">
+                        <h:commandButton value="💼 Financial Matrix" action="#{gridBean.loadFinancialPreset}" 
+                                         class="btn-tab #{gridBean.selectedPreset eq 'financial' ? 'active' : ''}">
+                            <f:ajax render=":gridForm:myGrid :presetForm :compMapPanel" />
+                        </h:commandButton>
+
+                        <h:commandButton value="📋 Task Board" action="#{gridBean.loadTaskBoardPreset}" 
+                                         class="btn-tab #{gridBean.selectedPreset eq 'taskboard' ? 'active' : ''}">
+                            <f:ajax render=":gridForm:myGrid :presetForm :compMapPanel" />
+                        </h:commandButton>
+
+                        <h:commandButton value="🛒 Product Catalog" action="#{gridBean.loadProductCatalogPreset}" 
+                                         class="btn-tab #{gridBean.selectedPreset eq 'catalog' ? 'active' : ''}">
+                            <f:ajax render=":gridForm:myGrid :presetForm :compMapPanel" />
+                        </h:commandButton>
+                    </div>
+                </h:form>
+
+                <!-- Grid Canvas -->
+                <div class="grid-frame">
+                    <h:form id="gridForm">
+                        <dh:dhGrid id="myGrid"
+                                   rowCount="#{gridBean.rowCount}"
+                                   colCount="#{gridBean.colCount}"
+                                   content="#{gridBean.content}"
+                                   captions="#{gridBean.captions}"
+                                   componentMap="#{gridBean.componentMap}" />
+                    </h:form>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="card">
+                <!-- Component Map Panel -->
+                <div class="sidebar-section">
+                    <div class="section-title">Mapped Web Components</div>
+                    <h:panelGroup id="compMapPanel" layout="block">
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+                            Cells with custom editors attached:
+                        </p>
+                        <div>
+                            <ui:repeat value="#{gridBean.componentMap.entrySet().toArray()}" var="entry" xmlns:ui="jakarta.faces.facelets">
+                                <span class="comp-tag">#{entry.key} ➔ &lt;#{entry.value}&gt;</span>
+                            </ui:repeat>
+                        </div>
+                    </h:panelGroup>
+                </div>
+
+                <!-- Event Monitor -->
+                <div class="sidebar-section">
+                    <div class="section-title">Real-Time Event Stream</div>
+                    <div class="event-log" id="eventLog">
+                        <div class="log-entry" style="color: #94a3b8;">[System] Listening for cell-change events...</div>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="sidebar-section">
+                    <div class="section-title">Usage Guide</div>
+                    <ul style="font-size: 13px; color: var(--text-muted); padding-left: 18px; line-height: 1.6;">
+                        <li><strong>Double-click</strong> any grid cell to edit inline.</li>
+                        <li>Cells mapped to Web Components will automatically launch dropdowns, rating stars, or badges.</li>
+                        <li>Press <strong>Enter</strong> to commit text, <strong>Escape</strong> to cancel.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download & Maven Installation Center -->
+        <div class="card" style="margin-top: 28px; border-color: rgba(56, 189, 248, 0.3);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                <div class="card-title" style="font-size: 20px; color: var(--accent-blue);">
+                    🚀 Downloads &amp; Maven Repository Integration
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <a href="#{request.contextPath}/resources/dadhawk/js/dh-grid.js" download="dh-grid.js" class="btn-action" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 10px 16px; border-radius: 8px; font-weight: 700; text-decoration: none;">
+                        💾 Download JS Script (dh-grid.js)
+                    </a>
+                    <a href="#{request.contextPath}/downloads/dhgrid-component-1.0.0.jar" download="dhgrid-component-1.0.0.jar" class="btn-action" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 10px 16px; border-radius: 8px; font-weight: 700; text-decoration: none;">
+                        📦 Download Maven JAR (v1.0.0)
+                    </a>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                    <div style="font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px;">
+                        1. CLI Command to Install JAR to Local Repository (~/.m2):
+                    </div>
+                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #34d399; overflow-x: auto; white-space: pre-wrap;">mvn install:install-file \
+  -Dfile=dhgrid-component-1.0.0.jar \
+  -DgroupId=com.dadhawk.faces \
+  -DartifactId=dhgrid-component \
+  -Dversion=1.0.0 \
+  -Dpackaging=jar</pre>
+                </div>
+
+                <div>
+                    <div style="font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px;">
+                        2. Add Maven Dependency to your pom.xml:
+                    </div>
+                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #fbbf24; overflow-x: auto; white-space: pre-wrap;">&lt;dependency&gt;
+    &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
+    &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Minimal Quick-Start Examples Card -->
+        <div class="card" style="margin-top: 28px; border-color: rgba(99, 102, 241, 0.3);">
+            <div class="card-title" style="font-size: 20px; color: #a5b4fc; margin-bottom: 16px;">
+                💡 Minimal Quick-Start Examples for Developers
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <!-- Vanilla JS Example -->
+                <div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                        <div style="font-size: 14px; font-weight: 700; color: #38bdf8;">
+                            🅰️ Vanilla JavaScript (Pure HTML + JS)
+                        </div>
+                        <button type="button" onclick="openDemoModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
+                            ▶ RUN Live Example
+                        </button>
+                    </div>
+                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #e2e8f0; overflow-x: auto; white-space: pre-wrap;">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script src="resources/dadhawk/js/dh-grid.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;dh-grid-element id="myGrid" rows="5" cols="5"&gt;&lt;/dh-grid-element&gt;
+
+  &lt;script&gt;
+    const grid = document.getElementById('myGrid');
+    // Composite Tree Captions &amp; Custom Components
+    grid.setAttribute('captions', JSON.stringify([
+      "Sales / H1 / Q1", "Sales / H1 / Q2",
+      "Sales / H2 / Q3", "Sales / H2 / Q4", "Status"
+    ]));
+    grid.setAttribute('content', JSON.stringify([
+      ["Header", "Q1", "Q2", "Q3", "Status"],
+      ["2026", "$120k", "$85k", "29.1%", "Completed"]
+    ]));
+    grid.setAttribute('components', JSON.stringify({
+      "r1_c4": "status-selector"
+    }));
+    grid.addEventListener('cell-change', (e) =&gt; {
+      console.log(e.detail.row, e.detail.col, e.detail.value);
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                </div>
+
+                <!-- JSF 4.0 Example -->
+                <div>
+                    <div style="font-size: 14px; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">
+                        🅱️ Jakarta Faces 4.0 (JSF View + Bean)
+                    </div>
+                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #e2e8f0; overflow-x: auto; white-space: pre-wrap;">&lt;!-- page.xhtml --&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:dh="http://dadhawk.com/faces"&gt;
+&lt;h:head&gt;&lt;title&gt;JSF Grid&lt;/title&gt;&lt;/h:head&gt;
+&lt;h:body&gt;
+  &lt;dh:dhGrid id="myGrid"
+             rowCount="#{gridBean.rowCount}"
+             colCount="#{gridBean.colCount}"
+             content="#{gridBean.content}"
+             captions="#{gridBean.captions}"
+             componentMap="#{gridBean.componentMap}" /&gt;
+&lt;/h:body&gt;
+&lt;/html&gt;
+
+// Java Backing Bean (@Named @SessionScoped):
+String[] captions = {
+  "Sales / H1 / Q1", "Sales / H1 / Q2",
+  "Sales / H2 / Q3", "Sales / H2 / Q4", "Status"
+};
+Map&lt;String, String&gt; componentMap = Map.of("r1_c4", "status-selector");</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Demo Modal Dialog Overlay -->
+    <div id="demoModal" style="display: none; position: fixed; inset: 0; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: #0f172a; border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; width: 100%; max-width: 880px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); overflow: hidden; animation: modalIn 0.25s ease;">
+            <!-- Modal Header -->
+            <div style="background: rgba(30, 41, 59, 0.8); border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 10px;">
+                    <span>🚀 Vanilla JS Live Component Execution</span>
+                    <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 12px; border: 1px solid rgba(52, 211, 153, 0.3);">ACTIVE DEMO</span>
+                </div>
+                <button type="button" onclick="closeDemoModal()" style="background: rgba(255,255,255,0.08); color: #94a3b8; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center;">✕</button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div style="padding: 24px; max-height: 75vh; overflow-y: auto;">
+                <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">
+                    This live grid component instance was dynamically executed using the exact code snippet above with composite parent-child tree captions and custom Web Component cell editors:
+                </p>
+
+                <div style="background: #ffffff; border-radius: 10px; padding: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); margin-bottom: 20px;">
+                    <dh-grid-element id="modalDemoGrid" rows="5" cols="5"></dh-grid-element>
+                </div>
+
+                <div style="background: #060911; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 14px;">
+                    <div style="font-size: 12px; font-weight: 700; color: #34d399; margin-bottom: 6px;">📡 Modal Real-Time Event Stream (cell-change):</div>
+                    <div id="modalEventLog" style="font-family: monospace; font-size: 12px; color: #a5b4fc; max-height: 100px; overflow-y: auto;">
+                        <div style="color: #64748b;">Double-click any cell to edit or launch status-selector dropdown...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div style="background: rgba(15, 23, 42, 0.9); border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 14px 24px; text-align: right;">
+                <button type="button" onclick="closeDemoModal()" style="background: rgba(255, 255, 255, 0.1); color: #f8fafc; border: 1px solid rgba(255, 255, 255, 0.15); padding: 8px 18px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;">Close Preview</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Event Interceptor & Modal Script -->
+    <script>
+        let eventCount = 0;
+
+        function openDemoModal() {
+            const modal = document.getElementById('demoModal');
+            const modalGrid = document.getElementById('modalDemoGrid');
+            const modalLog = document.getElementById('modalEventLog');
+
+            if (!modalGrid || !modal) return;
+
+            modalGrid.setAttribute('captions', JSON.stringify([
+                "Sales / H1 / Q1", "Sales / H1 / Q2",
+                "Sales / H2 / Q3", "Sales / H2 / Q4", "Status"
+            ]));
+            modalGrid.setAttribute('content', JSON.stringify([
+                ["Quarter", "Revenue ($)", "Expenses ($)", "Margin (%)", "Performance"],
+                ["Q1 2026", "$120,000", "$85,000", "29.1%", "Completed"],
+                ["Q2 2026", "$145,000", "$92,000", "36.5%", "Active"],
+                ["Q3 2026", "$160,000", "$98,000", "38.7%", "Pending"],
+                ["Q4 2026", "$210,000", "$110,000", "47.6%", "In Review"]
+            ]));
+            modalGrid.setAttribute('components', JSON.stringify({
+                "r1_c4": "status-selector",
+                "r2_c4": "status-selector",
+                "r3_c4": "status-selector",
+                "r4_c4": "status-selector"
+            }));
+
+            if (!modalGrid.dataset.listenerAttached) {
+                modalGrid.addEventListener('cell-change', (e) => {
+                    const time = new Date().toLocaleTimeString();
+                    const logItem = document.createElement('div');
+                    logItem.innerHTML = `[${time}] <strong>Row ${e.detail.row}, Col ${e.detail.col}</strong> ➔ "<span style="color: #38bdf8;">${e.detail.value}</span>"`;
+                    modalLog.prepend(logItem);
+                });
+                modalGrid.dataset.listenerAttached = "true";
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeDemoModal() {
+            const modal = document.getElementById('demoModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const gridEl = document.getElementById('gridForm:myGrid');
+            const eventLog = document.getElementById('eventLog');
+            const eventCountStat = document.getElementById('eventCountStat');
+
+            document.addEventListener('cell-change', (e) => {
+                eventCount++;
+                if (eventCountStat) eventCountStat.innerText = eventCount;
+
+                const time = new Date().toLocaleTimeString();
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.innerHTML = `[${time}] <strong>Row ${e.detail.row}, Col ${e.detail.col}</strong> ➔ "<span style="color: #38bdf8;">${e.detail.value}</span>"`;
+
+                if (eventLog) eventLog.prepend(entry);
+            });
+        });
+    </script>
+</h:body>
+</html>

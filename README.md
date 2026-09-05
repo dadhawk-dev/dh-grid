@@ -1,0 +1,223 @@
+# ⚡ DhGrid — High-Performance Data Grid Component for Jakarta Faces 4.0 & W3C Web Components
+
+[![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg?style=for-the-badge)](releases/1.0.0-alpha.md)
+[![Jakarta Faces](https://img.shields.io/badge/Jakarta%20Faces-4.0-orange.svg?style=for-the-badge)](https://jakarta.ee/specifications/faces/4.0/)
+[![W3C Web Component](https://img.shields.io/badge/Web%20Component-W3C%20Standard-purple.svg?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Web_components)
+[![License](https://img.shields.io/badge/License-GNU_LGPL_v3.0-blue.svg?style=for-the-badge)](LICENSE)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg?style=for-the-badge)](file:///home/telman/github/dadhawk-dhgrid-component/pom.xml)
+
+**DhGrid** is an open-source, lightweight, ultra-fast, zero-dependency data grid component designed for both **Jakarta EE / Jakarta Faces 4.0 (JSF)** applications and pure **W3C Web Components (`<dh-grid-element>`)**.
+
+It features intuitive inline editing, custom Web Component editor widgets (`<status-selector>`, `<rating-editor>`, `<priority-badge-editor>`), real-time reactive event streams, dynamic matrix expansion, and **Composite Parent-Child Tree Captions** with automatic `colspan` and `rowspan` grid calculation.
+
+---
+
+## 🌟 Key Features & Highlights
+
+- 🌳 **Composite Parent-Child Tree Captions**: Define multi-level hierarchical headers compactly using path notation (`"Sales / H1 / Q1"`, `"Sales / H1 / Q2"`), 2D arrays, or nested tree objects.
+- 🧩 **Custom Web Component Cell Editors**: Map custom interactive widgets (`<status-selector>`, `<rating-editor>`) directly to grid cells via simple `componentMap` JSON.
+- ⚡ **Zero External JS Dependencies**: Fully encapsulated inside Shadow DOM with native performance, zero external framework locks.
+- ☕ **Native Jakarta Faces 4.0 JSF Integration**: Drop-in `<dh:dhGrid>` Facelets tag library with direct EL expression binding (`#{gridBean.content}`, `#{gridBean.captions}`).
+- 🎨 **Modern Dark/Light Aesthetics**: Stunning modern glassmorphism aesthetic built with CSS design tokens.
+- 📡 **Real-Time Reactive Event System**: Emits composed `cell-change` CustomEvents for instant client-side or server-side reactive sync.
+- 🚀 **Built-in Interactive Live Demo Modal**: Interactive `▶ RUN Live Example` preview modal directly in the documentation.
+
+---
+
+## 📦 Quick Installation & Setup
+
+### 1. Maven Dependency (`pom.xml`)
+
+Add the following dependency to your Jakarta EE project's `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>com.dadhawk.faces</groupId>
+    <artifactId>dhgrid-component</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+### 2. CLI Command to Install JAR to Local Repository (`~/.m2`)
+
+```bash
+mvn install:install-file \
+  -Dfile=dhgrid-component-1.0.0.jar \
+  -DgroupId=com.dadhawk.faces \
+  -DartifactId=dhgrid-component \
+  -Dversion=1.0.0 \
+  -Dpackaging=jar
+```
+
+---
+
+## 💡 Quick-Start Developer Examples
+
+### 🅰️ Vanilla JavaScript (Pure HTML5 + Web Components)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="resources/dadhawk/js/dh-grid.js"></script>
+  <script src="resources/js/custom-editors.js"></script>
+</head>
+<body>
+  <!-- Embedded Web Component -->
+  <dh-grid-element id="myGrid" rows="5" cols="5"></dh-grid-element>
+
+  <script>
+    const grid = document.getElementById('myGrid');
+
+    // 1. Define Composite Parent-Child Tree Captions
+    grid.setAttribute('captions', JSON.stringify([
+      "Financial Performance / H1 (Q1-Q2) / Revenue ($)",
+      "Financial Performance / H1 (Q1-Q2) / Expenses ($)",
+      "Financial Performance / H2 (Q3-Q4) / Revenue ($)",
+      "Financial Performance / H2 (Q3-Q4) / Expenses ($)",
+      "Overall Status"
+    ]));
+
+    // 2. Populate Grid Content Matrix
+    grid.setAttribute('content', JSON.stringify([
+      ["Quarter", "Revenue ($)", "Expenses ($)", "Margin (%)", "Performance"],
+      ["Q1 2026", "$120,000", "$85,000", "29.1%", "Completed"],
+      ["Q2 2026", "$145,000", "$92,000", "36.5%", "Active"],
+      ["Q3 2026", "$160,000", "$98,000", "38.7%", "Pending"],
+      ["Q4 2026", "$210,000", "$110,000", "47.6%", "In Review"]
+    ]));
+
+    // 3. Map Custom Web Component Editors to Specific Cells
+    grid.setAttribute('components', JSON.stringify({
+      "r1_c4": "status-selector",
+      "r2_c4": "status-selector",
+      "r3_c4": "status-selector",
+      "r4_c4": "status-selector"
+    }));
+
+    // 4. Listen for Cell Change Events
+    grid.addEventListener('cell-change', (e) => {
+      console.log(`Row ${e.detail.row}, Col ${e.detail.col} updated -> "${e.detail.value}"`);
+    });
+  </script>
+</body>
+</html>
+```
+
+---
+
+### 🅱️ Jakarta Faces 4.0 (JSF View + Managed Bean)
+
+#### Facelets View (`index.xhtml`)
+
+```xml
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:dh="http://dadhawk.com/faces">
+<h:head>
+    <title>Jakarta Faces 4.0 DhGrid Showcase</title>
+</h:head>
+<h:body>
+    <h:form id="gridForm">
+        <dh:dhGrid id="myGrid"
+                   rowCount="#{gridBean.rowCount}"
+                   colCount="#{gridBean.colCount}"
+                   content="#{gridBean.content}"
+                   captions="#{gridBean.captions}"
+                   componentMap="#{gridBean.componentMap}" />
+    </h:form>
+</h:body>
+</html>
+```
+
+#### CDI Managed Bean (`GridBean.java`)
+
+```java
+package com.dadhawk.faces.demo;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
+import java.io.Serializable;
+import java.util.Map;
+
+@Named("gridBean")
+@SessionScoped
+public class GridBean implements Serializable {
+
+    private Integer rowCount = 5;
+    private Integer colCount = 5;
+    private String[][] content;
+    private Object captions;
+    private Map<String, String> componentMap;
+
+    @PostConstruct
+    public void init() {
+        this.captions = new String[] {
+            "Financial Performance / H1 / Revenue ($)",
+            "Financial Performance / H1 / Expenses ($)",
+            "Financial Performance / H2 / Revenue ($)",
+            "Financial Performance / H2 / Expenses ($)",
+            "Overall Status"
+        };
+        this.content = new String[][] {
+            {"Quarter", "Revenue ($)", "Expenses ($)", "Margin (%)", "Performance"},
+            {"Q1 2026", "$120,000", "$85,000", "29.1%", "Completed"},
+            {"Q2 2026", "$145,000", "$92,000", "36.5%", "Active"}
+        };
+        this.componentMap = Map.of(
+            "r1_c4", "status-selector",
+            "r2_c4", "status-selector"
+        );
+    }
+
+    public Integer getRowCount() { return rowCount; }
+    public Integer getColCount() { return colCount; }
+    public String[][] getContent() { return content; }
+    public Object getCaptions() { return captions; }
+    public Map<String, String> getComponentMap() { return componentMap; }
+}
+```
+
+---
+
+## 🛠️ CLI Quick Start Commands
+
+```bash
+# Build component library & install to ~/.m2
+mvn clean install
+
+# Launch Jetty 11 server (Jakarta Faces 4.0 runtime)
+cd demo
+mvn jetty:run
+```
+
+Access local endpoints:
+- **Jakarta Faces 4.0 Showcase**: `http://localhost:8080/index.xhtml`
+- **Standalone Web Component Showcase**: `http://localhost:8080/standalone-demo.html`
+
+---
+
+## 🏷️ Release History & Tags
+
+- **`v1.0.0-alpha`** ([Release Notes](releases/1.0.0-alpha.md)):
+  - Initial open-source release under GNU LGPL v3.0 by Telman Shahbazov / Dadhawk.
+  - Dual-mode architecture: Jakarta Faces 4.0 `<dh:dhGrid>` taglib component & native W3C `<dh-grid-element>`.
+  - Composite parent-child tree captions with automated `colspan`/`rowspan` matrix calculation.
+  - Custom Web Component cell editors (`<status-selector>`, `<rating-editor>`).
+  - Interactive live demo preview modal.
+
+---
+
+## 🏷️ GitHub Topics & SEO Tags
+
+`#jakarta-faces` `#jsf` `#web-components` `#grid-component` `#datagrid` `#java` `#jakarta-ee` `#handsontable-alternative` `#web-component` `#ui-components` `#custom-elements` `#facelets` `#component-library` `#shadow-dom`
+
+---
+
+## 📄 License
+
+Distributed under the **GNU Lesser General Public License v3.0 (LGPL v3.0)**. See `LICENSE` for details.
+
+Developed with ❤️ by **Telman Shahbazov / Dadhawk** with **Google DeepMind Antigravity AI** ([https://github.com/dadhawk-dev](https://github.com/dadhawk-dev)).

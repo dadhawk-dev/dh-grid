@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<facelet-taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibrary_4_0.xsd"
+                version="4.0">
+
+    <namespace>http://dadhawk.com/faces</namespace>
+
+    <tag>
+        <tag-name>dhGrid</tag-name>
+        <component>
+            <component-type>com.dadhawk.faces.component.DhGridComponent</component-type>
+        </component>
+        <attribute>
+            <name>rowCount</name>
+            <type>java.lang.Integer</type>
+            <description>Number of rows in the matrix</description>
+        </attribute>
+        <attribute>
+            <name>colCount</name>
+            <type>java.lang.Integer</type>
+            <description>Number of columns in the matrix</description>
+        </attribute>
+        <attribute>
+            <name>content</name>
+            <type>java.lang.Object</type>
+            <description>2D Array of String (String[][])</description>
+        </attribute>
+        <attribute>
+            <name>componentMap</name>
+            <type>java.util.Map</type>
+            <description>Map of coordinate keys (rX_cY) to custom Web Component tag names</description>
+        </attribute>
+    </tag>
+
+</facelet-taglib>
