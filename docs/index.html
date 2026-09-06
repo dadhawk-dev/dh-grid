@@ -258,17 +258,21 @@
                 It requires no Java backend or server-side JSF container, proving that <strong>DhGrid</strong> can be embedded directly into pure HTML, React, Vue, or Angular applications.
             </div>
 
-            <div class="guide-grid">
+            <div class="guide-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
                 <div class="guide-card">
-                    <div class="guide-step">Step 1: Edit Inline Text</div>
-                    <div class="guide-text"><strong>Double-click</strong> any cell to trigger inline editing. Press <code>Enter</code> to save or <code>Escape</code> to cancel.</div>
+                    <div class="guide-step">Step 1: Keyboard Navigation</div>
+                    <div class="guide-text">Use <code>Arrow Keys</code> to navigate cells. Press <code>Tab</code> to move right (wrapping rows), <code>Enter</code> to edit/save &amp; move down, <code>Escape</code> to cancel.</div>
                 </div>
                 <div class="guide-card">
-                    <div class="guide-step">Step 2: Custom Web Component Editors</div>
-                    <div class="guide-text">Double-click status cells or rating stars. The grid launches custom custom-element widgets (<code>&lt;status-selector&gt;</code>, <code>&lt;rating-editor&gt;</code>).</div>
+                    <div class="guide-step">Step 2: Inline Cell Editing</div>
+                    <div class="guide-text"><strong>Double-click</strong> or press <code>Enter</code> on any cell to trigger inline editing. Press <code>Enter</code> or <code>Tab</code> to commit changes.</div>
                 </div>
                 <div class="guide-card">
-                    <div class="guide-step">Step 3: Dynamic Matrix Expansion</div>
+                    <div class="guide-step">Step 3: Custom Web Component Editors</div>
+                    <div class="guide-text">Double-click status cells or rating stars to launch custom elements (<code>&lt;status-selector&gt;</code>, <code>&lt;rating-editor&gt;</code>).</div>
+                </div>
+                <div class="guide-card">
+                    <div class="guide-step">Step 4: Dynamic Matrix Expansion</div>
                     <div class="guide-text">Click <strong>+ Add Row</strong> or <strong>+ Add Col</strong> to dynamically add rows/columns to the matrix array in real-time.</div>
                 </div>
             </div>

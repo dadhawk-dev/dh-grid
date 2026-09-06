@@ -8,6 +8,8 @@ class DhGridElement extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
         this.activeEditor = null;
+        this.focusedRow = 0;
+        this.focusedCol = 0;
     }
 
     static get observedAttributes() {
@@ -429,6 +431,11 @@ class DhGridElement extends HTMLElement {
                     outline: 2px solid var(--dh-hover-outline);
                     outline-offset: -2px;
                 }
+                .grid-cell:focus, .grid-cell.grid-cell-focused {
+                    outline: 2px solid var(--dh-focus-ring);
+                    outline-offset: -2px;
+                    background-color: var(--dh-hover-bg);
+                }
                 .grid-cell.grid-cell-readonly {
                     background-color: var(--dh-readonly-bg);
                     color: var(--dh-readonly-color);
@@ -494,7 +501,7 @@ class DhGridElement extends HTMLElement {
                                         const isReadOnly = this.isCellReadOnly(r, c);
                                         const readOnlyClass = isReadOnly ? ' grid-cell-readonly' : '';
                                         const readOnlyAttr = isReadOnly ? ' data-readonly="true"' : '';
-                                        return `<td class="grid-cell${readOnlyClass}"${readOnlyAttr} style="${customStyle}" data-row="${r}" data-col="${c}">${val}</td>`;
+                                        return `<td class="grid-cell${readOnlyClass}"${readOnlyAttr} tabindex="0" style="${customStyle}" data-row="${r}" data-col="${c}">${val}</td>`;
                                     }).join('')}
                                 </tr>
                             `;
@@ -511,12 +518,52 @@ class DhGridElement extends HTMLElement {
         const table = this.shadowRoot.querySelector('.grid-table');
         if (!table) return;
 
+        table.addEventListener('click', (e) => {
+            const cell = e.target.closest('.grid-cell');
+            if (cell) {
+                const r = parseInt(cell.dataset.row, 10);
+                const c = parseInt(cell.dataset.col, 10);
+                this.focusCell(r, c);
+            }
+        });
+
         table.addEventListener('dblclick', (e) => {
             const cell = e.target.closest('.grid-cell');
             if (cell) {
                 const r = parseInt(cell.dataset.row, 10);
                 const c = parseInt(cell.dataset.col, 10);
                 this.openEditor(cell, r, c);
+            }
+        });
+
+        this.shadowRoot.addEventListener('keydown', (e) => {
+            if (this.activeEditor) return;
+
+            const key = e.key;
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape'].includes(key)) {
+                if (key === 'ArrowUp') {
+                    e.preventDefault();
+                    this.navigateFocus(this.focusedRow - 1, this.focusedCol);
+                } else if (key === 'ArrowDown') {
+                    e.preventDefault();
+                    this.navigateFocus(this.focusedRow + 1, this.focusedCol);
+                } else if (key === 'ArrowLeft') {
+                    e.preventDefault();
+                    this.navigateFocus(this.focusedRow, this.focusedCol - 1);
+                } else if (key === 'ArrowRight') {
+                    e.preventDefault();
+                    this.navigateFocus(this.focusedRow, this.focusedCol + 1);
+                } else if (key === 'Tab') {
+                    e.preventDefault();
+                    this.navigateTab(e.shiftKey ? -1 : 1);
+                } else if (key === 'Enter') {
+                    e.preventDefault();
+                    const cell = this.getCellElement(this.focusedRow, this.focusedCol);
+                    if (cell) this.openEditor(cell, this.focusedRow, this.focusedCol);
+                } else if (key === 'Escape') {
+                    e.preventDefault();
+                    this.focusCell(this.focusedRow, this.focusedCol);
+                }
             }
         });
 
@@ -527,7 +574,78 @@ class DhGridElement extends HTMLElement {
         });
     }
 
+    getCellElement(row, col) {
+        return this.shadowRoot.querySelector(`.grid-cell[data-row="${row}"][data-col="${col}"]`);
+    }
+
+    focusCell(row, col) {
+        const data = this.getData();
+        const hasExplicitCaptions = this.hasAttribute('captions');
+        const minRow = hasExplicitCaptions ? 0 : 1;
+        const maxRow = Math.max(minRow, data.length - 1);
+        const maxCol = Math.max(0, this.cols - 1);
+
+        const clampedRow = Math.max(minRow, Math.min(row, maxRow));
+        const clampedCol = Math.max(0, Math.min(col, maxCol));
+
+        this.focusedRow = clampedRow;
+        this.focusedCol = clampedCol;
+
+        this.shadowRoot.querySelectorAll('.grid-cell-focused').forEach(el => el.classList.remove('grid-cell-focused'));
+
+        const target = this.getCellElement(clampedRow, clampedCol);
+        if (target) {
+            target.classList.add('grid-cell-focused');
+            target.focus({ preventScroll: true });
+            if (typeof target.scrollIntoView === 'function') {
+                target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            }
+        }
+    }
+
+    navigateFocus(row, col) {
+        this.focusCell(row, col);
+    }
+
+    navigateTab(direction, fromRow, fromCol) {
+        const data = this.getData();
+        const hasExplicitCaptions = this.hasAttribute('captions');
+        const minRow = hasExplicitCaptions ? 0 : 1;
+        const maxRow = Math.max(minRow, data.length - 1);
+        const totalCols = this.cols;
+
+        let r = fromRow !== undefined ? fromRow : this.focusedRow;
+        let c = fromCol !== undefined ? fromCol : this.focusedCol;
+
+        if (direction > 0) {
+            c++;
+            if (c >= totalCols) {
+                c = 0;
+                r++;
+            }
+            if (r > maxRow) {
+                r = maxRow;
+                c = totalCols - 1;
+            }
+        } else {
+            c--;
+            if (c < 0) {
+                c = totalCols - 1;
+                r--;
+            }
+            if (r < minRow) {
+                r = minRow;
+                c = 0;
+            }
+        }
+
+        this.focusCell(r, c);
+    }
+
     openEditor(cell, row, col) {
+        this.focusedRow = row;
+        this.focusedCol = col;
+
         if (this.isCellReadOnly(row, col)) {
             cell.classList.add('cell-locked-shake');
             setTimeout(() => cell.classList.remove('cell-locked-shake'), 350);
@@ -568,7 +686,19 @@ class DhGridElement extends HTMLElement {
             customEl.addEventListener('change', (ev) => handleCustomChange(ev.detail?.value ?? customEl.value));
             customEl.addEventListener('value-changed', (ev) => handleCustomChange(ev.detail?.value ?? customEl.value));
             customEl.addEventListener('keydown', (ev) => {
-                if (ev.key === 'Escape') this.closeEditor();
+                if (ev.key === 'Enter') {
+                    ev.preventDefault();
+                    handleCustomChange(customEl.value);
+                    this.navigateFocus(row + 1, col);
+                } else if (ev.key === 'Tab') {
+                    ev.preventDefault();
+                    handleCustomChange(customEl.value);
+                    this.navigateTab(ev.shiftKey ? -1 : 1, row, col);
+                } else if (ev.key === 'Escape') {
+                    ev.preventDefault();
+                    this.closeEditor();
+                    this.focusCell(row, col);
+                }
             });
 
             overlay.appendChild(customEl);
@@ -579,12 +709,23 @@ class DhGridElement extends HTMLElement {
 
             input.addEventListener('keydown', (ev) => {
                 if (ev.key === 'Enter') {
+                    ev.preventDefault();
                     const newVal = input.value;
                     cell.innerText = newVal;
                     this.notifyChange(row, col, newVal);
                     this.closeEditor();
-                } else if (ev.key === 'Escape') {
+                    this.navigateFocus(row + 1, col);
+                } else if (ev.key === 'Tab') {
+                    ev.preventDefault();
+                    const newVal = input.value;
+                    cell.innerText = newVal;
+                    this.notifyChange(row, col, newVal);
                     this.closeEditor();
+                    this.navigateTab(ev.shiftKey ? -1 : 1, row, col);
+                } else if (ev.key === 'Escape') {
+                    ev.preventDefault();
+                    this.closeEditor();
+                    this.focusCell(row, col);
                 }
             });
 
