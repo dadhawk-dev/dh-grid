@@ -11,12 +11,16 @@
 
 It features intuitive inline editing, custom Web Component editor widgets (`<status-selector>`, `<rating-editor>`, `<priority-badge-editor>`), real-time reactive event streams, dynamic matrix expansion, **Composite Parent-Child Tree Captions**, **Cell ReadOnly Control**, and **Dynamic Cell Styling Strategies**.
 
+> 🌐 **Interactive Online Showcase**: Want to test DhGrid live right now in your browser?  
+> 👉 **[Click here to open the Interactive Live Demo Page](https://dadhawk-dev.github.io/dh-grid/)** (or click the preview image below) to explore live inline editing, custom editor widgets, tree headers, and live-editable code execution!
+
 [![DhGrid Web Component Showcase Live Demo](assets/demo-preview.png)](https://dadhawk-dev.github.io/dh-grid/)
 
 ---
 
 ## 🌟 Key Features & Highlights
 
+- 🌐 **Interactive Live Demo Showcase**: Click **[https://dadhawk-dev.github.io/dh-grid/](https://dadhawk-dev.github.io/dh-grid/)** to experience all grid features, preset datasets, and live code runners directly in your browser.
 - 🌳 **Composite Parent-Child Tree Captions**: Define multi-level hierarchical headers compactly using path notation (`"Sales / H1 / Q1"`, `"Sales / H1 / Q2"`), 2D arrays, or nested tree objects.
 - 🔒 **Cell ReadOnly Control (`readOnly`, `readOnlyCells`)**: Global grid locking or per-cell / per-column read-only rule maps with lock-shake animation feedback.
 - 🎨 **Dynamic Cell Styling Strategy (`cellStyles`)**: Custom background colors, text colors, and font styles per cell, column, or row using shorthand objects or CSS rule strings.
@@ -24,7 +28,6 @@ It features intuitive inline editing, custom Web Component editor widgets (`<sta
 - ⚡ **Zero External JS Dependencies**: Fully encapsulated inside Shadow DOM with native performance, zero external framework locks.
 - ☕ **Native Jakarta Faces 4.0 JSF Integration**: Drop-in `<dh:dhGrid>` Facelets tag library with direct EL expression binding (`#{gridBean.content}`, `#{gridBean.readOnlyCells}`, `#{gridBean.cellStyles}`).
 - 📡 **Real-Time Reactive Event System**: Emits composed `cell-change` CustomEvents for instant client-side or server-side reactive sync.
-- 🚀 **Built-in Interactive Live Demo Modal**: Interactive [`▶ RUN Live Example`](https://dadhawk-dev.github.io/dh-grid/) preview modal directly in the documentation.
 
 ---
 
@@ -56,6 +59,8 @@ mvn install:install-file \
 ---
 
 ## 💡 Quick-Start Developer Examples
+
+> 💡 **Try it live in your browser!** Click **[▶ Open Interactive Live Demo Showcase Page](https://dadhawk-dev.github.io/dh-grid/)** to test and edit these code snippets live in an interactive web application!
 
 ### 🅰️ Vanilla JavaScript (Pure HTML5 + Web Components) &nbsp; [![▶ RUN Live Example](https://img.shields.io/badge/%E2%96%B6_RUN-Live_Example-28a745?style=for-the-badge)](https://dadhawk-dev.github.io/dh-grid/)
 
