@@ -9,11 +9,11 @@ echo "============================================================"
 echo "🚀 Building & Launching Dadhawk DhGrid Showcase Application"
 echo "============================================================"
 
-# Free port 8080 if it is already in use by a previous instance
-PID_8080=$(lsof -t -i:8080 2>/dev/null || fuser 8080/tcp 2>/dev/null | tr -d ' ' || true)
-if [ -n "$PID_8080" ]; then
-    echo "⚠️ Port 8080 is currently in use by process $PID_8080. Freeing port 8080..."
-    kill -9 $PID_8080 2>/dev/null || true
+# Free port 8085 if it is already in use by a previous instance
+PID_8085=$(lsof -t -i:8085 2>/dev/null || fuser 8085/tcp 2>/dev/null | tr -d ' ' || true)
+if [ -n "$PID_8085" ]; then
+    echo "⚠️ Port 8085 is currently in use by process $PID_8085. Freeing port 8085..."
+    kill -9 $PID_8085 2>/dev/null || true
     sleep 1
 fi
 
@@ -44,12 +44,12 @@ echo ""
 echo "============================================================"
 echo "✨ Dadhawk DhGrid App is Ready!"
 echo "🌐 Server URLs once started:"
-echo "   - Jakarta Faces 4.0 Demo : http://localhost:8080/index.xhtml"
-echo "   - Standalone Web Showcase: http://localhost:8080/standalone-demo.html"
-echo "   - Web Component Script   : http://localhost:8080/resources/dadhawk/js/dh-grid.js"
-echo "   - Downloadable JAR       : http://localhost:8080/downloads/dhgrid-component-1.0.0.jar"
+echo "   - Jakarta Faces 4.0 Demo : http://localhost:8085/index.xhtml"
+echo "   - Standalone Web Showcase: http://localhost:8085/standalone-demo.html"
+echo "   - Web Component Script   : http://localhost:8085/resources/dadhawk/js/dh-grid.js"
+echo "   - Downloadable JAR       : http://localhost:8085/downloads/dhgrid-component-1.0.0.jar"
 echo "============================================================"
 echo ""
 
-echo "▶️ Launching Jetty Web Server (Port 8080)..."
+echo "▶️ Launching Jetty Web Server (Port 8085)..."
 mvn jetty:run
