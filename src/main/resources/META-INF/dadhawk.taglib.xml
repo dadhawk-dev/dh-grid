@@ -51,6 +51,11 @@
             <type>java.lang.Object</type>
             <description>Per-cell, per-column, or per-row CSS style rule map or JSON string</description>
         </attribute>
+        <attribute>
+            <name>cssCompatible</name>
+            <type>java.lang.String</type>
+            <description>CSS theme compatibility strategy mode (e.g. primethemes, true, auto)</description>
+        </attribute>
     </tag>
 
 </facelet-taglib>

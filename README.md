@@ -1,6 +1,6 @@
 # ⚡ DhGrid — High-Performance Data Grid Component for Jakarta Faces 4.0 & W3C Web Components
 
-[![Version](https://img.shields.io/badge/version-1.0.0--beta-blue.svg?style=for-the-badge)](releases/1.0.0-beta.md)
+[![Version](https://img.shields.io/badge/version-1.0.0--gamma-blue.svg?style=for-the-badge)](releases/1.0.0-gamma.md)
 [![Jakarta Faces](https://img.shields.io/badge/Jakarta%20Faces-4.0-orange.svg?style=for-the-badge)](https://jakarta.ee/specifications/faces/4.0/)
 [![W3C Web Component](https://img.shields.io/badge/Web%20Component-W3C%20Standard-purple.svg?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Web_components)
 [![License](https://img.shields.io/badge/License-GNU_LGPL_v3.0-blue.svg?style=for-the-badge)](LICENSE)
@@ -9,7 +9,7 @@
 
 **DhGrid** is an open-source, lightweight, ultra-fast, zero-dependency data grid component designed for both **Jakarta EE / Jakarta Faces 4.0 (JSF)** applications and pure **W3C Web Components (`<dh-grid-element>`)**.
 
-It features intuitive inline editing, custom Web Component editor widgets (`<status-selector>`, `<rating-editor>`, `<priority-badge-editor>`), real-time reactive event streams, dynamic matrix expansion, **Composite Parent-Child Tree Captions**, **Cell ReadOnly Control**, and **Dynamic Cell Styling Strategies**.
+It features intuitive inline editing, custom Web Component editor widgets (`<status-selector>`, `<rating-editor>`, `<priority-badge-editor>`), real-time reactive event streams, dynamic matrix expansion, **Composite Parent-Child Tree Captions**, **Cell ReadOnly Control**, **Dynamic Cell Styling Strategies**, and **PrimeFaces Theme Compatibility**.
 
 > 🌐 **Interactive Online Showcase**: Want to test DhGrid live right now in your browser?  
 > 👉 **[Click here to open the Interactive Live Demo Page](https://dadhawk-dev.github.io/dh-grid/)** (or click the preview image below) to explore live inline editing, custom editor widgets, tree headers, and live-editable code execution!
@@ -21,12 +21,13 @@ It features intuitive inline editing, custom Web Component editor widgets (`<sta
 ## 🌟 Key Features & Highlights
 
 - 🌐 **Interactive Live Demo Showcase**: Click **[https://dadhawk-dev.github.io/dh-grid/](https://dadhawk-dev.github.io/dh-grid/)** to experience all grid features, preset datasets, and live code runners directly in your browser.
+- 🎨 **PrimeFaces Theme Compatibility (`css-compatible="primethemes"`)**: Seamlessly binds Shadow DOM table styles (`--dh-table-bg`, `--dh-border-color`, `--dh-cell-color`) to active PrimeFaces CSS variables (`--surface-a`, `--surface-border`, `--text-color`, `--primary-color`).
 - 🌳 **Composite Parent-Child Tree Captions**: Define multi-level hierarchical headers compactly using path notation (`"Sales / H1 / Q1"`, `"Sales / H1 / Q2"`), 2D arrays, or nested tree objects.
 - 🔒 **Cell ReadOnly Control (`readOnly`, `readOnlyCells`)**: Global grid locking or per-cell / per-column read-only rule maps with lock-shake animation feedback.
 - 🎨 **Dynamic Cell Styling Strategy (`cellStyles`)**: Custom background colors, text colors, and font styles per cell, column, or row using shorthand objects or CSS rule strings.
 - 🧩 **Custom Web Component Cell Editors**: Map custom interactive widgets (`<status-selector>`, `<rating-editor>`) directly to grid cells via simple `componentMap` JSON.
 - ⚡ **Zero External JS Dependencies**: Fully encapsulated inside Shadow DOM with native performance, zero external framework locks.
-- ☕ **Native Jakarta Faces 4.0 JSF Integration**: Drop-in `<dh:dhGrid>` Facelets tag library with direct EL expression binding (`#{gridBean.content}`, `#{gridBean.readOnlyCells}`, `#{gridBean.cellStyles}`).
+- ☕ **Native Jakarta Faces 4.0 JSF Integration**: Drop-in `<dh:dhGrid>` Facelets tag library with direct EL expression binding (`#{gridBean.content}`, `#{gridBean.readOnlyCells}`, `#{gridBean.cellStyles}`, `#{gridBean.cssCompatible}`).
 - 📡 **Real-Time Reactive Event System**: Emits composed `cell-change` CustomEvents for instant client-side or server-side reactive sync.
 
 ---
@@ -291,6 +292,10 @@ Access local endpoints:
 
 ## 🏷️ Release History & Tags
 
+- **`v1.0.0-gamma`** ([Release Notes](releases/1.0.0-gamma.md)):
+  - Added **PrimeFaces Theme Compatibility** (`css-compatible="primethemes"` / `cssCompatible="primethemes"`).
+  - Direct CSS variable binding between Shadow DOM host element and PrimeThemes variables (`--surface-a`, `--surface-b`, `--surface-border`, `--text-color`, `--primary-color`).
+  - Added live PrimeThemes theme switcher toolbar in interactive showcase.
 - **`v1.0.0-beta`** ([Release Notes](releases/1.0.0-beta.md)):
   - Added **Cell ReadOnly Strategy** (`readOnly`, `readOnlyCells`) with lock-shake animation feedback.
   - Added **Dynamic Cell Styling Strategy** (`cellStyles`) supporting per-cell/column background, text colors, and font styles.

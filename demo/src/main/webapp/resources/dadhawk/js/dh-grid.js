@@ -11,7 +11,7 @@ class DhGridElement extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ['rows', 'cols', 'content', 'components', 'captions', 'readonly', 'readonly-cells', 'cell-styles'];
+        return ['rows', 'cols', 'content', 'components', 'captions', 'readonly', 'readonly-cells', 'cell-styles', 'css-compatible'];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -22,6 +22,15 @@ class DhGridElement extends HTMLElement {
 
     connectedCallback() {
         this.render();
+    }
+
+    get cssCompatible() {
+        return this.getAttribute('css-compatible') || '';
+    }
+
+    set cssCompatible(val) {
+        if (val) this.setAttribute('css-compatible', val);
+        else this.removeAttribute('css-compatible');
     }
 
     get readOnly() {
@@ -362,9 +371,19 @@ class DhGridElement extends HTMLElement {
                 :host {
                     display: block;
                     position: relative;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                    font-family: var(--dh-font-family, var(--font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif));
                     font-size: 14px;
                     width: 100%;
+                    --dh-table-bg: var(--surface-a, var(--surface-card, #ffffff));
+                    --dh-header-bg: var(--surface-b, var(--surface-section, var(--surface-50, #f1f5f9)));
+                    --dh-header-color: var(--text-color, #0f172a);
+                    --dh-cell-color: var(--text-color, #1e293b);
+                    --dh-border-color: var(--surface-border, var(--surface-d, #cbd5e1));
+                    --dh-hover-bg: var(--primary-50, var(--surface-hover, #e0f2fe));
+                    --dh-hover-outline: var(--primary-color, #38bdf8);
+                    --dh-readonly-bg: var(--surface-c, rgba(241, 245, 249, 0.7));
+                    --dh-readonly-color: var(--text-color-secondary, #64748b);
+                    --dh-focus-ring: var(--focus-ring-color, var(--primary-color, #2563eb));
                 }
                 .grid-container {
                     position: relative;
@@ -376,47 +395,48 @@ class DhGridElement extends HTMLElement {
                 .grid-table {
                     width: 100%;
                     border-collapse: collapse;
-                    border: 2px solid #cbd5e1;
+                    border: 2px solid var(--dh-border-color);
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                    background-color: #ffffff;
+                    background-color: var(--dh-table-bg);
+                    color: var(--dh-cell-color);
                 }
                 .grid-header-cell {
-                    background: #f1f5f9;
+                    background: var(--dh-header-bg);
                     font-weight: 700;
-                    color: #0f172a;
-                    border: 1px solid #cbd5e1;
-                    border-bottom: 2px solid #cbd5e1;
+                    color: var(--dh-header-color);
+                    border: 1px solid var(--dh-border-color);
+                    border-bottom: 2px solid var(--dh-border-color);
                     padding: 8px 12px;
                     text-align: center;
                     cursor: default;
                     user-select: none;
                 }
                 .grid-cell {
-                    border: 1px solid #cbd5e1;
+                    border: 1px solid var(--dh-border-color);
                     padding: 10px 14px;
                     min-width: 110px;
                     height: 38px;
                     text-align: left;
                     cursor: cell;
                     transition: background 0.15s ease, outline 0.15s ease;
-                    color: #1e293b;
+                    color: var(--dh-cell-color);
                     font-weight: 500;
                     box-sizing: border-box;
                     white-space: nowrap;
                 }
                 .grid-cell:hover {
-                    background-color: #e0f2fe;
-                    outline: 2px solid #38bdf8;
+                    background-color: var(--dh-hover-bg);
+                    outline: 2px solid var(--dh-hover-outline);
                     outline-offset: -2px;
                 }
                 .grid-cell.grid-cell-readonly {
-                    background-color: rgba(241, 245, 249, 0.7);
-                    color: #64748b;
+                    background-color: var(--dh-readonly-bg);
+                    color: var(--dh-readonly-color);
                     cursor: not-allowed;
                 }
                 .grid-cell.grid-cell-readonly:hover {
-                    background-color: rgba(226, 232, 240, 0.85);
-                    outline: 1px solid #cbd5e1;
+                    background-color: var(--dh-readonly-bg);
+                    outline: 1px solid var(--dh-border-color);
                 }
                 @keyframes cellShake {
                     0%, 100% { transform: translateX(0); }
@@ -428,9 +448,9 @@ class DhGridElement extends HTMLElement {
                 }
                 .cell-overlay {
                     position: absolute;
-                    background: #ffffff;
+                    background: var(--dh-table-bg);
                     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-                    border: 2px solid #2563eb;
+                    border: 2px solid var(--dh-focus-ring);
                     border-radius: 4px;
                     z-index: 999;
                     display: flex;
@@ -445,9 +465,9 @@ class DhGridElement extends HTMLElement {
                     padding: 0 10px;
                     font-size: 14px;
                     font-weight: 600;
-                    color: #0f172a;
+                    color: var(--dh-cell-color);
                     box-sizing: border-box;
-                    background: #ffffff;
+                    background: var(--dh-table-bg);
                 }
             </style>
             <div class="grid-container" id="container">

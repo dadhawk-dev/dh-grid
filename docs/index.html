@@ -305,6 +305,23 @@
                 </div>
             </div>
 
+            <!-- Theme Switcher Toolbar -->
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-card); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 13px; font-weight: 700; color: #a5b4fc; display: flex; align-items: center; gap: 6px;">
+                        🎨 PrimeThemes CSS Compatibility:
+                    </span>
+                    <button onclick="setTheme('default')" class="theme-btn active" id="theme-default" style="font-size: 12px; padding: 5px 12px;">⚡ Default DhGrid</button>
+                    <button onclick="setTheme('saga-blue')" class="theme-btn" id="theme-saga-blue" style="font-size: 12px; padding: 5px 12px; background: rgba(33, 150, 243, 0.15); color: #2196F3; border-color: rgba(33, 150, 243, 0.3);">☀️ Saga Blue</button>
+                    <button onclick="setTheme('arya')" class="theme-btn" id="theme-arya" style="font-size: 12px; padding: 5px 12px; background: rgba(144, 202, 249, 0.15); color: #90caf9; border-color: rgba(144, 202, 249, 0.3);">🌙 Arya Dark</button>
+                    <button onclick="setTheme('vela')" class="theme-btn" id="theme-vela" style="font-size: 12px; padding: 5px 12px; background: rgba(100, 181, 246, 0.15); color: #64b5f6; border-color: rgba(100, 181, 246, 0.3);">🌌 Vela Blue</button>
+                    <button onclick="setTheme('luna-amber')" class="theme-btn" id="theme-luna-amber" style="font-size: 12px; padding: 5px 12px; background: rgba(255, 179, 0, 0.15); color: #ffb300; border-color: rgba(255, 179, 0, 0.3);">🔥 Luna Amber</button>
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted);">
+                    Attribute: <code id="themeAttrLabel" style="color: #34d399; font-weight: 600;">css-compatible="primethemes"</code>
+                </div>
+            </div>
+
             <div class="toolbar">
                 <button onclick="loadPreset('financial')" class="preset-btn active" id="btn-financial">💼 Financial Matrix</button>
                 <button onclick="loadPreset('taskboard')" class="preset-btn" id="btn-taskboard">📋 Task Board</button>
@@ -317,8 +334,8 @@
                 <button onclick="exportJson()" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: rgba(168, 85, 247, 0.3);">📥 Export JSON</button>
             </div>
 
-            <div class="grid-host-frame">
-                <dh-grid-element id="demoGrid" rows="5" cols="5"
+            <div class="grid-host-frame" id="gridHostFrame">
+                <dh-grid-element id="demoGrid" rows="5" cols="5" css-compatible="primethemes"
                   content='[["Quarter","Revenue ($)","Expenses ($)","Margin (%)","Performance"],["Q1 2026","$120,000","$85,000","29.1%","Completed"],["Q2 2026","$145,000","$92,000","36.5%","Active"],["Q3 2026","$160,000","$98,000","38.7%","Pending"],["Q4 2026","$210,000","$110,000","47.6%","In Review"]]'
                   components='{"r1_c4":"status-selector","r2_c4":"status-selector","r3_c4":"status-selector","r4_c4":"status-selector"}'>
                 </dh-grid-element>
@@ -857,6 +874,75 @@ cd dh-grid
             }
         };
 
+        const primeThemes = {
+            'default': null,
+            'saga-blue': {
+                '--surface-a': '#ffffff',
+                '--surface-b': '#f8f9fa',
+                '--surface-c': '#e9ecef',
+                '--surface-border': '#dee2e6',
+                '--text-color': '#495057',
+                '--text-color-secondary': '#6c757d',
+                '--primary-color': '#2196F3',
+                '--focus-ring-color': 'rgba(33, 150, 243, 0.4)'
+            },
+            'arya': {
+                '--surface-a': '#121212',
+                '--surface-b': '#1e1e1e',
+                '--surface-c': '#2d2d2d',
+                '--surface-border': '#383838',
+                '--text-color': 'rgba(255, 255, 255, 0.87)',
+                '--text-color-secondary': 'rgba(255, 255, 255, 0.6)',
+                '--primary-color': '#90caf9',
+                '--focus-ring-color': 'rgba(144, 202, 249, 0.4)'
+            },
+            'vela': {
+                '--surface-a': '#1f2d40',
+                '--surface-b': '#17212f',
+                '--surface-c': '#2c3e55',
+                '--surface-border': '#2c3e55',
+                '--text-color': 'rgba(255, 255, 255, 0.87)',
+                '--text-color-secondary': 'rgba(255, 255, 255, 0.6)',
+                '--primary-color': '#64b5f6',
+                '--focus-ring-color': 'rgba(100, 181, 246, 0.4)'
+            },
+            'luna-amber': {
+                '--surface-a': '#2a2e33',
+                '--surface-b': '#202428',
+                '--surface-c': '#353a40',
+                '--surface-border': '#353a40',
+                '--text-color': '#ffffff',
+                '--text-color-secondary': '#a6a6a6',
+                '--primary-color': '#ffb300',
+                '--focus-ring-color': 'rgba(255, 179, 0, 0.4)'
+            }
+        };
+
+        function setTheme(themeKey) {
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`theme-${themeKey}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const frame = document.getElementById('gridHostFrame');
+            const label = document.getElementById('themeAttrLabel');
+
+            if (themeKey === 'default') {
+                grid.removeAttribute('css-compatible');
+                if (label) label.innerText = 'css-compatible (disabled)';
+                if (frame) {
+                    Object.keys(primeThemes['saga-blue']).forEach(prop => frame.style.removeProperty(prop));
+                }
+            } else {
+                grid.setAttribute('css-compatible', 'primethemes');
+                if (label) label.innerText = 'css-compatible="primethemes"';
+                const vars = primeThemes[themeKey];
+                if (vars && frame) {
+                    Object.entries(vars).forEach(([k, v]) => frame.style.setProperty(k, v));
+                }
+            }
+            syncUI();
+        }
+
         function syncUI() {
             const r = grid.rows;
             const c = grid.cols;
@@ -867,6 +953,8 @@ cd dh-grid
             statMapped.innerText = `${comps} Mapped`;
 
             // Update Snippet
+            const cssComp = grid.getAttribute('css-compatible');
+            const cssCompStr = cssComp ? `\n  css-compatible="${cssComp}"` : '';
             const contentAttr = grid.getAttribute('content') || '[]';
             const compAttr = grid.getAttribute('components') || '{}';
             const captAttr = grid.getAttribute('captions') || '';
@@ -877,7 +965,7 @@ cd dh-grid
             const roStr = roAttr ? `\n  readonly-cells='${roAttr}'` : '';
             const styleStr = styleAttr ? `\n  cell-styles='${styleAttr}'` : '';
 
-            codeSnippet.innerText = `<dh-grid-element rows="${r}" cols="${c}"${captStr}\n  content='${contentAttr}'\n  components='${compAttr}'${roStr}${styleStr}>\n</dh-grid-element>`;
+            codeSnippet.innerText = `<dh-grid-element rows="${r}" cols="${c}"${cssCompStr}${captStr}\n  content='${contentAttr}'\n  components='${compAttr}'${roStr}${styleStr}>\n</dh-grid-element>`;
         }
 
         function updateGrid(ds) {

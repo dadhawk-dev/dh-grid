@@ -26,6 +26,7 @@ public class GridBean implements Serializable {
     private Object readOnlyCells;
     private Object cellStyles;
     private String selectedPreset = "financial";
+    private String cssCompatible = "primethemes";
 
     @PostConstruct
     public void init() {
@@ -221,5 +222,13 @@ public class GridBean implements Serializable {
 
     public void setSelectedPreset(String selectedPreset) {
         this.selectedPreset = selectedPreset;
+    }
+
+    public String getCssCompatible() {
+        return cssCompatible;
+    }
+
+    public void setCssCompatible(String cssCompatible) {
+        this.cssCompatible = cssCompatible;
     }
 }

@@ -30,7 +30,7 @@ public class DhGridComponent extends UIComponentBase {
     public static final String COMPONENT_TYPE = "com.dadhawk.faces.component.DhGridComponent";
 
     enum PropertyKeys {
-        rowCount, colCount, content, componentMap, captions, readOnly, readOnlyCells, cellStyles
+        rowCount, colCount, content, componentMap, captions, readOnly, readOnlyCells, cellStyles, cssCompatible
     }
 
     @Override
@@ -103,6 +103,14 @@ public class DhGridComponent extends UIComponentBase {
         getStateHelper().put(PropertyKeys.cellStyles, cellStyles);
     }
 
+    public Object getCssCompatible() {
+        return getStateHelper().eval(PropertyKeys.cssCompatible, null);
+    }
+
+    public void setCssCompatible(Object cssCompatible) {
+        getStateHelper().put(PropertyKeys.cssCompatible, cssCompatible);
+    }
+
     @Override
     public void encodeBegin(FacesContext context) throws IOException {
         if (!isRendered()) {
@@ -128,6 +136,9 @@ public class DhGridComponent extends UIComponentBase {
         }
         if (getCellStyles() != null) {
             writer.writeAttribute("cell-styles", toJson(getCellStyles()), "cellStyles");
+        }
+        if (getCssCompatible() != null) {
+            writer.writeAttribute("css-compatible", getCssCompatible().toString(), "cssCompatible");
         }
     }
 
