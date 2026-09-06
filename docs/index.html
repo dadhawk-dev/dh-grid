@@ -442,11 +442,12 @@
   &lt;script src="resources/dadhawk/js/dh-grid.js"&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;dh-grid-element id="myGrid" rows="5" cols="5" readonly-cells='{"r1_c0": true, "r3": true}' cell-styles='{"r1_c3": "color:#4ade80;font-weight:700;", "c1": "color:#38bdf8;"}'&gt;&lt;/dh-grid-element&gt;
+  &lt;dh-grid-element id="myGrid" rows="5" cols="5" css-compatible="primethemes" readonly-cells='{"r1_c0": true, "r3": true}' cell-styles='{"r1_c3": "color:#4ade80;font-weight:700;", "c1": "color:#38bdf8;"}'&gt;&lt;/dh-grid-element&gt;
 
   &lt;script&gt;
     const grid = document.getElementById('myGrid');
-    // Composite Tree Captions &amp; Custom Components
+    // PrimeFaces Theme Compatibility & Composite Tree Captions
+    grid.setAttribute('css-compatible', 'primethemes');
     grid.setAttribute('captions', JSON.stringify([
       "Sales / H1 / Q1", "Sales / H1 / Q2",
       "Sales / H2 / Q3", "Sales / H2 / Q4", "Status"
@@ -491,6 +492,7 @@
   &lt;dh:dhGrid id="myGrid"
              rowCount="#{gridBean.rowCount}"
              colCount="#{gridBean.colCount}"
+             cssCompatible="primethemes"
              content="#{gridBean.content}"
              captions="#{gridBean.captions}"
              componentMap="#{gridBean.componentMap}"

@@ -235,9 +235,28 @@ public class GridBean implements Serializable {
 
 ---
 
-### 🔀 Minimal Feature Usage Snippets (`v1.0.0-beta`)
+### 🔀 Minimal Feature Usage Snippets
 
-#### 🔒 1. Cell ReadOnly Control (`readOnly`, `readOnlyCells`)
+#### 🎨 1. PrimeFaces Theme Compatibility (`css-compatible="primethemes"`)
+Seamlessly bind Shadow DOM table styling to active PrimeFaces / PrimeVue theme CSS variables (`--surface-a`, `--surface-b`, `--surface-border`, `--text-color`, `--primary-color`). Enables instant compatibility with all PrimeFaces profile themes (e.g., `saga-blue`, `arya`, `vela`, `luna-amber`):
+
+```html
+<!-- W3C Web Component (Pure HTML5) -->
+<dh-grid-element id="myGrid"
+                 css-compatible="primethemes"
+                 rows="5" cols="5">
+</dh-grid-element>
+```
+
+```xml
+<!-- Jakarta Faces 4.0 Taglib (Facelets View) -->
+<dh:dhGrid id="myGrid"
+           cssCompatible="primethemes"
+           content="#{gridBean.content}"
+           captions="#{gridBean.captions}" />
+```
+
+#### 🔒 2. Cell ReadOnly Control (`readOnly`, `readOnlyCells`)
 Lock all cells globally (`readOnly="true"`) or configure per-cell/per-column read-only rule maps:
 
 ```html
@@ -255,7 +274,7 @@ Lock all cells globally (`readOnly="true"`) or configure per-cell/per-column rea
            readOnlyCells="#{gridBean.readOnlyCells}" />
 ```
 
-#### 🎨 2. Dynamic Cell Styling Strategy (`cellStyles`)
+#### 🎨 3. Dynamic Cell Styling Strategy (`cellStyles`)
 Apply custom background colors, text colors, and font styles per cell, column, or row using inline CSS strings or JSON objects:
 
 ```html
