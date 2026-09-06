@@ -530,16 +530,28 @@ class DhGridElement extends HTMLElement {
 
         table.addEventListener('click', (e) => {
             const cell = e.target.closest('.grid-cell');
-            if (cell) {
+            if (cell && cell.dataset.row !== undefined && cell.dataset.col !== undefined) {
                 const r = parseInt(cell.dataset.row, 10);
                 const c = parseInt(cell.dataset.col, 10);
                 this.focusCell(r, c, true);
             }
         });
 
+        table.addEventListener('focusin', (e) => {
+            const cell = e.target.closest('.grid-cell');
+            if (cell && cell.dataset.row !== undefined && cell.dataset.col !== undefined) {
+                const r = parseInt(cell.dataset.row, 10);
+                const c = parseInt(cell.dataset.col, 10);
+                this.focusedRow = r;
+                this.focusedCol = c;
+                this.shadowRoot.querySelectorAll('.grid-cell-focused').forEach(el => el.classList.remove('grid-cell-focused'));
+                cell.classList.add('grid-cell-focused');
+            }
+        });
+
         table.addEventListener('dblclick', (e) => {
             const cell = e.target.closest('.grid-cell');
-            if (cell) {
+            if (cell && cell.dataset.row !== undefined && cell.dataset.col !== undefined) {
                 const r = parseInt(cell.dataset.row, 10);
                 const c = parseInt(cell.dataset.col, 10);
                 this.openEditor(cell, r, c);
@@ -549,27 +561,39 @@ class DhGridElement extends HTMLElement {
         this.shadowRoot.addEventListener('keydown', (e) => {
             if (this.activeEditor) return;
 
+            // Sync focused position with currently active element in DOM if available
+            const activeEl = this.shadowRoot.activeElement || document.activeElement;
+            if (activeEl && activeEl.classList && activeEl.classList.contains('grid-cell')) {
+                if (activeEl.dataset.row !== undefined && activeEl.dataset.col !== undefined) {
+                    this.focusedRow = parseInt(activeEl.dataset.row, 10);
+                    this.focusedCol = parseInt(activeEl.dataset.col, 10);
+                }
+            }
+
             const key = e.key;
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape'].includes(key)) {
+                const currR = this.focusedRow;
+                const currC = this.focusedCol;
+
                 if (key === 'ArrowUp') {
                     e.preventDefault();
-                    this.focusCell(this.focusedRow - 1, this.focusedCol, true);
+                    this.focusCell(currR - 1, currC, true);
                 } else if (key === 'ArrowDown' || key === 'Enter') {
                     e.preventDefault();
-                    this.focusCell(this.focusedRow + 1, this.focusedCol, true);
+                    this.focusCell(currR + 1, currC, true);
                 } else if (key === 'ArrowLeft') {
                     e.preventDefault();
-                    this.focusCell(this.focusedRow, this.focusedCol - 1, true);
+                    this.focusCell(currR, currC - 1, true);
                 } else if (key === 'ArrowRight') {
                     e.preventDefault();
-                    this.focusCell(this.focusedRow, this.focusedCol + 1, true);
+                    this.focusCell(currR, currC + 1, true);
                 } else if (key === 'Tab') {
                     e.preventDefault();
-                    const nextPos = this.getNextTabPosition(e.shiftKey ? -1 : 1, this.focusedRow, this.focusedCol);
+                    const nextPos = this.getNextTabPosition(e.shiftKey ? -1 : 1, currR, currC);
                     this.focusCell(nextPos.r, nextPos.c, true);
                 } else if (key === 'Escape') {
                     e.preventDefault();
-                    this.focusCell(this.focusedRow, this.focusedCol, true);
+                    this.focusCell(currR, currC, true);
                 }
             }
         });
