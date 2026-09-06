@@ -411,7 +411,7 @@
   &lt;script src="resources/dadhawk/js/dh-grid.js"&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;dh-grid-element id="myGrid" rows="5" cols="5" readonly-cells='{"r1_c0": true}' cell-styles='{"r1_c3": "color:#4ade80;font-weight:700;"}'&gt;&lt;/dh-grid-element&gt;
+  &lt;dh-grid-element id="myGrid" rows="5" cols="5" readonly-cells='{"r1_c0": true, "r3": true}' cell-styles='{"r1_c3": "color:#4ade80;font-weight:700;", "c1": "color:#38bdf8;"}'&gt;&lt;/dh-grid-element&gt;
 
   &lt;script&gt;
     const grid = document.getElementById('myGrid');
@@ -431,8 +431,8 @@
       "r1_c4": "status-selector"
     }));
     // Cell ReadOnly Rules &amp; Custom Cell Styling API
-    grid.readOnlyCells = { "r1_c0": true };
-    grid.cellStyles = { "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;" };
+    grid.readOnlyCells = { "r1_c0": true, "r3": true };
+    grid.cellStyles = { "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;", "c1": "color: #38bdf8; font-weight: 600;" };
     grid.addEventListener('cell-change', (e) =&gt; {
       console.log(e.detail.row, e.detail.col, e.detail.value);
     });
@@ -614,10 +614,11 @@ cd dh-grid
                 "r4_c4": "status-selector"
             }));
             modalGrid.setAttribute('readonly-cells', JSON.stringify({
-                "r1_c0": true
+                "r1_c0": true, "r3": true
             }));
             modalGrid.setAttribute('cell-styles', JSON.stringify({
-                "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;"
+                "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+                "c1": "color: #0284c7; font-weight: 600;"
             }));
 
             if (!modalGrid.dataset.listenerAttached) {
@@ -674,10 +675,12 @@ cd dh-grid
                     "r4_c4": "status-selector"
                 },
                 readonlyCells: {
-                    "r1_c0": true
+                    "r1_c0": true,
+                    "r3": true
                 },
                 cellStyles: {
-                    "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;"
+                    "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;",
+                    "c1": "color: #38bdf8; font-weight: 600;"
                 }
             },
             taskboard: {

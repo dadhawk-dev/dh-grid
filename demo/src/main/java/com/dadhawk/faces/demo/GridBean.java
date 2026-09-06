@@ -57,12 +57,10 @@ public class GridBean implements Serializable {
         this.componentMap.put("r3_c4", "status-selector");
         this.componentMap.put("r4_c4", "status-selector");
 
-        this.readOnlyCells = Map.of("r1_c0", true, "r2_c0", true, "r3_c0", true, "r4_c0", true);
+        this.readOnlyCells = Map.of("r1_c0", true, "r3", true);
         this.cellStyles = Map.of(
             "r1_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
-            "r2_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
-            "r3_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
-            "r4_c3", "background-color: rgba(34, 197, 94, 0.25); color: #166534; font-weight: 800;"
+            "c1", "color: #0284c7; font-weight: 600;"
         );
     }
 

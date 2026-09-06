@@ -72,8 +72,8 @@ mvn install:install-file \
                    rows="5"
                    cols="5"
                    readonly="false"
-                   readonly-cells='{"r1_c0": true}'
-                   cell-styles='{"r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;"}'>
+                   readonly-cells='{"r1_c0": true, "r3": true}'
+                   cell-styles='{"r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;", "c1": "color: #0284c7; font-weight: 600;"}'>
   </dh-grid-element>
 
   <script>
@@ -106,11 +106,12 @@ mvn install:install-file \
     }));
 
     // 5. Configure Cell ReadOnly Rules & Custom Styling (Imperative JS Property API)
-    // Note: {"r1_c0": true} locks ONLY Row 1 Col 0. Use {"c0": true} to lock column 0 entirely.
-    grid.readOnlyCells = { "r1_c0": true };
-    // Note: {"r1_c3": "..."} styles ONLY Row 1 Col 3. Use {"c3": "..."} to style column 3 entirely.
+    // Note: {"r1_c0": true} locks single cell; {"r3": true} locks entire row 3; {"c0": true} locks column 0.
+    grid.readOnlyCells = { "r1_c0": true, "r3": true };
+    // Note: {"r1_c3": "..."} styles single cell; {"c1": "..."} styles entire column 1; {"r2": "..."} styles row 2.
     grid.cellStyles = {
-      "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;"
+      "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+      "c1": "color: #0284c7; font-weight: 600;"
     };
 
     // 6. Listen for Cell Change Events
@@ -218,9 +219,9 @@ Lock all cells globally (`readOnly="true"`) or configure per-cell/per-column rea
 
 ```html
 <!-- W3C Web Component (Pure HTML5) -->
-<!-- Lock ONLY Row 1 Col 0 ("r1_c0": true). To lock entire column 0, use ("c0": true) -->
+<!-- Lock single cell ("r1_c0"), entire row ("r3"), or entire column ("c0") -->
 <dh-grid-element id="myGrid"
-                 readonly-cells='{"r1_c0": true}'>
+                 readonly-cells='{"r1_c0": true, "r3": true, "c0": true}'>
 </dh-grid-element>
 ```
 
@@ -236,8 +237,9 @@ Apply custom background colors, text colors, and font styles per cell, column, o
 
 ```html
 <!-- W3C Web Component (Pure HTML5) -->
+<!-- Style single cell ("r1_c3"), entire column ("c1"), or entire row ("r2") -->
 <dh-grid-element id="myGrid"
-                 cell-styles='{"r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;", "c0": "font-weight: 600;"}'>
+                 cell-styles='{"r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;", "c1": "color: #38bdf8; font-weight: 600;", "r2": "background: rgba(99, 102, 241, 0.1);"}'>
 </dh-grid-element>
 ```
 
