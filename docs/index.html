@@ -244,9 +244,9 @@
                 <span class="tag-badge">&lt;dh-grid-element&gt;</span>
             </div>
             <div>
-                <a href="index.xhtml" style="color: var(--accent-blue); text-decoration: none; font-weight: 600; font-size: 14px;">
-                    ← Launch Jakarta Faces 4.0 App
-                </a>
+                <button type="button" onclick="openJsfGuideModal()" style="background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3); font-weight: 600; font-size: 13.5px; padding: 8px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease;">
+                    <span>☕ How to use in Jakarta Faces 4.0</span>
+                </button>
             </div>
         </header>
 
@@ -466,6 +466,70 @@ Map&lt;String, String&gt; componentMap = Map.of("r1_c4", "status-selector");</di
         </div>
     </div>
 
+    <!-- Jakarta Faces 4.0 Integration Guide Modal -->
+    <div id="jsfGuideModal" style="display: none; position: fixed; inset: 0; background: rgba(5, 8, 16, 0.85); backdrop-filter: blur(12px); z-index: 99999; align-items: center; justify-content: center; padding: 24px;">
+        <div style="background: #0f172a; border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; width: 100%; max-width: 820px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); overflow: hidden; animation: modalIn 0.25s ease; max-height: 90vh; display: flex; flex-direction: column;">
+            <!-- Modal Header -->
+            <div style="padding: 18px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: space-between; background: rgba(30, 41, 59, 0.5);">
+                <div style="font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; color: #f8fafc; display: flex; align-items: center; gap: 10px;">
+                    ☕ Jakarta Faces 4.0 (JSF) Integration Guide
+                </div>
+                <button type="button" onclick="closeJsfGuideModal()" style="background: rgba(255,255,255,0.08); color: #94a3b8; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center;">✕</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div style="padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;">
+                <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); padding: 14px 18px; border-radius: 10px; font-size: 13.5px; color: #e2e8f0; line-height: 1.6;">
+                    <strong>ℹ️ Note:</strong> GitHub Pages serves static HTML assets. To run the full <strong>Jakarta Faces 4.0</strong> server-side application with Java CDI managed beans (<code>GridBean.java</code>) and JSF EL expressions (<code>#{gridBean.content}</code>), follow these 3 quick steps locally:
+                </div>
+
+                <!-- Step 1 -->
+                <div>
+                    <div style="font-weight: 700; font-size: 14.5px; color: #38bdf8; margin-bottom: 8px;">1️⃣ Add Maven Dependency (<code>pom.xml</code>)</div>
+                    <pre style="background: #020617; border: 1px solid rgba(255, 255, 255, 0.08); padding: 14px; border-radius: 8px; font-family: 'Fira Code', monospace; font-size: 13px; color: #38bdf8; overflow-x: auto;"><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
+    &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+                </div>
+
+                <!-- Step 2 -->
+                <div>
+                    <div style="font-weight: 700; font-size: 14.5px; color: #38bdf8; margin-bottom: 8px;">2️⃣ Embed Taglib in JSF Facelets View (<code>index.xhtml</code>)</div>
+                    <pre style="background: #020617; border: 1px solid rgba(255, 255, 255, 0.08); padding: 14px; border-radius: 8px; font-family: 'Fira Code', monospace; font-size: 13px; color: #a5b4fc; overflow-x: auto;"><code>&lt;!DOCTYPE html&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:dh="http://dadhawk.com/faces"&gt;
+  &lt;h:body&gt;
+      &lt;h:form id="gridForm"&gt;
+          &lt;dh:dhGrid id="myGrid"
+                     rowCount="#{gridBean.rowCount}"
+                     colCount="#{gridBean.colCount}"
+                     content="#{gridBean.content}"
+                     captions="#{gridBean.captions}"
+                     componentMap="#{gridBean.componentMap}" /&gt;
+      &lt;/h:form&gt;
+  &lt;/h:body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <!-- Step 3 -->
+                <div>
+                    <div style="font-weight: 700; font-size: 14.5px; color: #38bdf8; margin-bottom: 8px;">3️⃣ Run Local Jakarta Faces 4.0 Showcase Server</div>
+                    <pre style="background: #020617; border: 1px solid rgba(255, 255, 255, 0.08); padding: 14px; border-radius: 8px; font-family: 'Fira Code', monospace; font-size: 13px; color: #4ade80; overflow-x: auto;"><code>git clone https://github.com/dadhawk-dev/dh-grid.git
+cd dh-grid
+./run-app.sh</code></pre>
+                    <div style="font-size: 12.5px; color: #94a3b8; margin-top: 6px;">App endpoint: <code>http://localhost:8080/index.xhtml</code></div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div style="padding: 14px 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); background: rgba(15, 23, 42, 0.9); display: flex; justify-content: flex-end;">
+                <button type="button" onclick="closeJsfGuideModal()" style="background: var(--accent-gradient); color: white; border: none; padding: 9px 22px; border-radius: 8px; font-weight: 600; font-size: 13.5px; cursor: pointer;">Got It!</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Live Demo Modal Dialog Overlay -->
     <div id="demoModal" style="display: none; position: fixed; inset: 0; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
         <div style="background: #0f172a; border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; width: 100%; max-width: 880px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); overflow: hidden; animation: modalIn 0.25s ease;">
@@ -505,6 +569,16 @@ Map&lt;String, String&gt; componentMap = Map.of("r1_c4", "status-selector");</di
 
     <!-- Interactive Script -->
     <script>
+        function openJsfGuideModal() {
+            const modal = document.getElementById('jsfGuideModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeJsfGuideModal() {
+            const modal = document.getElementById('jsfGuideModal');
+            if (modal) modal.style.display = 'none';
+        }
+
         function openDemoModal() {
             const modal = document.getElementById('demoModal');
             const modalGrid = document.getElementById('modalDemoGrid');
