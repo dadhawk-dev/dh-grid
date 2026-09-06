@@ -11,7 +11,7 @@ class DhGridElement extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ['rows', 'cols', 'content', 'components', 'captions'];
+        return ['rows', 'cols', 'content', 'components', 'captions', 'readonly', 'readonly-cells', 'cell-styles'];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -22,6 +22,35 @@ class DhGridElement extends HTMLElement {
 
     connectedCallback() {
         this.render();
+    }
+
+    get readOnly() {
+        return this.hasAttribute('readonly') && this.getAttribute('readonly') !== 'false';
+    }
+
+    set readOnly(val) {
+        if (val) this.setAttribute('readonly', 'true');
+        else this.removeAttribute('readonly');
+    }
+
+    get readOnlyCells() {
+        return this.getAttribute('readonly-cells');
+    }
+
+    set readOnlyCells(val) {
+        if (typeof val === 'object') this.setAttribute('readonly-cells', JSON.stringify(val));
+        else if (val) this.setAttribute('readonly-cells', val);
+        else this.removeAttribute('readonly-cells');
+    }
+
+    get cellStyles() {
+        return this.getAttribute('cell-styles');
+    }
+
+    set cellStyles(val) {
+        if (typeof val === 'object') this.setAttribute('cell-styles', JSON.stringify(val));
+        else if (val) this.setAttribute('cell-styles', val);
+        else this.removeAttribute('cell-styles');
     }
 
     get captions() {
@@ -120,6 +149,74 @@ class DhGridElement extends HTMLElement {
             console.error("Error parsing components map:", e);
             return {};
         }
+    }
+
+    isCellReadOnly(row, col) {
+        if (this.readOnly) return true;
+
+        const raw = this.getAttribute('readonly-cells');
+        if (!raw) return false;
+
+        try {
+            const clean = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+            const parsed = JSON.parse(clean);
+
+            const keyCell = `r${row}_c${col}`;
+            const keyCol = `c${col}`;
+            const keyRow = `r${row}`;
+
+            if (Array.isArray(parsed)) {
+                return parsed.includes(keyCell) || parsed.includes(keyCol) || parsed.includes(keyRow);
+            } else if (typeof parsed === 'object' && parsed !== null) {
+                if (parsed[keyCell] !== undefined) return Boolean(parsed[keyCell]);
+                if (parsed[keyCol] !== undefined) return Boolean(parsed[keyCol]);
+                if (parsed[keyRow] !== undefined) return Boolean(parsed[keyRow]);
+            }
+        } catch (e) {
+            console.error("Error parsing readonly-cells attribute:", e);
+        }
+        return false;
+    }
+
+    getCellStyle(row, col) {
+        const raw = this.getAttribute('cell-styles');
+        if (!raw) return '';
+
+        try {
+            const clean = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+            const parsed = JSON.parse(clean);
+            if (typeof parsed === 'object' && parsed !== null) {
+                const keyCell = `r${row}_c${col}`;
+                const keyCol = `c${col}`;
+                const keyRow = `r${row}`;
+
+                const styleVal = parsed[keyCell] || parsed[keyCol] || parsed[keyRow];
+                if (typeof styleVal === 'string') {
+                    return styleVal;
+                } else if (typeof styleVal === 'object' && styleVal !== null) {
+                    let css = '';
+                    if (styleVal.bg || styleVal.background || styleVal['background-color']) {
+                        css += `background-color: ${styleVal.bg || styleVal.background || styleVal['background-color']}; `;
+                    }
+                    if (styleVal.color) {
+                        css += `color: ${styleVal.color}; `;
+                    }
+                    if (styleVal.fontWeight || styleVal['font-weight']) {
+                        css += `font-weight: ${styleVal.fontWeight || styleVal['font-weight']}; `;
+                    }
+                    if (styleVal.fontSize || styleVal['font-size']) {
+                        css += `font-size: ${styleVal.fontSize || styleVal['font-size']}; `;
+                    }
+                    if (styleVal.textAlign || styleVal['text-align']) {
+                        css += `text-align: ${styleVal.textAlign || styleVal['text-align']}; `;
+                    }
+                    return css;
+                }
+            }
+        } catch (e) {
+            console.error("Error parsing cell-styles attribute:", e);
+        }
+        return '';
     }
 
     parseHeaderStructure(captionsInput, numCols) {
@@ -312,6 +409,23 @@ class DhGridElement extends HTMLElement {
                     outline: 2px solid #38bdf8;
                     outline-offset: -2px;
                 }
+                .grid-cell.grid-cell-readonly {
+                    background-color: rgba(241, 245, 249, 0.7);
+                    color: #64748b;
+                    cursor: not-allowed;
+                }
+                .grid-cell.grid-cell-readonly:hover {
+                    background-color: rgba(226, 232, 240, 0.85);
+                    outline: 1px solid #cbd5e1;
+                }
+                @keyframes cellShake {
+                    0%, 100% { transform: translateX(0); }
+                    20%, 60% { transform: translateX(-4px); }
+                    40%, 80% { transform: translateX(4px); }
+                }
+                .cell-locked-shake {
+                    animation: cellShake 0.35s ease;
+                }
                 .cell-overlay {
                     position: absolute;
                     background: #ffffff;
@@ -356,7 +470,11 @@ class DhGridElement extends HTMLElement {
                                 <tr>
                                     ${Array.from({ length: cols }, (_, c) => {
                                         const val = (data[r] && data[r][c] !== undefined) ? data[r][c] : '';
-                                        return `<td class="grid-cell" data-row="${r}" data-col="${c}">${val}</td>`;
+                                        const customStyle = this.getCellStyle(r, c);
+                                        const isReadOnly = this.isCellReadOnly(r, c);
+                                        const readOnlyClass = isReadOnly ? ' grid-cell-readonly' : '';
+                                        const readOnlyAttr = isReadOnly ? ' data-readonly="true"' : '';
+                                        return `<td class="grid-cell${readOnlyClass}"${readOnlyAttr} style="${customStyle}" data-row="${r}" data-col="${c}">${val}</td>`;
                                     }).join('')}
                                 </tr>
                             `;
@@ -390,6 +508,12 @@ class DhGridElement extends HTMLElement {
     }
 
     openEditor(cell, row, col) {
+        if (this.isCellReadOnly(row, col)) {
+            cell.classList.add('cell-locked-shake');
+            setTimeout(() => cell.classList.remove('cell-locked-shake'), 350);
+            return;
+        }
+
         this.closeEditor();
 
         const container = this.shadowRoot.getElementById('container');

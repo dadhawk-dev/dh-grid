@@ -1,6 +1,6 @@
 # ⚡ DhGrid — High-Performance Data Grid Component for Jakarta Faces 4.0 & W3C Web Components
 
-[![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg?style=for-the-badge)](releases/1.0.0-alpha.md)
+[![Version](https://img.shields.io/badge/version-1.0.0--beta-blue.svg?style=for-the-badge)](releases/1.0.0-beta.md)
 [![Jakarta Faces](https://img.shields.io/badge/Jakarta%20Faces-4.0-orange.svg?style=for-the-badge)](https://jakarta.ee/specifications/faces/4.0/)
 [![W3C Web Component](https://img.shields.io/badge/Web%20Component-W3C%20Standard-purple.svg?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Web_components)
 [![License](https://img.shields.io/badge/License-GNU_LGPL_v3.0-blue.svg?style=for-the-badge)](LICENSE)
@@ -9,7 +9,7 @@
 
 **DhGrid** is an open-source, lightweight, ultra-fast, zero-dependency data grid component designed for both **Jakarta EE / Jakarta Faces 4.0 (JSF)** applications and pure **W3C Web Components (`<dh-grid-element>`)**.
 
-It features intuitive inline editing, custom Web Component editor widgets (`<status-selector>`, `<rating-editor>`, `<priority-badge-editor>`), real-time reactive event streams, dynamic matrix expansion, and **Composite Parent-Child Tree Captions** with automatic `colspan` and `rowspan` grid calculation.
+It features intuitive inline editing, custom Web Component editor widgets (`<status-selector>`, `<rating-editor>`, `<priority-badge-editor>`), real-time reactive event streams, dynamic matrix expansion, **Composite Parent-Child Tree Captions**, **Cell ReadOnly Control**, and **Dynamic Cell Styling Strategies**.
 
 [![DhGrid Web Component Showcase Live Demo](assets/demo-preview.png)](https://dadhawk-dev.github.io/dh-grid/)
 
@@ -18,10 +18,11 @@ It features intuitive inline editing, custom Web Component editor widgets (`<sta
 ## 🌟 Key Features & Highlights
 
 - 🌳 **Composite Parent-Child Tree Captions**: Define multi-level hierarchical headers compactly using path notation (`"Sales / H1 / Q1"`, `"Sales / H1 / Q2"`), 2D arrays, or nested tree objects.
+- 🔒 **Cell ReadOnly Control (`readOnly`, `readOnlyCells`)**: Global grid locking or per-cell / per-column read-only rule maps with lock-shake animation feedback.
+- 🎨 **Dynamic Cell Styling Strategy (`cellStyles`)**: Custom background colors, text colors, and font styles per cell, column, or row using shorthand objects or CSS rule strings.
 - 🧩 **Custom Web Component Cell Editors**: Map custom interactive widgets (`<status-selector>`, `<rating-editor>`) directly to grid cells via simple `componentMap` JSON.
 - ⚡ **Zero External JS Dependencies**: Fully encapsulated inside Shadow DOM with native performance, zero external framework locks.
-- ☕ **Native Jakarta Faces 4.0 JSF Integration**: Drop-in `<dh:dhGrid>` Facelets tag library with direct EL expression binding (`#{gridBean.content}`, `#{gridBean.captions}`).
-- 🎨 **Modern Dark/Light Aesthetics**: Stunning modern glassmorphism aesthetic built with CSS design tokens.
+- ☕ **Native Jakarta Faces 4.0 JSF Integration**: Drop-in `<dh:dhGrid>` Facelets tag library with direct EL expression binding (`#{gridBean.content}`, `#{gridBean.readOnlyCells}`, `#{gridBean.cellStyles}`).
 - 📡 **Real-Time Reactive Event System**: Emits composed `cell-change` CustomEvents for instant client-side or server-side reactive sync.
 - 🚀 **Built-in Interactive Live Demo Modal**: Interactive [`▶ RUN Live Example`](https://dadhawk-dev.github.io/dh-grid/) preview modal directly in the documentation.
 
@@ -66,13 +67,19 @@ mvn install:install-file \
   <script src="resources/js/custom-editors.js"></script>
 </head>
 <body>
-  <!-- Embedded Web Component -->
-  <dh-grid-element id="myGrid" rows="5" cols="5"></dh-grid-element>
+  <!-- 1. Embedded Web Component (Declarative HTML Attributes) -->
+  <dh-grid-element id="myGrid"
+                   rows="5"
+                   cols="5"
+                   readonly="false"
+                   readonly-cells='{"r1_c0": true, "r2_c0": true, "r3_c0": true, "r4_c0": true}'
+                   cell-styles='{"r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;", "r4_c3": "background-color: rgba(34, 197, 94, 0.25); color: #166534; font-weight: 800;"}'>
+  </dh-grid-element>
 
   <script>
     const grid = document.getElementById('myGrid');
 
-    // 1. Define Composite Parent-Child Tree Captions
+    // 2. Define Composite Parent-Child Tree Captions
     grid.setAttribute('captions', JSON.stringify([
       "Financial Performance / H1 (Q1-Q2) / Revenue ($)",
       "Financial Performance / H1 (Q1-Q2) / Expenses ($)",
@@ -81,7 +88,7 @@ mvn install:install-file \
       "Overall Status"
     ]));
 
-    // 2. Populate Grid Content Matrix
+    // 3. Populate Grid Content Matrix
     grid.setAttribute('content', JSON.stringify([
       ["Quarter", "Revenue ($)", "Expenses ($)", "Margin (%)", "Performance"],
       ["Q1 2026", "$120,000", "$85,000", "29.1%", "Completed"],
@@ -90,7 +97,7 @@ mvn install:install-file \
       ["Q4 2026", "$210,000", "$110,000", "47.6%", "In Review"]
     ]));
 
-    // 3. Map Custom Web Component Editors to Specific Cells
+    // 4. Map Custom Web Component Editors to Specific Cells
     grid.setAttribute('components', JSON.stringify({
       "r1_c4": "status-selector",
       "r2_c4": "status-selector",
@@ -98,7 +105,16 @@ mvn install:install-file \
       "r4_c4": "status-selector"
     }));
 
-    // 4. Listen for Cell Change Events
+    // 5. Configure Cell ReadOnly Rules & Custom Styling (Imperative JS Property API)
+    grid.readOnlyCells = { "r1_c0": true, "r2_c0": true, "r3_c0": true, "r4_c0": true };
+    grid.cellStyles = {
+      "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+      "r2_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+      "r3_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+      "r4_c3": "background-color: rgba(34, 197, 94, 0.25); color: #166534; font-weight: 800;"
+    };
+
+    // 6. Listen for Cell Change Events
     grid.addEventListener('cell-change', (e) => {
       console.log(`Row ${e.detail.row}, Col ${e.detail.col} updated -> "${e.detail.value}"`);
     });
@@ -128,7 +144,9 @@ mvn install:install-file \
                    colCount="#{gridBean.colCount}"
                    content="#{gridBean.content}"
                    captions="#{gridBean.captions}"
-                   componentMap="#{gridBean.componentMap}" />
+                   componentMap="#{gridBean.componentMap}"
+                   readOnlyCells="#{gridBean.readOnlyCells}"
+                   cellStyles="#{gridBean.cellStyles}" />
     </h:form>
 </h:body>
 </html>
@@ -154,6 +172,8 @@ public class GridBean implements Serializable {
     private String[][] content;
     private Object captions;
     private Map<String, String> componentMap;
+    private Object readOnlyCells;
+    private Object cellStyles;
 
     @PostConstruct
     public void init() {
@@ -173,6 +193,11 @@ public class GridBean implements Serializable {
             "r1_c4", "status-selector",
             "r2_c4", "status-selector"
         );
+        this.readOnlyCells = Map.of("r1_c0", true, "r2_c0", true);
+        this.cellStyles = Map.of(
+            "r1_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+            "r2_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;"
+        );
     }
 
     public Integer getRowCount() { return rowCount; }
@@ -180,7 +205,46 @@ public class GridBean implements Serializable {
     public String[][] getContent() { return content; }
     public Object getCaptions() { return captions; }
     public Map<String, String> getComponentMap() { return componentMap; }
+    public Object getReadOnlyCells() { return readOnlyCells; }
+    public Object getCellStyles() { return cellStyles; }
 }
+```
+
+---
+
+### 🔀 Minimal Feature Usage Snippets (`v1.0.0-beta`)
+
+#### 🔒 1. Cell ReadOnly Control (`readOnly`, `readOnlyCells`)
+Lock all cells globally (`readOnly="true"`) or configure per-cell/per-column read-only rule maps:
+
+```html
+<!-- W3C Web Component (Pure HTML5) -->
+<dh-grid-element id="myGrid"
+                 readonly-cells='{"r1_c0": true, "r2_c0": true, "c0": true}'>
+</dh-grid-element>
+```
+
+```xml
+<!-- Jakarta Faces 4.0 Taglib (Facelets View) -->
+<dh:dhGrid id="myGrid"
+           readOnly="false"
+           readOnlyCells="#{gridBean.readOnlyCells}" />
+```
+
+#### 🎨 2. Dynamic Cell Styling Strategy (`cellStyles`)
+Apply custom background colors, text colors, and font styles per cell, column, or row using inline CSS strings or JSON objects:
+
+```html
+<!-- W3C Web Component (Pure HTML5) -->
+<dh-grid-element id="myGrid"
+                 cell-styles='{"r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;", "c0": "font-weight: 600;"}'>
+</dh-grid-element>
+```
+
+```xml
+<!-- Jakarta Faces 4.0 Taglib (Facelets View) -->
+<dh:dhGrid id="myGrid"
+           cellStyles="#{gridBean.cellStyles}" />
 ```
 
 ---
@@ -204,6 +268,10 @@ Access local endpoints:
 
 ## 🏷️ Release History & Tags
 
+- **`v1.0.0-beta`** ([Release Notes](releases/1.0.0-beta.md)):
+  - Added **Cell ReadOnly Strategy** (`readOnly`, `readOnlyCells`) with lock-shake animation feedback.
+  - Added **Dynamic Cell Styling Strategy** (`cellStyles`) supporting per-cell/column background, text colors, and font styles.
+  - Expanded Jakarta Faces 4.0 `<dh:dhGrid>` taglib attributes with full EL binding support.
 - **`v1.0.0-alpha`** ([Release Notes](releases/1.0.0-alpha.md)):
   - Initial open-source release under GNU LGPL v3.0 by Telman Shahbazov / Dadhawk.
   - Dual-mode architecture: Jakarta Faces 4.0 `<dh:dhGrid>` taglib component & native W3C `<dh-grid-element>`.

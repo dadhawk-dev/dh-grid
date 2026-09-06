@@ -30,7 +30,7 @@ public class DhGridComponent extends UIComponentBase {
     public static final String COMPONENT_TYPE = "com.dadhawk.faces.component.DhGridComponent";
 
     enum PropertyKeys {
-        rowCount, colCount, content, componentMap, captions
+        rowCount, colCount, content, componentMap, captions, readOnly, readOnlyCells, cellStyles
     }
 
     @Override
@@ -79,6 +79,30 @@ public class DhGridComponent extends UIComponentBase {
         getStateHelper().put(PropertyKeys.componentMap, componentMap);
     }
 
+    public Boolean isReadOnly() {
+        return (Boolean) getStateHelper().eval(PropertyKeys.readOnly, false);
+    }
+
+    public void setReadOnly(Boolean readOnly) {
+        getStateHelper().put(PropertyKeys.readOnly, readOnly);
+    }
+
+    public Object getReadOnlyCells() {
+        return getStateHelper().eval(PropertyKeys.readOnlyCells, null);
+    }
+
+    public void setReadOnlyCells(Object readOnlyCells) {
+        getStateHelper().put(PropertyKeys.readOnlyCells, readOnlyCells);
+    }
+
+    public Object getCellStyles() {
+        return getStateHelper().eval(PropertyKeys.cellStyles, null);
+    }
+
+    public void setCellStyles(Object cellStyles) {
+        getStateHelper().put(PropertyKeys.cellStyles, cellStyles);
+    }
+
     @Override
     public void encodeBegin(FacesContext context) throws IOException {
         if (!isRendered()) {
@@ -96,6 +120,15 @@ public class DhGridComponent extends UIComponentBase {
             writer.writeAttribute("captions", toJson(getCaptions()), "captions");
         }
         writer.writeAttribute("components", toJson(getComponentMap()), "components");
+        if (isReadOnly() != null && isReadOnly()) {
+            writer.writeAttribute("readonly", "true", "readOnly");
+        }
+        if (getReadOnlyCells() != null) {
+            writer.writeAttribute("readonly-cells", toJson(getReadOnlyCells()), "readOnlyCells");
+        }
+        if (getCellStyles() != null) {
+            writer.writeAttribute("cell-styles", toJson(getCellStyles()), "cellStyles");
+        }
     }
 
     @Override

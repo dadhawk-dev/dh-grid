@@ -411,7 +411,7 @@
   &lt;script src="resources/dadhawk/js/dh-grid.js"&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;dh-grid-element id="myGrid" rows="5" cols="5"&gt;&lt;/dh-grid-element&gt;
+  &lt;dh-grid-element id="myGrid" rows="5" cols="5" readonly-cells='{"r1_c0": true}' cell-styles='{"r1_c3": "color:#4ade80;font-weight:700;"}'&gt;&lt;/dh-grid-element&gt;
 
   &lt;script&gt;
     const grid = document.getElementById('myGrid');
@@ -427,6 +427,9 @@
     grid.setAttribute('components', JSON.stringify({
       "r1_c4": "status-selector"
     }));
+    // Cell ReadOnly Rules &amp; Custom Cell Styling API
+    grid.readOnlyCells = { "r1_c0": true };
+    grid.cellStyles = { "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;" };
     grid.addEventListener('cell-change', (e) =&gt; {
       console.log(e.detail.row, e.detail.col, e.detail.value);
     });
@@ -451,7 +454,9 @@
              colCount="#{gridBean.colCount}"
              content="#{gridBean.content}"
              captions="#{gridBean.captions}"
-             componentMap="#{gridBean.componentMap}" /&gt;
+             componentMap="#{gridBean.componentMap}"
+             readOnlyCells="#{gridBean.readOnlyCells}"
+             cellStyles="#{gridBean.cellStyles}" /&gt;
 &lt;/h:body&gt;
 &lt;/html&gt;
 
@@ -460,7 +465,9 @@ String[] captions = {
   "Sales / H1 / Q1", "Sales / H1 / Q2",
   "Sales / H2 / Q3", "Sales / H2 / Q4", "Status"
 };
-Map&lt;String, String&gt; componentMap = Map.of("r1_c4", "status-selector");</div>
+Map&lt;String, String&gt; componentMap = Map.of("r1_c4", "status-selector");
+Object readOnlyCells = Map.of("r1_c0", true);
+Object cellStyles = Map.of("r1_c3", "color:#4ade80;font-weight:700;");</div>
                 </div>
             </div>
         </div>
@@ -603,6 +610,15 @@ cd dh-grid
                 "r3_c4": "status-selector",
                 "r4_c4": "status-selector"
             }));
+            modalGrid.setAttribute('readonly-cells', JSON.stringify({
+                "r1_c0": true, "r2_c0": true, "r3_c0": true, "r4_c0": true
+            }));
+            modalGrid.setAttribute('cell-styles', JSON.stringify({
+                "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+                "r2_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+                "r3_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+                "r4_c3": "background-color: rgba(34, 197, 94, 0.25); color: #166534; font-weight: 800;"
+            }));
 
             if (!modalGrid.dataset.listenerAttached) {
                 modalGrid.addEventListener('cell-change', (e) => {
@@ -656,6 +672,18 @@ cd dh-grid
                     "r2_c4": "status-selector",
                     "r3_c4": "status-selector",
                     "r4_c4": "status-selector"
+                },
+                readonlyCells: {
+                    "r1_c0": true,
+                    "r2_c0": true,
+                    "r3_c0": true,
+                    "r4_c0": true
+                },
+                cellStyles: {
+                    "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;",
+                    "r2_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;",
+                    "r3_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;",
+                    "r4_c3": "background-color: rgba(34, 197, 94, 0.25); color: #4ade80; font-weight: 800;"
                 }
             },
             taskboard: {
@@ -678,6 +706,18 @@ cd dh-grid
                     "r2_c4": "status-selector",
                     "r3_c4": "status-selector",
                     "r4_c4": "status-selector"
+                },
+                readonlyCells: {
+                    "r1_c0": true,
+                    "r2_c0": true,
+                    "r3_c0": true,
+                    "r4_c0": true
+                },
+                cellStyles: {
+                    "r1_c3": "background-color: rgba(239, 68, 68, 0.15); color: #f87171; font-weight: 700;",
+                    "r2_c3": "background-color: rgba(234, 179, 8, 0.15); color: #facc15; font-weight: 700;",
+                    "r3_c3": "background-color: rgba(239, 68, 68, 0.15); color: #f87171; font-weight: 700;",
+                    "r4_c3": "background-color: rgba(148, 163, 184, 0.15); color: #cbd5e1; font-weight: 700;"
                 }
             },
             catalog: {
@@ -700,6 +740,18 @@ cd dh-grid
                     "r2_c4": "status-selector",
                     "r3_c4": "status-selector",
                     "r4_c4": "status-selector"
+                },
+                readonlyCells: {
+                    "r1_c0": true,
+                    "r2_c0": true,
+                    "r3_c0": true,
+                    "r4_c0": true
+                },
+                cellStyles: {
+                    "r1_c3": "color: #fbbf24; font-weight: 700;",
+                    "r2_c3": "color: #fbbf24; font-weight: 700;",
+                    "r3_c3": "color: #fbbf24; font-weight: 700;",
+                    "r4_c3": "color: #fbbf24; font-weight: 700;"
                 }
             }
         };
@@ -717,8 +769,14 @@ cd dh-grid
             const contentAttr = grid.getAttribute('content') || '[]';
             const compAttr = grid.getAttribute('components') || '{}';
             const captAttr = grid.getAttribute('captions') || '';
+            const roAttr = grid.getAttribute('readonly-cells') || '';
+            const styleAttr = grid.getAttribute('cell-styles') || '';
+
             const captStr = captAttr ? `\n  captions='${captAttr}'` : '';
-            codeSnippet.innerText = `<dh-grid-element rows="${r}" cols="${c}"${captStr}\n  content='${contentAttr}'\n  components='${compAttr}'>\n</dh-grid-element>`;
+            const roStr = roAttr ? `\n  readonly-cells='${roAttr}'` : '';
+            const styleStr = styleAttr ? `\n  cell-styles='${styleAttr}'` : '';
+
+            codeSnippet.innerText = `<dh-grid-element rows="${r}" cols="${c}"${captStr}\n  content='${contentAttr}'\n  components='${compAttr}'${roStr}${styleStr}>\n</dh-grid-element>`;
         }
 
         function updateGrid(ds) {
@@ -730,6 +788,16 @@ cd dh-grid
                 grid.setAttribute('captions', JSON.stringify(ds.captions));
             } else {
                 grid.removeAttribute('captions');
+            }
+            if (ds.readonlyCells) {
+                grid.setAttribute('readonly-cells', JSON.stringify(ds.readonlyCells));
+            } else {
+                grid.removeAttribute('readonly-cells');
+            }
+            if (ds.cellStyles) {
+                grid.setAttribute('cell-styles', JSON.stringify(ds.cellStyles));
+            } else {
+                grid.removeAttribute('cell-styles');
             }
             setTimeout(syncUI, 50);
         }

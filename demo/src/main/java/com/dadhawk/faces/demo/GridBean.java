@@ -23,6 +23,8 @@ public class GridBean implements Serializable {
     private String[][] content;
     private Object captions;
     private Map<String, String> componentMap = new HashMap<>();
+    private Object readOnlyCells;
+    private Object cellStyles;
     private String selectedPreset = "financial";
 
     @PostConstruct
@@ -54,6 +56,14 @@ public class GridBean implements Serializable {
         this.componentMap.put("r2_c4", "status-selector");
         this.componentMap.put("r3_c4", "status-selector");
         this.componentMap.put("r4_c4", "status-selector");
+
+        this.readOnlyCells = Map.of("r1_c0", true, "r2_c0", true, "r3_c0", true, "r4_c0", true);
+        this.cellStyles = Map.of(
+            "r1_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+            "r2_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+            "r3_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
+            "r4_c3", "background-color: rgba(34, 197, 94, 0.25); color: #166534; font-weight: 800;"
+        );
     }
 
     public void loadTaskBoardPreset() {
@@ -189,6 +199,22 @@ public class GridBean implements Serializable {
 
     public void setComponentMap(Map<String, String> componentMap) {
         this.componentMap = componentMap;
+    }
+
+    public Object getReadOnlyCells() {
+        return readOnlyCells;
+    }
+
+    public void setReadOnlyCells(Object readOnlyCells) {
+        this.readOnlyCells = readOnlyCells;
+    }
+
+    public Object getCellStyles() {
+        return cellStyles;
+    }
+
+    public void setCellStyles(Object cellStyles) {
+        this.cellStyles = cellStyles;
     }
 
     public String getSelectedPreset() {

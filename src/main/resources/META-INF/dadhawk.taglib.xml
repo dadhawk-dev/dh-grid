@@ -31,6 +31,26 @@
             <type>java.util.Map</type>
             <description>Map of coordinate keys (rX_cY) to custom Web Component tag names</description>
         </attribute>
+        <attribute>
+            <name>captions</name>
+            <type>java.lang.Object</type>
+            <description>Column captions (String[], List, path notation, or 2D array)</description>
+        </attribute>
+        <attribute>
+            <name>readOnly</name>
+            <type>java.lang.Boolean</type>
+            <description>Global read-only flag for grid matrix</description>
+        </attribute>
+        <attribute>
+            <name>readOnlyCells</name>
+            <type>java.lang.Object</type>
+            <description>Per-cell or per-column read-only rule map or list (e.g. Map or JSON string)</description>
+        </attribute>
+        <attribute>
+            <name>cellStyles</name>
+            <type>java.lang.Object</type>
+            <description>Per-cell, per-column, or per-row CSS style rule map or JSON string</description>
+        </attribute>
     </tag>
 
 </facelet-taglib>
