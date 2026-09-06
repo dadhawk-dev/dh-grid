@@ -348,22 +348,7 @@ class DhGridElement extends HTMLElement {
         const data = this.getData();
         const captions = this.getCaptions();
         const hasExplicitCaptions = this.hasAttribute('captions');
-
-        let startRow = 0;
-        if (Array.isArray(data) && data.length > 0) {
-            if (!hasExplicitCaptions) {
-                startRow = 1;
-            } else {
-                const firstCell = String(data[0][0] || "");
-                const headerKeywords = ["quarter", "task name", "sku code", "id", "header", "name"];
-                const isHeaderTitle = headerKeywords.some(k => firstCell.toLowerCase().includes(k));
-                if (isHeaderTitle || data.length >= 5) {
-                    startRow = 1;
-                } else {
-                    startRow = 0;
-                }
-            }
-        }
+        const startRow = hasExplicitCaptions ? 0 : 1;
 
         const endRow = Math.max(this.rows, Array.isArray(data) ? data.length : 0);
         const headerStructure = this.parseHeaderStructure(captions, cols);
@@ -773,13 +758,7 @@ class DhGridElement extends HTMLElement {
     notifyChange(row, col, value) {
         try {
             const data = this.getData();
-            const hasExplicitCaptions = this.hasAttribute('captions');
-            const targetRow = hasExplicitCaptions ? row : (row + 1);
-
-            if (data[targetRow]) {
-                data[targetRow][col] = value;
-                this.setAttribute('content', JSON.stringify(data));
-            } else if (data[row]) {
+            if (data && data[row]) {
                 data[row][col] = value;
                 this.setAttribute('content', JSON.stringify(data));
             }
