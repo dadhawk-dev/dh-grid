@@ -579,8 +579,13 @@ class DhGridElement extends HTMLElement {
 
                 if (key === 'ArrowUp') {
                     this.focusCell(currR - 1, currC, true);
-                } else if (key === 'ArrowDown' || key === 'Enter') {
+                } else if (key === 'ArrowDown') {
                     this.focusCell(currR + 1, currC, true);
+                } else if (key === 'Enter') {
+                    const targetCell = this.getCellElement(currR, currC);
+                    if (targetCell) {
+                        this.openEditor(targetCell, currR, currC);
+                    }
                 } else if (key === 'ArrowLeft') {
                     this.focusCell(currR, currC - 1, true);
                 } else if (key === 'ArrowRight') {
