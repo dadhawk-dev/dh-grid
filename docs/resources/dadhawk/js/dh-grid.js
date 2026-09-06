@@ -347,8 +347,7 @@ class DhGridElement extends HTMLElement {
         const cols = this.cols;
         const data = this.getData();
         const captions = this.getCaptions();
-        const hasExplicitCaptions = this.hasAttribute('captions');
-        const startRow = hasExplicitCaptions ? 0 : 1;
+        const startRow = 1;
 
         const endRow = Math.max(this.rows, Array.isArray(data) ? data.length : 0);
         const headerStructure = this.parseHeaderStructure(captions, cols);
@@ -514,8 +513,7 @@ class DhGridElement extends HTMLElement {
         `;
 
         this.attachEvents();
-        const hasExplicitCaptions = this.hasAttribute('captions');
-        const minRow = hasExplicitCaptions ? 0 : 1;
+        const minRow = 1;
         if (this.focusedRow === undefined || this.focusedRow < minRow) {
             this.focusedRow = minRow;
         }
@@ -589,8 +587,7 @@ class DhGridElement extends HTMLElement {
 
     focusCell(row, col, forceFocus = true) {
         const data = this.getData();
-        const hasExplicitCaptions = this.hasAttribute('captions');
-        const minRow = hasExplicitCaptions ? 0 : 1;
+        const minRow = 1;
         const maxRow = Math.max(minRow, data.length - 1);
         const maxCol = Math.max(0, this.cols - 1);
 
@@ -618,8 +615,7 @@ class DhGridElement extends HTMLElement {
 
     getNextTabPosition(direction, fromRow, fromCol) {
         const data = this.getData();
-        const hasExplicitCaptions = this.hasAttribute('captions');
-        const minRow = hasExplicitCaptions ? 0 : 1;
+        const minRow = 1;
         const maxRow = Math.max(minRow, data.length - 1);
         const totalCols = this.cols;
 
