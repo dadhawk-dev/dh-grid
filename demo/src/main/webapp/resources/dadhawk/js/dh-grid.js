@@ -717,6 +717,7 @@ class DhGridElement extends HTMLElement {
 
             this.closeEditor();
             this.notifyChange(row, col, newVal);
+            this.focusCell(nextR, nextC, true);
         };
 
         if (customCompTag && customElements.get(customCompTag)) {
