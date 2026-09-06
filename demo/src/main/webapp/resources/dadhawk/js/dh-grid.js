@@ -525,10 +525,10 @@ class DhGridElement extends HTMLElement {
     }
 
     attachEvents() {
-        const table = this.shadowRoot.querySelector('.grid-table');
-        if (!table) return;
+        if (this._eventsAttached) return;
+        this._eventsAttached = true;
 
-        table.addEventListener('click', (e) => {
+        this.shadowRoot.addEventListener('click', (e) => {
             const cell = e.target.closest('.grid-cell');
             if (cell && cell.dataset.row !== undefined && cell.dataset.col !== undefined) {
                 const r = parseInt(cell.dataset.row, 10);
@@ -537,7 +537,7 @@ class DhGridElement extends HTMLElement {
             }
         });
 
-        table.addEventListener('focusin', (e) => {
+        this.shadowRoot.addEventListener('focusin', (e) => {
             const cell = e.target.closest('.grid-cell');
             if (cell && cell.dataset.row !== undefined && cell.dataset.col !== undefined) {
                 const r = parseInt(cell.dataset.row, 10);
@@ -549,7 +549,7 @@ class DhGridElement extends HTMLElement {
             }
         });
 
-        table.addEventListener('dblclick', (e) => {
+        this.shadowRoot.addEventListener('dblclick', (e) => {
             const cell = e.target.closest('.grid-cell');
             if (cell && cell.dataset.row !== undefined && cell.dataset.col !== undefined) {
                 const r = parseInt(cell.dataset.row, 10);
@@ -561,38 +561,34 @@ class DhGridElement extends HTMLElement {
         this.shadowRoot.addEventListener('keydown', (e) => {
             if (this.activeEditor) return;
 
-            // Sync focused position with currently active element in DOM if available
-            const activeEl = this.shadowRoot.activeElement || document.activeElement;
-            if (activeEl && activeEl.classList && activeEl.classList.contains('grid-cell')) {
-                if (activeEl.dataset.row !== undefined && activeEl.dataset.col !== undefined) {
-                    this.focusedRow = parseInt(activeEl.dataset.row, 10);
-                    this.focusedCol = parseInt(activeEl.dataset.col, 10);
-                }
+            const cell = e.target.closest('.grid-cell');
+            let currR = this.focusedRow;
+            let currC = this.focusedCol;
+
+            if (cell && cell.dataset.row !== undefined && cell.dataset.col !== undefined) {
+                currR = parseInt(cell.dataset.row, 10);
+                currC = parseInt(cell.dataset.col, 10);
+                this.focusedRow = currR;
+                this.focusedCol = currC;
             }
 
             const key = e.key;
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape'].includes(key)) {
-                const currR = this.focusedRow;
-                const currC = this.focusedCol;
+                e.preventDefault();
+                e.stopPropagation();
 
                 if (key === 'ArrowUp') {
-                    e.preventDefault();
                     this.focusCell(currR - 1, currC, true);
                 } else if (key === 'ArrowDown' || key === 'Enter') {
-                    e.preventDefault();
                     this.focusCell(currR + 1, currC, true);
                 } else if (key === 'ArrowLeft') {
-                    e.preventDefault();
                     this.focusCell(currR, currC - 1, true);
                 } else if (key === 'ArrowRight') {
-                    e.preventDefault();
                     this.focusCell(currR, currC + 1, true);
                 } else if (key === 'Tab') {
-                    e.preventDefault();
                     const nextPos = this.getNextTabPosition(e.shiftKey ? -1 : 1, currR, currC);
                     this.focusCell(nextPos.r, nextPos.c, true);
                 } else if (key === 'Escape') {
-                    e.preventDefault();
                     this.focusCell(currR, currC, true);
                 }
             }
