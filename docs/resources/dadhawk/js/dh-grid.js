@@ -596,6 +596,13 @@ class DhGridElement extends HTMLElement {
                 } else if (key === 'Escape') {
                     this.focusCell(currR, currC, true);
                 }
+            } else if (key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                const targetCell = this.getCellElement(currR, currC);
+                if (targetCell && !this.isCellReadOnly(currR, currC)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.openEditor(targetCell, currR, currC, key);
+                }
             }
         });
 
@@ -671,7 +678,7 @@ class DhGridElement extends HTMLElement {
         return { r, c };
     }
 
-    openEditor(cell, row, col) {
+    openEditor(cell, row, col, initialChar = null) {
         this.focusedRow = row;
         this.focusedCol = col;
 
@@ -722,7 +729,7 @@ class DhGridElement extends HTMLElement {
 
         if (customCompTag && customElements.get(customCompTag)) {
             const customEl = document.createElement(customCompTag);
-            customEl.setAttribute('value', cell.innerText.trim());
+            customEl.setAttribute('value', initialChar !== null ? initialChar : cell.innerText.trim());
             customEl.setAttribute('row', row);
             customEl.setAttribute('col', col);
 
@@ -757,7 +764,7 @@ class DhGridElement extends HTMLElement {
         } else {
             const input = document.createElement('input');
             input.type = 'text';
-            input.value = cell.innerText.trim();
+            input.value = initialChar !== null ? initialChar : cell.innerText.trim();
 
             input.addEventListener('keydown', (ev) => {
                 if (ev.key === 'Enter') {
@@ -779,7 +786,11 @@ class DhGridElement extends HTMLElement {
             overlay.appendChild(input);
             setTimeout(() => {
                 input.focus();
-                input.select();
+                if (initialChar !== null) {
+                    input.setSelectionRange(initialChar.length, initialChar.length);
+                } else {
+                    input.select();
+                }
             }, 20);
         }
 
