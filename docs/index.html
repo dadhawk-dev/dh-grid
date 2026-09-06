@@ -362,22 +362,22 @@
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
                 <div>
-                    <div style="font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px;">
-                        1. CLI Command to Install JAR to Local Repository (~/.m2):
+                    <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">
+                        1. Add GitHub Maven Repository to pom.xml:
                     </div>
-                    <div class="code-box" style="margin-top: 0; color: #34d399; font-size: 12px;">mvn install:install-file \
-  -Dfile=dhgrid-component-1.0.0.jar \
-  -DgroupId=com.dadhawk.faces \
-  -DartifactId=dhgrid-component \
-  -Dversion=1.0.0 \
-  -Dpackaging=jar</div>
+                    <div class="code-box" style="margin-top: 0; color: #38bdf8; font-size: 12px;">&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;dadhawk-dhgrid-repo&lt;/id&gt;
+        &lt;url&gt;https://dadhawk-dev.github.io/dh-grid/maven-repo/&lt;/url&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;</div>
                 </div>
 
                 <div>
-                    <div style="font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px;">
-                        2. Add Maven Dependency to your pom.xml:
+                    <div style="font-size: 13px; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">
+                        2. Add Maven Dependency to pom.xml:
                     </div>
                     <div class="code-box" style="margin-top: 0; color: #fbbf24; font-size: 12px;">&lt;dependency&gt;
     &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;

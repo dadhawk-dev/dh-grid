@@ -33,21 +33,35 @@ It features intuitive inline editing, custom Web Component editor widgets (`<sta
 
 ## 📦 Quick Installation & Setup
 
-> 📦 **Direct Download**: **[Download Maven JAR v1.0.0 (`dhgrid-component-1.0.0.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0.jar)**
+### 🅰️ Method 1: GitHub Pages Maven Repository (Recommended)
 
-### 1. Maven Dependency (`pom.xml`)
-
-Add the following dependency to your Jakarta EE project's `pom.xml`:
+Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatically download `dhgrid-component-1.0.0.jar` (no manual CLI commands required!):
 
 ```xml
-<dependency>
-    <groupId>com.dadhawk.faces</groupId>
-    <artifactId>dhgrid-component</artifactId>
-    <version>1.0.0</version>
-</dependency>
+<repositories>
+    <repository>
+        <id>dadhawk-dhgrid-repo</id>
+        <name>DhGrid GitHub Maven Repository</name>
+        <url>https://dadhawk-dev.github.io/dh-grid/maven-repo/</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>com.dadhawk.faces</groupId>
+        <artifactId>dhgrid-component</artifactId>
+        <version>1.0.0</version> <!-- or 1.0.0-beta -->
+    </dependency>
+</dependencies>
 ```
 
-### 2. CLI Command to Install JAR to Local Repository (`~/.m2`)
+---
+
+### 🅱️ Method 2: Direct JAR Download & Local Maven Install (`~/.m2`)
+
+> 📦 **Direct Download**: **[Download Maven JAR v1.0.0 (`dhgrid-component-1.0.0.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0.jar)**
+
+If you downloaded the JAR manually, install it to your local Maven repository:
 
 ```bash
 mvn install:install-file \
