@@ -73,7 +73,7 @@ mvn install:install-file \
                    cols="5"
                    readonly="false"
                    readonly-cells='{"r1_c0": true}'
-                   cell-styles='{"r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;", "r4_c3": "background-color: rgba(34, 197, 94, 0.25); color: #166534; font-weight: 800;"}'>
+                   cell-styles='{"r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;"}'>
   </dh-grid-element>
 
   <script>
@@ -108,11 +108,9 @@ mvn install:install-file \
     // 5. Configure Cell ReadOnly Rules & Custom Styling (Imperative JS Property API)
     // Note: {"r1_c0": true} locks ONLY Row 1 Col 0. Use {"c0": true} to lock column 0 entirely.
     grid.readOnlyCells = { "r1_c0": true };
+    // Note: {"r1_c3": "..."} styles ONLY Row 1 Col 3. Use {"c3": "..."} to style column 3 entirely.
     grid.cellStyles = {
-      "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
-      "r2_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
-      "r3_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
-      "r4_c3": "background-color: rgba(34, 197, 94, 0.25); color: #166534; font-weight: 800;"
+      "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;"
     };
 
     // 6. Listen for Cell Change Events
