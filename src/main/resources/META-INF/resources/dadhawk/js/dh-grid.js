@@ -361,12 +361,29 @@ class DhGridElement extends HTMLElement {
                     font-family: var(--dh-font-family, var(--font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif));
                     font-size: 14px;
                     width: 100%;
+
+                    /* Built-in high-contrast default theme tokens */
+                    --dh-table-bg: var(--dh-bg, #ffffff);
+                    --dh-header-bg: var(--dh-head-bg, #f1f5f9);
+                    --dh-header-color: var(--dh-head-color, #0f172a);
+                    --dh-cell-color: var(--dh-text-color, #1e293b);
+                    --dh-border-color: var(--dh-grid-border, #cbd5e1);
+                    --dh-hover-bg: #e0f2fe;
+                    --dh-hover-outline: #38bdf8;
+                    --dh-readonly-bg: rgba(241, 245, 249, 0.8);
+                    --dh-readonly-color: #64748b;
+                    --dh-focus-ring: #2563eb;
+                }
+
+                /* Scoped PrimeThemes CSS variables compatibility mode */
+                :host([css-compatible="primethemes"]),
+                :host([css-compatible="true"]) {
                     --dh-table-bg: var(--surface-a, var(--surface-card, #ffffff));
                     --dh-header-bg: var(--surface-b, var(--surface-section, var(--surface-50, #f1f5f9)));
                     --dh-header-color: var(--text-color, #0f172a);
                     --dh-cell-color: var(--text-color, #1e293b);
                     --dh-border-color: var(--surface-border, var(--surface-d, #cbd5e1));
-                    --dh-hover-bg: var(--primary-50, var(--surface-hover, #e0f2fe));
+                    --dh-hover-bg: var(--surface-hover, var(--primary-50, #e0f2fe));
                     --dh-hover-outline: var(--primary-color, #38bdf8);
                     --dh-readonly-bg: var(--surface-c, rgba(241, 245, 249, 0.7));
                     --dh-readonly-color: var(--text-color-secondary, #64748b);
