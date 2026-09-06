@@ -354,7 +354,7 @@ class DhGridElement extends HTMLElement {
             }
         }
 
-        const endRow = Array.isArray(data) ? data.length : 0;
+        const endRow = Math.max(this.rows, Array.isArray(data) ? data.length : 0);
         const headerStructure = this.parseHeaderStructure(captions, cols);
 
         this.shadowRoot.innerHTML = `

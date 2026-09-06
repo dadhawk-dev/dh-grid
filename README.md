@@ -72,7 +72,7 @@ mvn install:install-file \
                    rows="5"
                    cols="5"
                    readonly="false"
-                   readonly-cells='{"r1_c0": true, "r2_c0": true, "r3_c0": true, "r4_c0": true}'
+                   readonly-cells='{"r1_c0": true}'
                    cell-styles='{"r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;", "r4_c3": "background-color: rgba(34, 197, 94, 0.25); color: #166534; font-weight: 800;"}'>
   </dh-grid-element>
 
@@ -106,7 +106,8 @@ mvn install:install-file \
     }));
 
     // 5. Configure Cell ReadOnly Rules & Custom Styling (Imperative JS Property API)
-    grid.readOnlyCells = { "r1_c0": true, "r2_c0": true, "r3_c0": true, "r4_c0": true };
+    // Note: {"r1_c0": true} locks ONLY Row 1 Col 0. Use {"c0": true} to lock column 0 entirely.
+    grid.readOnlyCells = { "r1_c0": true };
     grid.cellStyles = {
       "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
       "r2_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
@@ -219,8 +220,9 @@ Lock all cells globally (`readOnly="true"`) or configure per-cell/per-column rea
 
 ```html
 <!-- W3C Web Component (Pure HTML5) -->
+<!-- Lock ONLY Row 1 Col 0 ("r1_c0": true). To lock entire column 0, use ("c0": true) -->
 <dh-grid-element id="myGrid"
-                 readonly-cells='{"r1_c0": true, "r2_c0": true, "c0": true}'>
+                 readonly-cells='{"r1_c0": true}'>
 </dh-grid-element>
 ```
 
