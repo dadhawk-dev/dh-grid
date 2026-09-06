@@ -650,6 +650,25 @@ cd dh-grid
             modal.style.display = 'flex';
         }
 
+        function closeDemoModal() {
+            const modal = document.getElementById('demoModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeDemoModal();
+                closeJsfGuideModal();
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            const demoModal = document.getElementById('demoModal');
+            const jsfGuideModal = document.getElementById('jsfGuideModal');
+            if (e.target === demoModal) closeDemoModal();
+            if (e.target === jsfGuideModal) closeJsfGuideModal();
+        });
+
         function copyCode(elementId, btn) {
             const el = document.getElementById(elementId);
             if (!el) return;
@@ -670,7 +689,7 @@ cd dh-grid
         function runLiveFromCodeBox() {
             openDemoModal();
             const codeEl = document.getElementById('jsCodeBox');
-            const modalGrid = document.getElementById('modalGrid');
+            const modalGrid = document.getElementById('modalDemoGrid');
             if (!codeEl || !modalGrid) return;
             const codeText = codeEl.innerText || codeEl.textContent;
 
