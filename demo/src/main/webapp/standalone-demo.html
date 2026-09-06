@@ -397,15 +397,25 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
                 <!-- Vanilla JS Example -->
                 <div>
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                        <div style="font-size: 14px; font-weight: 700; color: #38bdf8;">
-                            🅰️ Vanilla JavaScript (Pure HTML + JS)
+                <!-- Vanilla JS Example -->
+                <div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                        <div style="font-size: 14px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px;">
+                            <span>🅰️ Vanilla JavaScript (Pure HTML + JS)</span>
+                            <span style="font-size: 11px; font-weight: 600; color: #38bdf8; background: rgba(56, 189, 248, 0.12); padding: 2px 10px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; gap: 4px;">
+                                ✏️ Live Editable
+                            </span>
                         </div>
-                        <button type="button" onclick="openDemoModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
-                            ▶ RUN Live Example
-                        </button>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <button type="button" onclick="copyCode('jsCodeBox', this)" style="background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                                <span>📋 Copy Code</span>
+                            </button>
+                            <button type="button" onclick="runLiveFromCodeBox()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
+                                ▶ RUN Live Test
+                            </button>
+                        </div>
                     </div>
-                    <div class="code-box" style="margin-top: 0; color: #e2e8f0; font-size: 12px;">&lt;!DOCTYPE html&gt;
+                    <div id="jsCodeBox" contenteditable="true" spellcheck="false" class="code-box" style="margin-top: 0; color: #e2e8f0; font-size: 12px; outline: none; border: 1.5px solid rgba(56, 189, 248, 0.25); transition: all 0.2s ease; font-family: 'Fira Code', monospace; white-space: pre; overflow-x: auto; background: rgba(15, 23, 42, 0.9); padding: 14px; border-radius: 8px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);" onfocus="this.style.borderColor='#38bdf8'; this.style.boxShadow='0 0 12px rgba(56,189,248,0.25)';" onblur="this.style.borderColor='rgba(56, 189, 248, 0.25)'; this.style.boxShadow='inset 0 2px 8px rgba(0,0,0,0.4)';">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
   &lt;script src="resources/dadhawk/js/dh-grid.js"&gt;&lt;/script&gt;
@@ -443,10 +453,15 @@
 
                 <!-- JSF 4.0 Example -->
                 <div>
-                    <div style="font-size: 14px; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">
-                        🅱️ Jakarta Faces 4.0 (JSF View + Bean)
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                        <div style="font-size: 14px; font-weight: 700; color: #fbbf24;">
+                            🅱️ Jakarta Faces 4.0 (JSF View + Bean)
+                        </div>
+                        <button type="button" onclick="copyCode('jsfCodeBox', this)" style="background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                            <span>📋 Copy Code</span>
+                        </button>
                     </div>
-                    <div class="code-box" style="margin-top: 0; color: #e2e8f0; font-size: 12px;">&lt;!-- page.xhtml --&gt;
+                    <div id="jsfCodeBox" class="code-box" style="margin-top: 0; color: #e2e8f0; font-size: 12px;">&lt;!-- page.xhtml --&gt;
 &lt;html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:dh="http://dadhawk.com/faces"&gt;
@@ -469,8 +484,9 @@ String[] captions = {
   "Sales / H2 / Q3", "Sales / H2 / Q4", "Status"
 };
 Map&lt;String, String&gt; componentMap = Map.of("r1_c4", "status-selector");
-Object readOnlyCells = Map.of("r1_c0", true);
-Object cellStyles = Map.of("r1_c3", "color:#4ade80;font-weight:700;");</div>
+Object readOnlyCells = Map.of("r1_c0", true, "r3", true);
+Object cellStyles = Map.of("r1_c3", "color:#4ade80;font-weight:700;", "c1", "color:#38bdf8;font-weight:600;");</div>
+                </div>
                 </div>
             </div>
         </div>
@@ -634,9 +650,78 @@ cd dh-grid
             modal.style.display = 'flex';
         }
 
-        function closeDemoModal() {
-            const modal = document.getElementById('demoModal');
-            if (modal) modal.style.display = 'none';
+        function copyCode(elementId, btn) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const textToCopy = el.innerText || el.textContent;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const origHTML = btn.innerHTML;
+                btn.innerHTML = '<span style="color: #4ade80; font-weight: 700;">✓ Copied!</span>';
+                btn.style.borderColor = '#4ade80';
+                setTimeout(() => {
+                    btn.innerHTML = origHTML;
+                    btn.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                }, 2000);
+            }).catch(err => {
+                console.error("Clipboard copy failed:", err);
+            });
+        }
+
+        function runLiveFromCodeBox() {
+            openDemoModal();
+            const codeEl = document.getElementById('jsCodeBox');
+            const modalGrid = document.getElementById('modalGrid');
+            if (!codeEl || !modalGrid) return;
+            const codeText = codeEl.innerText || codeEl.textContent;
+
+            try {
+                // Parse readOnlyCells
+                const roMatch = codeText.match(/readOnlyCells\s*=\s*(\{[\s\S]*?\});/) || codeText.match(/readonly-cells=['"](\{[\s\S]*?\})['"]/);
+                if (roMatch) {
+                    try {
+                        const parsed = (new Function(`return ${roMatch[1]}`))();
+                        modalGrid.setAttribute('readonly-cells', JSON.stringify(parsed));
+                    } catch(e) {}
+                }
+
+                // Parse cellStyles
+                const csMatch = codeText.match(/cellStyles\s*=\s*(\{[\s\S]*?\});/) || codeText.match(/cell-styles=['"](\{[\s\S]*?\})['"]/);
+                if (csMatch) {
+                    try {
+                        const parsed = (new Function(`return ${csMatch[1]}`))();
+                        modalGrid.setAttribute('cell-styles', JSON.stringify(parsed));
+                    } catch(e) {}
+                }
+
+                // Parse content
+                const contentMatch = codeText.match(/setAttribute\(['"]content['"]\s*,\s*JSON\.stringify\((\[[\s\S]*?\])\)\)/);
+                if (contentMatch) {
+                    try {
+                        const parsed = (new Function(`return ${contentMatch[1]}`))();
+                        modalGrid.setAttribute('content', JSON.stringify(parsed));
+                    } catch(e) {}
+                }
+
+                // Parse captions
+                const captionsMatch = codeText.match(/setAttribute\(['"]captions['"]\s*,\s*JSON\.stringify\((\[[\s\S]*?\])\)\)/);
+                if (captionsMatch) {
+                    try {
+                        const parsed = (new Function(`return ${captionsMatch[1]}`))();
+                        modalGrid.setAttribute('captions', JSON.stringify(parsed));
+                    } catch(e) {}
+                }
+
+                // Parse components
+                const compMatch = codeText.match(/setAttribute\(['"]components['"]\s*,\s*JSON\.stringify\((\{[\s\S]*?\})\)\)/);
+                if (compMatch) {
+                    try {
+                        const parsed = (new Function(`return ${compMatch[1]}`))();
+                        modalGrid.setAttribute('components', JSON.stringify(parsed));
+                    } catch(e) {}
+                }
+            } catch (e) {
+                console.warn("Could not parse dynamic code edits, running default modal config:", e);
+            }
         }
         const grid = document.getElementById('demoGrid');
         const eventLog = document.getElementById('eventLog');
