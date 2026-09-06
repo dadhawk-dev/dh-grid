@@ -33,6 +33,8 @@ It features intuitive inline editing, custom Web Component editor widgets (`<sta
 
 ## 📦 Quick Installation & Setup
 
+> 📦 **Direct Download**: **[Download Maven JAR v1.0.0 (`dhgrid-component-1.0.0.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0.jar)**
+
 ### 1. Maven Dependency (`pom.xml`)
 
 Add the following dependency to your Jakarta EE project's `pom.xml`:

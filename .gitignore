@@ -3,6 +3,8 @@ target/
 demo/target/
 *.class
 *.jar
+!docs/downloads/*.jar
+!demo/src/main/webapp/downloads/*.jar
 *.war
 *.ear
 
