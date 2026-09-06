@@ -36,7 +36,7 @@ It features intuitive inline editing, custom Web Component editor widgets (`<sta
 
 ### 🅰️ Method 1: GitHub Pages Maven Repository (Recommended)
 
-Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatically download `dhgrid-component-1.0.0.jar` (no manual CLI commands required!):
+Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatically download `dhgrid-component-1.0.0-gamma.jar` (no manual CLI commands required!):
 
 ```xml
 <repositories>
@@ -51,7 +51,7 @@ Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatical
     <dependency>
         <groupId>com.dadhawk.faces</groupId>
         <artifactId>dhgrid-component</artifactId>
-        <version>1.0.0</version> <!-- or 1.0.0-beta -->
+        <version>1.0.0-gamma</version>
     </dependency>
 </dependencies>
 ```
@@ -60,16 +60,16 @@ Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatical
 
 ### 🅱️ Method 2: Direct JAR Download & Local Maven Install (`~/.m2`)
 
-> 📦 **Direct Download**: **[Download Maven JAR v1.0.0 (`dhgrid-component-1.0.0.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0.jar)**
+> 📦 **Direct Download**: **[Download Maven JAR v1.0.0-gamma (`dhgrid-component-1.0.0-gamma.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0-gamma.jar)**
 
 If you downloaded the JAR manually, install it to your local Maven repository:
 
 ```bash
 mvn install:install-file \
-  -Dfile=dhgrid-component-1.0.0.jar \
+  -Dfile=dhgrid-component-1.0.0-gamma.jar \
   -DgroupId=com.dadhawk.faces \
   -DartifactId=dhgrid-component \
-  -Dversion=1.0.0 \
+  -Dversion=1.0.0-gamma \
   -Dpackaging=jar
 ```
 

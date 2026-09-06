@@ -3,10 +3,11 @@
   <groupId>com.dadhawk.faces</groupId>
   <artifactId>dhgrid-component</artifactId>
   <versioning>
-    <release>1.0.0</release>
+    <release>1.0.0-gamma</release>
     <versions>
       <version>1.0.0</version>
+      <version>1.0.0-gamma</version>
     </versions>
-    <lastUpdated>20260906203029</lastUpdated>
+    <lastUpdated>20260906203507</lastUpdated>
   </versioning>
 </metadata>
