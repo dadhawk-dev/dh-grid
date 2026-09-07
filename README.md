@@ -158,6 +158,7 @@ mvn install:install-file \
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
       xmlns:dh="http://dadhawk.com/faces">
 <h:head>
     <title>Jakarta Faces 4.0 DhGrid Showcase</title>
@@ -172,6 +173,12 @@ mvn install:install-file \
                    componentMap="#{gridBean.componentMap}"
                    readOnlyCells="#{gridBean.readOnlyCells}"
                    cellStyles="#{gridBean.cellStyles}" />
+
+        <!-- Form Submit with Backend Save Action Method -->
+        <h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid}">
+            <f:ajax execute="@form" render="saveMsg" />
+        </h:commandButton>
+        <h:outputText id="saveMsg" value="#{gridBean.lastSaveStatus}" />
     </h:form>
 </h:body>
 </html>
@@ -199,6 +206,7 @@ public class GridBean implements Serializable {
     private Map<String, String> componentMap;
     private Object readOnlyCells;
     private Object cellStyles;
+    private String lastSaveStatus;
 
     @PostConstruct
     public void init() {
@@ -214,10 +222,7 @@ public class GridBean implements Serializable {
             {"Q1 2026", "$120,000", "$85,000", "29.1%", "Completed"},
             {"Q2 2026", "$145,000", "$92,000", "36.5%", "Active"}
         };
-        this.componentMap = Map.of(
-            "r1_c4", "status-selector",
-            "r2_c4", "status-selector"
-        );
+        this.componentMap = Map.of("r1_c4", "status-selector", "r2_c4", "status-selector");
         this.readOnlyCells = Map.of("r1_c0", true, "r2_c0", true);
         this.cellStyles = Map.of(
             "r1_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
@@ -225,13 +230,23 @@ public class GridBean implements Serializable {
         );
     }
 
+    // Backend Action Method invoked on form submission / AJAX save button
+    public String saveGrid() {
+        int r = (content != null) ? content.length : 0;
+        int c = (r > 0 && content[0] != null) ? content[0].length : 0;
+        this.lastSaveStatus = "Saved " + r + "x" + c + " grid matrix to GridBean!";
+        return null;
+    }
+
     public Integer getRowCount() { return rowCount; }
     public Integer getColCount() { return colCount; }
     public String[][] getContent() { return content; }
+    public void setContent(String[][] content) { this.content = content; }
     public Object getCaptions() { return captions; }
     public Map<String, String> getComponentMap() { return componentMap; }
     public Object getReadOnlyCells() { return readOnlyCells; }
     public Object getCellStyles() { return cellStyles; }
+    public String getLastSaveStatus() { return lastSaveStatus; }
 }
 ```
 

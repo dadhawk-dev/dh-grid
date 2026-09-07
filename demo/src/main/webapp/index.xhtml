@@ -490,30 +490,46 @@
 
                 <!-- JSF 4.0 Example -->
                 <div>
-                    <div style="font-size: 14px; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">
-                        🅱️ Jakarta Faces 4.0 (JSF View + Bean)
+                    <div style="font-size: 14px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">
+                        🅱️ Minimal Quick-Start Examples for JSF Developers (JSF View + Bean)
                     </div>
                     <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #e2e8f0; overflow-x: auto; white-space: pre-wrap;">&lt;!-- page.xhtml --&gt;
 &lt;html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
       xmlns:dh="http://dadhawk.com/faces"&gt;
 &lt;h:head&gt;&lt;title&gt;JSF Grid&lt;/title&gt;&lt;/h:head&gt;
 &lt;h:body&gt;
-  &lt;dh:dhGrid id="myGrid"
-             rowCount="#{gridBean.rowCount}"
-             colCount="#{gridBean.colCount}"
-             content="#{gridBean.content}"
-             captions="#{gridBean.captions}"
-             componentMap="#{gridBean.componentMap}" /&gt;
+  &lt;h:form id="gridForm"&gt;
+    &lt;dh:dhGrid id="myGrid"
+               rowCount="#{gridBean.rowCount}"
+               colCount="#{gridBean.colCount}"
+               content="#{gridBean.content}"
+               captions="#{gridBean.captions}"
+               componentMap="#{gridBean.componentMap}" /&gt;
+
+    &lt;!-- Save Grid to Backend Managed Bean --&gt;
+    &lt;h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid}"&gt;
+      &lt;f:ajax execute="@form" render="saveMsg" /&gt;
+    &lt;/h:commandButton&gt;
+    &lt;h:outputText id="saveMsg" value="#{gridBean.lastSaveStatus}" /&gt;
+  &lt;/h:form&gt;
 &lt;/h:body&gt;
 &lt;/html&gt;
 
-// Java Backing Bean (@Named @SessionScoped):
-String[] captions = {
-  "Sales / H1 / Q1", "Sales / H1 / Q2",
-  "Sales / H2 / Q3", "Sales / H2 / Q4", "Status"
-};
-Map&lt;String, String&gt; componentMap = Map.of("r1_c4", "status-selector");</pre>
+// Java CDI Backing Bean (@Named @SessionScoped):
+@Named("gridBean")
+@SessionScoped
+public class GridBean implements Serializable {
+    private String[][] content;
+    private String lastSaveStatus;
+
+    public String saveGrid() {
+        // Save action method automatically receives updated matrix content
+        this.lastSaveStatus = "Saved grid matrix to GridBean!";
+        return null;
+    }
+}</pre>
                 </div>
             </div>
         </div>
