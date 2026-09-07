@@ -24,16 +24,16 @@ mvn clean install
 echo ""
 echo "📦 Step 2: Installing compiled JAR into local Maven repository (~/.m2)..."
 mvn install:install-file \
-  -Dfile=target/dhgrid-component-1.0.0-RC1.jar \
+  -Dfile=target/dhgrid-component-1.0.0-RC2.jar \
   -DgroupId=com.dadhawk.faces \
   -DartifactId=dhgrid-component \
-  -Dversion=1.0.0-RC1 \
+  -Dversion=1.0.0-RC2 \
   -Dpackaging=jar
 
 echo ""
 echo "📂 Step 3: Copying downloadable JAR to webapp demo..."
 mkdir -p demo/src/main/webapp/downloads
-cp target/dhgrid-component-1.0.0-RC1.jar demo/src/main/webapp/downloads/dhgrid-component-1.0.0-RC1.jar
+cp target/dhgrid-component-1.0.0-RC2.jar demo/src/main/webapp/downloads/dhgrid-component-1.0.0-RC2.jar
 
 echo ""
 echo "🛠️ Step 4: Compiling dhgrid-demo Web Application..."
@@ -47,7 +47,7 @@ echo "🌐 Server URLs once started:"
 echo "   - Jakarta Faces 4.0 Demo : http://localhost:8085/index.xhtml"
 echo "   - Standalone Web Showcase: http://localhost:8085/standalone-demo.html"
 echo "   - Web Component Script   : http://localhost:8085/resources/dadhawk/js/dh-grid.js"
-echo "   - Downloadable JAR       : http://localhost:8085/downloads/dhgrid-component-1.0.0-RC1.jar"
+echo "   - Downloadable JAR       : http://localhost:8085/downloads/dhgrid-component-1.0.0-RC2.jar"
 echo "============================================================"
 echo ""
 

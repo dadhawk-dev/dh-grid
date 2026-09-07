@@ -1,6 +1,6 @@
 # ⚡ DhGrid — High-Performance Data Grid Component for Jakarta Faces 4.0 & W3C Web Components
 
-[![Version](https://img.shields.io/badge/version-1.0.0--RC1-blue.svg?style=for-the-badge)](releases/1.0.0-RC1.md)
+[![Version](https://img.shields.io/badge/version-1.0.0--RC2-blue.svg?style=for-the-badge)](releases/1.0.0-RC2.md)
 [![Jakarta Faces](https://img.shields.io/badge/Jakarta%20Faces-4.0-orange.svg?style=for-the-badge)](https://jakarta.ee/specifications/faces/4.0/)
 [![W3C Web Component](https://img.shields.io/badge/Web%20Component-W3C%20Standard-purple.svg?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Web_components)
 [![License](https://img.shields.io/badge/License-GNU_LGPL_v3.0-blue.svg?style=for-the-badge)](LICENSE)
@@ -39,7 +39,7 @@ It features intuitive inline editing, keyboard-driven cell navigation (`Arrow Ke
 
 ### 🅰️ Method 1: GitHub Pages Maven Repository (Recommended)
 
-Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatically download `dhgrid-component-1.0.0-RC1.jar`:
+Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatically download `dhgrid-component-1.0.0-RC2.jar`:
 
 ```xml
 <repositories>
@@ -54,7 +54,7 @@ Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatical
     <dependency>
         <groupId>com.dadhawk.faces</groupId>
         <artifactId>dhgrid-component</artifactId>
-        <version>1.0.0-RC1</version>
+        <version>1.0.0-RC2</version>
     </dependency>
 </dependencies>
 ```
@@ -63,16 +63,16 @@ Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatical
 
 ### 🅱️ Method 2: Direct JAR Download & Local Maven Install (`~/.m2`)
 
-> 📦 **Direct Download**: **[Download Maven JAR v1.0.0-RC1 (`dhgrid-component-1.0.0-RC1.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0-RC1.jar)**
+> 📦 **Direct Download**: **[Download Maven JAR v1.0.0-RC2 (`dhgrid-component-1.0.0-RC2.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0-RC2.jar)**
 
 If you downloaded the JAR manually, install it to your local Maven repository:
 
 ```bash
 mvn install:install-file \
-  -Dfile=dhgrid-component-1.0.0-RC1.jar \
+  -Dfile=dhgrid-component-1.0.0-RC2.jar \
   -DgroupId=com.dadhawk.faces \
   -DartifactId=dhgrid-component \
-  -Dversion=1.0.0-RC1 \
+  -Dversion=1.0.0-RC2 \
   -Dpackaging=jar
 ```
 
@@ -329,6 +329,9 @@ Access local endpoints:
 
 ## 🏷️ Release History & Tags
 
+- **`v1.0.0-RC2`** ([Release Notes](releases/1.0.0-RC2.md)):
+  - Fixed GitHub Pages Maven Repository metadata indexing (`maven-metadata.xml`) so external projects cleanly resolve `dhgrid-component`.
+  - Upgraded release candidate package to `v1.0.0-RC2`.
 - **`v1.0.0-RC1`** ([Release Notes](releases/1.0.0-RC1.md)):
   - Added **Backend Form Save & Automatic Model Binding** (`DhGridComponent` extends `UIInput` with `decode()` & `updateModel()`).
   - Added zero-dependency JSON matrix parser `parseJsonMatrix(String json)`.
