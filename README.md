@@ -175,7 +175,7 @@ mvn install:install-file \
                    cellStyles="#{gridBean.cellStyles}" />
 
         <!-- Form Submit with Backend Save Action Method -->
-        <h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid}">
+        <h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid()}">
             <f:ajax execute="@form" render="saveMsg" />
         </h:commandButton>
         <h:outputText id="saveMsg" value="#{gridBean.lastSaveStatus}" />

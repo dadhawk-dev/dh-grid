@@ -351,7 +351,7 @@
 
                         <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 14px;">
                             <h:commandButton value="💾 Save Grid to Backend (gridBean.saveGrid)"
-                                             action="#{gridBean.saveGrid}"
+                                             action="#{gridBean.saveGrid()}"
                                              style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
                                 <f:ajax execute="@form" render=":gridForm:saveStatusMsg :statsPanel" />
                             </h:commandButton>
@@ -514,7 +514,7 @@
                componentMap="#{gridBean.componentMap}" /&gt;
 
     &lt;!-- Save Grid to Backend Managed Bean --&gt;
-    &lt;h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid}"&gt;
+    &lt;h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid()}"&gt;
       &lt;f:ajax execute="@form" render="saveMsg" /&gt;
     &lt;/h:commandButton&gt;
     &lt;h:outputText id="saveMsg" value="#{gridBean.lastSaveStatus}" /&gt;

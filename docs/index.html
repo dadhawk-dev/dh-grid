@@ -510,7 +510,7 @@
                cellStyles="#{gridBean.cellStyles}" /&gt;
 
     &lt;!-- Save Grid to Backend Managed Bean --&gt;
-    &lt;h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid}"&gt;
+    &lt;h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid()}"&gt;
       &lt;f:ajax execute="@form" render="saveStatus" /&gt;
     &lt;/h:commandButton&gt;
     &lt;h:outputText id="saveStatus" value="#{gridBean.lastSaveStatus}" /&gt;
