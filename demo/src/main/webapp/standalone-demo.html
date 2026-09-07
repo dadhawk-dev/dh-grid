@@ -367,35 +367,28 @@
             </div>
         </div>
 
-        <!-- Quick-Start Minimal Examples Card -->
-        <div class="card" style="border-color: rgba(99, 102, 241, 0.3);">
-            <h3 style="font-family: 'Outfit', sans-serif; font-size: 20px; color: #a5b4fc; margin-bottom: 16px;">
-                💡 Minimal Quick-Start Examples for Developers
-            </h3>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
-                <!-- Vanilla JS Example -->
-                <div>
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
-                        <div style="font-size: 14px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px;">
-                            <span>🅰️ Vanilla JavaScript (Pure HTML + JS)</span>
-                            <span style="font-size: 11px; font-weight: 600; color: #38bdf8; background: rgba(56, 189, 248, 0.12); padding: 2px 10px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; gap: 4px;">
-                                ✏️ Live Editable
-                            </span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <a href="resources/dadhawk/js/dh-grid.js" download="dh-grid.js" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
-                                <span>💾 Download JS Script (dh-grid.js)</span>
-                            </a>
-                            <button type="button" onclick="copyCode('jsCodeBox', this)" style="background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
-                                <span>📋 Copy Code</span>
-                            </button>
-                            <button type="button" onclick="runLiveFromCodeBox()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
-                                ▶ RUN Live Test
-                            </button>
-                        </div>
-                    </div>
-                    <div id="jsCodeBox" contenteditable="true" spellcheck="false" class="code-box" style="margin-top: 0; color: #e2e8f0; font-size: 12px; outline: none; border: 1.5px solid rgba(56, 189, 248, 0.25); transition: all 0.2s ease; font-family: 'Fira Code', monospace; white-space: pre; overflow-x: auto; background: rgba(15, 23, 42, 0.9); padding: 14px; border-radius: 8px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);" onfocus="this.style.borderColor='#38bdf8'; this.style.boxShadow='0 0 12px rgba(56,189,248,0.25)';" onblur="this.style.borderColor='rgba(56, 189, 248, 0.25)'; this.style.boxShadow='inset 0 2px 8px rgba(0,0,0,0.4)';">&lt;!DOCTYPE html&gt;
+        <!-- Vanilla JS Quick-Start Card -->
+        <div class="card" style="border-color: rgba(56, 189, 248, 0.3);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <div style="font-size: 14px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px;">
+                    <span>🅰️ Vanilla JavaScript (Pure HTML + JS)</span>
+                    <span style="font-size: 11px; font-weight: 600; color: #38bdf8; background: rgba(56, 189, 248, 0.12); padding: 2px 10px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; gap: 4px;">
+                        ✏️ Live Editable
+                    </span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <a href="resources/dadhawk/js/dh-grid.js" download="dh-grid.js" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                        <span>💾 Download JS Script (dh-grid.js)</span>
+                    </a>
+                    <button type="button" onclick="copyCode('jsCodeBox', this)" style="background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                        <span>📋 Copy Code</span>
+                    </button>
+                    <button type="button" onclick="runLiveFromCodeBox()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
+                        ▶ RUN Live Test
+                    </button>
+                </div>
+            </div>
+            <div id="jsCodeBox" contenteditable="true" spellcheck="false" class="code-box" style="margin-top: 0; color: #e2e8f0; font-size: 12px; outline: none; border: 1.5px solid rgba(56, 189, 248, 0.25); transition: all 0.2s ease; font-family: 'Fira Code', monospace; white-space: pre; overflow-x: auto; background: rgba(15, 23, 42, 0.9); padding: 14px; border-radius: 8px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);" onfocus="this.style.borderColor='#38bdf8'; this.style.boxShadow='0 0 12px rgba(56,189,248,0.25)';" onblur="this.style.borderColor='rgba(56, 189, 248, 0.25)'; this.style.boxShadow='inset 0 2px 8px rgba(0,0,0,0.4)';">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
   &lt;script src="resources/dadhawk/js/dh-grid.js"&gt;&lt;/script&gt;
@@ -430,27 +423,28 @@
   &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</div>
-                </div>
+        </div>
 
-                <!-- JSF 4.0 Example -->
-                <div>
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
-                        <div style="font-size: 14px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px;">
-                            <span>🅱️ Minimal Quick-Start Examples for JSF Developers (JSF View + Bean)</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <a href="downloads/dhgrid-component-1.0.0-RC1.jar" download="dhgrid-component-1.0.0-RC1.jar" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
-                                <span>📦 Download Maven JAR (v1.0.0-RC1)</span>
-                            </a>
-                            <button type="button" onclick="copyCode('jsfCodeBox', this)" style="background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
-                                <span>📋 Copy Code</span>
-                            </button>
-                            <button type="button" onclick="openJsfGuideModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
-                                ▶ How to use in Jakarta Faces 4.0
-                            </button>
-                        </div>
-                    </div>
-                    <div id="jsfCodeBox" class="code-box" style="margin-top: 0; color: #e2e8f0; font-size: 12px;">&lt;!-- page.xhtml --&gt;
+        <!-- JSF 4.0 Developers Quick-Start Card -->
+        <div class="card" style="border-color: rgba(99, 102, 241, 0.3);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <div style="font-size: 14px; font-weight: 700; color: #a5b4fc; display: flex; align-items: center; gap: 8px;">
+                    <span>🅱️ Minimal Quick-Start Examples for JSF Developers (JSF View + Bean)</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <a href="downloads/dhgrid-component-1.0.0-RC1.jar" download="dhgrid-component-1.0.0-RC1.jar" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                        <span>📦 Download Maven JAR (v1.0.0-RC1)</span>
+                    </a>
+                    <button type="button" onclick="copyCode('jsfCodeBox', this)" style="background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                        <span>📋 Copy Code</span>
+                    </button>
+                    <button type="button" onclick="openJsfGuideModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
+                        ▶ How to use in Jakarta Faces 4.0
+                    </button>
+                </div>
+            </div>
+
+            <div id="jsfCodeBox" class="code-box" style="margin-top: 0; color: #e2e8f0; font-size: 12px;">&lt;!-- page.xhtml --&gt;
 &lt;html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
@@ -496,19 +490,9 @@ public class GridBean implements Serializable {
     public void setContent(String[][] content) { this.content = content; }
     public String getLastSaveStatus() { return lastSaveStatus; }
 }</div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Download & Maven Installation Center -->
-        <div class="card" style="border-color: rgba(56, 189, 248, 0.3);">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-                <h3 style="font-family: 'Outfit', sans-serif; font-size: 20px; color: var(--accent-blue);">
-                    🚀 Downloads &amp; Maven Repository Integration
-                </h3>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+            <!-- Maven Repository & Dependency Integration -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
                 <div>
                     <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">
                         1. Add GitHub Maven Repository to pom.xml:
