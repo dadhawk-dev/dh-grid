@@ -450,35 +450,30 @@
                 <div style="font-size: 14px; font-weight: 700; color: #a5b4fc;">
                     🅱️ Minimal Quick-Start Examples for JSF Developers (JSF View + Bean)
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <a href="#{request.contextPath}/downloads/dhgrid-component-1.0.0-RC1.jar" download="dhgrid-component-1.0.0-RC1.jar" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
-                        <span>📦 Download Maven JAR (v1.0.0-RC1)</span>
-                    </a>
-                </div>
             </div>
-            <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #e2e8f0; overflow-x: auto; white-space: pre-wrap;">&lt;!-- page.xhtml --&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml"
+            <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #e2e8f0; overflow-x: auto; white-space: pre-wrap;"><!-- page.xhtml -->
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
-      xmlns:dh="http://dadhawk.com/faces"&gt;
-&lt;h:head&gt;&lt;title&gt;JSF Grid&lt;/title&gt;&lt;/h:head&gt;
-&lt;h:body&gt;
-  &lt;h:form id="gridForm"&gt;
-    &lt;dh:dhGrid id="myGrid"
+      xmlns:dh="http://dadhawk.com/faces">
+<h:head><title>JSF Grid</title></h:head>
+<h:body>
+  <h:form id="gridForm">
+    <dh:dhGrid id="myGrid"
                rowCount="#{gridBean.rowCount}"
                colCount="#{gridBean.colCount}"
                content="#{gridBean.content}"
                captions="#{gridBean.captions}"
-               componentMap="#{gridBean.componentMap}" /&gt;
+               componentMap="#{gridBean.componentMap}" />
 
-    &lt;!-- Save Grid to Backend Managed Bean --&gt;
-    &lt;h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid()}"&gt;
-      &lt;f:ajax execute="@form" render="saveMsg" /&gt;
-    &lt;/h:commandButton&gt;
-    &lt;h:outputText id="saveMsg" value="#{gridBean.lastSaveStatus}" /&gt;
-  &lt;/h:form&gt;
-&lt;/h:body&gt;
-&lt;/html&gt;
+    <!-- Save Grid to Backend Managed Bean -->
+    <h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid()}">
+      <f:ajax execute="@form" render="saveMsg" />
+    </h:commandButton>
+    <h:outputText id="saveMsg" value="#{gridBean.lastSaveStatus}" />
+  </h:form>
+</h:body>
+</html>
 
 // Java CDI Backing Bean (@Named @SessionScoped):
 @Named("gridBean")
@@ -500,25 +495,30 @@ public class GridBean implements Serializable {
                     <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">
                         🌐 Option 1: Add GitHub Maven Repository &amp; Dependency to pom.xml
                     </div>
-                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #38bdf8; overflow-x: auto; white-space: pre-wrap;">&lt;!-- 1. Add GitHub Repository --&gt;
-&lt;repositories&gt;
-    &lt;repository&gt;
-        &lt;id&gt;dadhawk-dhgrid-repo&lt;/id&gt;
-        &lt;url&gt;https://dadhawk-dev.github.io/dh-grid/maven-repo/&lt;/url&gt;
-    &lt;/repository&gt;
-&lt;/repositories&gt;
+                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #38bdf8; overflow-x: auto; white-space: pre-wrap;"><!-- 1. Add GitHub Repository -->
+<repositories>
+    <repository>
+        <id>dadhawk-dhgrid-repo</id>
+        <url>https://dadhawk-dev.github.io/dh-grid/maven-repo/</url>
+    </repository>
+</repositories>
 
-&lt;!-- 2. Add Dependency --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
-    &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0-RC1&lt;/version&gt;
-&lt;/dependency&gt;</pre>
+<!-- 2. Add Dependency -->
+<dependency>
+    <groupId>com.dadhawk.faces</groupId>
+    <artifactId>dhgrid-component</artifactId>
+    <version>1.0.0-RC1</version>
+</dependency></pre>
                 </div>
 
                 <div>
-                    <div style="font-size: 13px; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">
-                        📦 Option 2: Download &amp; Mavenize Local JAR
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                        <div style="font-size: 13px; font-weight: 700; color: #fbbf24;">
+                            📦 Option 2: Download &amp; Mavenize Local JAR
+                        </div>
+                        <a href="#{request.contextPath}/downloads/dhgrid-component-1.0.0-RC1.jar" download="dhgrid-component-1.0.0-RC1.jar" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                            <span>📦 Download Maven JAR (v1.0.0-RC1)</span>
+                        </a>
                     </div>
                     <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #34d399; overflow-x: auto; white-space: pre-wrap;"># 1. Mavenize (Install downloaded JAR into local ~/.m2 repo):
 mvn install:install-file \

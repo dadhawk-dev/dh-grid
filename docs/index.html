@@ -432,9 +432,6 @@
                     <span>🅱️ Minimal Quick-Start Examples for JSF Developers (JSF View + Bean)</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <a href="downloads/dhgrid-component-1.0.0-RC1.jar" download="dhgrid-component-1.0.0-RC1.jar" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
-                        <span>📦 Download Maven JAR (v1.0.0-RC1)</span>
-                    </a>
                     <button type="button" onclick="copyCode('jsfCodeBox', this)" style="background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
                         <span>📋 Copy Code</span>
                     </button>
@@ -514,8 +511,13 @@ public class GridBean implements Serializable {
                 </div>
 
                 <div>
-                    <div style="font-size: 13px; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">
-                        📦 Option 2: Download &amp; Mavenize Local JAR
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                        <div style="font-size: 13px; font-weight: 700; color: #fbbf24;">
+                            📦 Option 2: Download &amp; Mavenize Local JAR
+                        </div>
+                        <a href="downloads/dhgrid-component-1.0.0-RC1.jar" download="dhgrid-component-1.0.0-RC1.jar" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                            <span>📦 Download Maven JAR (v1.0.0-RC1)</span>
+                        </a>
                     </div>
                     <div class="code-box" style="margin-top: 0; color: #fbbf24; font-size: 12px;"># 1. Mavenize (Install downloaded JAR into local ~/.m2 repo):
 mvn install:install-file \
