@@ -494,25 +494,42 @@ public class GridBean implements Serializable {
     }
 }</pre>
 
-            <!-- Maven Repository & Dependency Integration -->
+            <!-- Maven Repository & Dependency Integration Options -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
                 <div>
-                    <div style="font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px;">
-                        1. CLI Command to Install JAR to Local Repository (~/.m2):
+                    <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">
+                        🌐 Option 1: Add GitHub Maven Repository &amp; Dependency to pom.xml
                     </div>
-                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #34d399; overflow-x: auto; white-space: pre-wrap;">mvn install:install-file \
+                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #38bdf8; overflow-x: auto; white-space: pre-wrap;">&lt;!-- 1. Add GitHub Repository --&gt;
+&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;dadhawk-dhgrid-repo&lt;/id&gt;
+        &lt;url&gt;https://dadhawk-dev.github.io/dh-grid/maven-repo/&lt;/url&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;
+
+&lt;!-- 2. Add Dependency --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
+    &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-RC1&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                </div>
+
+                <div>
+                    <div style="font-size: 13px; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">
+                        📦 Option 2: Download &amp; Mavenize Local JAR
+                    </div>
+                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #34d399; overflow-x: auto; white-space: pre-wrap;"># 1. Mavenize (Install downloaded JAR into local ~/.m2 repo):
+mvn install:install-file \
   -Dfile=dhgrid-component-1.0.0-RC1.jar \
   -DgroupId=com.dadhawk.faces \
   -DartifactId=dhgrid-component \
   -Dversion=1.0.0-RC1 \
-  -Dpackaging=jar</pre>
-                </div>
+  -Dpackaging=jar
 
-                <div>
-                    <div style="font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px;">
-                        2. Add Maven Dependency to your pom.xml:
-                    </div>
-                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #fbbf24; overflow-x: auto; white-space: pre-wrap;">&lt;dependency&gt;
+# 2. Add Dependency to pom.xml:
+&lt;dependency&gt;
     &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
     &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
     &lt;version&gt;1.0.0-RC1&lt;/version&gt;
