@@ -367,45 +367,6 @@
             </div>
         </div>
 
-        <!-- Download & Maven Installation Center -->
-        <div class="card" style="border-color: rgba(56, 189, 248, 0.3);">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-                <h3 style="font-family: 'Outfit', sans-serif; font-size: 20px; color: var(--accent-blue);">
-                    🚀 Downloads &amp; Maven Repository Integration
-                </h3>
-                <div style="display: flex; gap: 10px;">
-                    <a href="downloads/dhgrid-component-1.0.0-RC1.jar" download="dhgrid-component-1.0.0-RC1.jar" class="btn-action" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 10px 16px; border-radius: 8px; font-weight: 700; text-decoration: none;">
-                        📦 Download Maven JAR (v1.0.0-RC1)
-                    </a>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
-                <div>
-                    <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">
-                        1. Add GitHub Maven Repository to pom.xml:
-                    </div>
-                    <div class="code-box" style="margin-top: 0; color: #38bdf8; font-size: 12px;">&lt;repositories&gt;
-    &lt;repository&gt;
-        &lt;id&gt;dadhawk-dhgrid-repo&lt;/id&gt;
-        &lt;url&gt;https://dadhawk-dev.github.io/dh-grid/maven-repo/&lt;/url&gt;
-    &lt;/repository&gt;
-&lt;/repositories&gt;</div>
-                </div>
-
-                <div>
-                    <div style="font-size: 13px; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">
-                        2. Add Maven Dependency to pom.xml:
-                    </div>
-                    <div class="code-box" style="margin-top: 0; color: #fbbf24; font-size: 12px;">&lt;dependency&gt;
-    &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
-    &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0-RC1&lt;/version&gt;
-&lt;/dependency&gt;</div>
-                </div>
-            </div>
-        </div>
-
         <!-- Quick-Start Minimal Examples Card -->
         <div class="card" style="border-color: rgba(99, 102, 241, 0.3);">
             <h3 style="font-family: 'Outfit', sans-serif; font-size: 20px; color: #a5b4fc; margin-bottom: 16px;">
@@ -413,8 +374,6 @@
             </h3>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
-                <!-- Vanilla JS Example -->
-                <div>
                 <!-- Vanilla JS Example -->
                 <div>
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
@@ -535,6 +494,44 @@ public class GridBean implements Serializable {
     public String getLastSaveStatus() { return lastSaveStatus; }
 }</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Download & Maven Installation Center -->
+        <div class="card" style="border-color: rgba(56, 189, 248, 0.3);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                <h3 style="font-family: 'Outfit', sans-serif; font-size: 20px; color: var(--accent-blue);">
+                    🚀 Downloads &amp; Maven Repository Integration
+                </h3>
+                <div style="display: flex; gap: 10px;">
+                    <a href="downloads/dhgrid-component-1.0.0-RC1.jar" download="dhgrid-component-1.0.0-RC1.jar" class="btn-action" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 10px 16px; border-radius: 8px; font-weight: 700; text-decoration: none;">
+                        📦 Download Maven JAR (v1.0.0-RC1)
+                    </a>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+                <div>
+                    <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">
+                        1. Add GitHub Maven Repository to pom.xml:
+                    </div>
+                    <div class="code-box" style="margin-top: 0; color: #38bdf8; font-size: 12px;">&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;dadhawk-dhgrid-repo&lt;/id&gt;
+        &lt;url&gt;https://dadhawk-dev.github.io/dh-grid/maven-repo/&lt;/url&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;</div>
+                </div>
+
+                <div>
+                    <div style="font-size: 13px; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">
+                        2. Add Maven Dependency to pom.xml:
+                    </div>
+                    <div class="code-box" style="margin-top: 0; color: #fbbf24; font-size: 12px;">&lt;dependency&gt;
+    &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
+    &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-RC1&lt;/version&gt;
+&lt;/dependency&gt;</div>
                 </div>
             </div>
         </div>
