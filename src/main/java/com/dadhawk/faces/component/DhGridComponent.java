@@ -3,15 +3,18 @@ package com.dadhawk.faces.component;
 import jakarta.faces.application.ResourceDependencies;
 import jakarta.faces.application.ResourceDependency;
 import jakarta.faces.component.FacesComponent;
-import jakarta.faces.component.UIComponentBase;
+import jakarta.faces.component.UIInput;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
  * DhGridComponent — High-Performance Jakarta Faces 4.0 Data Grid Component.
+ * Supports automatic decode form submission, value binding, and backend action saving.
  *
  * @author Telman Shahbazov / Dadhawk (with Google DeepMind Antigravity AI)
  */
@@ -24,13 +27,17 @@ import java.util.Map;
 @ResourceDependencies({
     @ResourceDependency(library = "dadhawk", name = "js/dh-grid.js", target = "head")
 })
-public class DhGridComponent extends UIComponentBase {
+public class DhGridComponent extends UIInput {
 
     public static final String COMPONENT_FAMILY = "com.dadhawk.faces.component";
     public static final String COMPONENT_TYPE = "com.dadhawk.faces.component.DhGridComponent";
 
     enum PropertyKeys {
         rowCount, colCount, content, componentMap, captions, readOnly, readOnlyCells, cellStyles, cssCompatible
+    }
+
+    public DhGridComponent() {
+        setRendererType(null);
     }
 
     @Override
@@ -55,11 +62,16 @@ public class DhGridComponent extends UIComponentBase {
     }
 
     public Object getContent() {
+        Object val = super.getValue();
+        if (val != null) {
+            return val;
+        }
         return getStateHelper().eval(PropertyKeys.content, null);
     }
 
     public void setContent(Object content) {
         getStateHelper().put(PropertyKeys.content, content);
+        setValue(content);
     }
 
     public Object getCaptions() {
@@ -112,15 +124,54 @@ public class DhGridComponent extends UIComponentBase {
     }
 
     @Override
+    public void decode(FacesContext context) {
+        if (context == null || !isRendered()) {
+            return;
+        }
+
+        String clientId = getClientId(context);
+        String inputParam = clientId + "_input";
+        Map<String, String> requestMap = context.getExternalContext().getRequestParameterMap();
+
+        if (requestMap.containsKey(inputParam)) {
+            String submittedJson = requestMap.get(inputParam);
+            if (submittedJson != null && !submittedJson.trim().isEmpty()) {
+                String[][] parsedMatrix = parseJsonMatrix(submittedJson);
+                setSubmittedValue(parsedMatrix);
+            }
+        }
+    }
+
+    @Override
+    public void updateModel(FacesContext context) {
+        super.updateModel(context);
+        Object submitted = getSubmittedValue();
+        if (submitted != null) {
+            setContent(submitted);
+        }
+    }
+
+    @Override
     public void encodeBegin(FacesContext context) throws IOException {
         if (!isRendered()) {
             return;
         }
 
         ResponseWriter writer = context.getResponseWriter();
+        String clientId = getClientId(context);
+        String hiddenInputId = clientId + "_input";
 
+        // Render hidden input for JSF form submission sync
+        writer.startElement("input", this);
+        writer.writeAttribute("type", "hidden", null);
+        writer.writeAttribute("id", hiddenInputId, "id");
+        writer.writeAttribute("name", hiddenInputId, "name");
+        writer.writeAttribute("value", toJson(getContent()), "value");
+        writer.endElement("input");
+
+        // Render W3C Web Component <dh-grid-element>
         writer.startElement("dh-grid-element", this);
-        writer.writeAttribute("id", getClientId(context), "id");
+        writer.writeAttribute("id", clientId, "id");
         writer.writeAttribute("rows", getRowCount(), "rows");
         writer.writeAttribute("cols", getColCount(), "cols");
         writer.writeAttribute("content", toJson(getContent()), "content");
@@ -149,6 +200,79 @@ public class DhGridComponent extends UIComponentBase {
         }
         ResponseWriter writer = context.getResponseWriter();
         writer.endElement("dh-grid-element");
+    }
+
+    public static String[][] parseJsonMatrix(String json) {
+        if (json == null || json.trim().isEmpty() || json.trim().equals("[]")) {
+            return new String[0][0];
+        }
+        try {
+            json = json.trim();
+            if (json.startsWith("[")) json = json.substring(1);
+            if (json.endsWith("]")) json = json.substring(0, json.length() - 1);
+            json = json.trim();
+
+            List<List<String>> rows = new ArrayList<>();
+            List<String> currentRow = null;
+            StringBuilder sb = new StringBuilder();
+            boolean inString = false;
+            boolean inRow = false;
+            boolean escaped = false;
+
+            for (int i = 0; i < json.length(); i++) {
+                char c = json.charAt(i);
+
+                if (escaped) {
+                    sb.append(c);
+                    escaped = false;
+                    continue;
+                }
+
+                if (c == '\\') {
+                    escaped = true;
+                    continue;
+                }
+
+                if (c == '"') {
+                    inString = !inString;
+                    continue;
+                }
+
+                if (inString) {
+                    sb.append(c);
+                    continue;
+                }
+
+                if (c == '[') {
+                    inRow = true;
+                    currentRow = new ArrayList<>();
+                    sb.setLength(0);
+                } else if (c == ']') {
+                    if (inRow && currentRow != null) {
+                        currentRow.add(sb.toString());
+                        rows.add(currentRow);
+                        inRow = false;
+                        sb.setLength(0);
+                    }
+                } else if (c == ',') {
+                    if (inRow && currentRow != null) {
+                        currentRow.add(sb.toString());
+                        sb.setLength(0);
+                    }
+                }
+            }
+
+            if (rows.isEmpty()) return new String[0][0];
+
+            String[][] result = new String[rows.size()][];
+            for (int r = 0; r < rows.size(); r++) {
+                List<String> rowList = rows.get(r);
+                result[r] = rowList.toArray(new String[0]);
+            }
+            return result;
+        } catch (Exception e) {
+            return new String[0][0];
+        }
     }
 
     private String toJson(Object obj) {

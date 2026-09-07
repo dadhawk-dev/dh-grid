@@ -5,7 +5,7 @@
 
     <groupId>com.dadhawk.faces</groupId>
     <artifactId>dhgrid-demo</artifactId>
-    <version>1.0.0-delta</version>
+    <version>1.0.0-RC1</version>
     <packaging>war</packaging>
 
     <name>dhgrid-demo</name>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.dadhawk.faces</groupId>
             <artifactId>dhgrid-component</artifactId>
-            <version>1.0.0-delta</version>
+            <version>1.0.0-RC1</version>
         </dependency>
 
         <!-- Jakarta Faces 4.0 API & Mojarra Implementation -->

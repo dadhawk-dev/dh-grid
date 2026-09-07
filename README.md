@@ -1,6 +1,6 @@
 # ⚡ DhGrid — High-Performance Data Grid Component for Jakarta Faces 4.0 & W3C Web Components
 
-[![Version](https://img.shields.io/badge/version-1.0.0--delta-blue.svg?style=for-the-badge)](releases/1.0.0-delta.md)
+[![Version](https://img.shields.io/badge/version-1.0.0--RC1-blue.svg?style=for-the-badge)](releases/1.0.0-RC1.md)
 [![Jakarta Faces](https://img.shields.io/badge/Jakarta%20Faces-4.0-orange.svg?style=for-the-badge)](https://jakarta.ee/specifications/faces/4.0/)
 [![W3C Web Component](https://img.shields.io/badge/Web%20Component-W3C%20Standard-purple.svg?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Web_components)
 [![License](https://img.shields.io/badge/License-GNU_LGPL_v3.0-blue.svg?style=for-the-badge)](LICENSE)
@@ -9,7 +9,7 @@
 
 **DhGrid** is an open-source, lightweight, ultra-fast, zero-dependency data grid component designed for both **Jakarta EE / Jakarta Faces 4.0 (JSF)** applications and pure **W3C Web Components (`<dh-grid-element>`)**.
 
-It features intuitive inline editing, keyboard-driven cell navigation (`Arrow Keys`, `Tab`, `Enter`, `Escape`), custom Web Component editor widgets (`<status-selector>`, `<rating-editor>`, `<priority-badge-editor>`), real-time reactive event streams, dynamic matrix expansion, **Composite Parent-Child Tree Captions**, **Cell ReadOnly Control**, **Dynamic Cell Styling Strategies**, and **PrimeFaces Theme Compatibility**.
+It features intuitive inline editing, keyboard-driven cell navigation (`Arrow Keys`, `Tab`, `Enter`, `Escape`), custom Web Component editor widgets (`<status-selector>`, `<rating-editor>`, `<priority-badge-editor>`), real-time reactive event streams, dynamic matrix expansion, **Backend Form Save Integration**, **Global JavaScript State (`window.dhGridData`)**, **Composite Parent-Child Tree Captions**, **Cell ReadOnly Control**, **Dynamic Cell Styling Strategies**, and **PrimeFaces Theme Compatibility**.
 
 > 🌐 **Interactive Online Showcase**: Want to test DhGrid live right now in your browser?  
 > 👉 **[Click here to open the Interactive Live Demo Page](https://dadhawk-dev.github.io/dh-grid/)** (or click the preview image below) to explore live inline editing, custom editor widgets, tree headers, and live-editable code execution!
@@ -21,6 +21,8 @@ It features intuitive inline editing, keyboard-driven cell navigation (`Arrow Ke
 ## 🌟 Key Features & Highlights
 
 - 🌐 **Interactive Live Demo Showcase**: Click **[https://dadhawk-dev.github.io/dh-grid/](https://dadhawk-dev.github.io/dh-grid/)** to experience all grid features, preset datasets, and live code runners directly in your browser.
+- 💾 **Backend Form Save & Automatic Model Binding**: Extends `UIInput` to decode submitted cell updates via hidden form input (`clientId_input`) and sync directly with backing bean properties (`#{gridBean.content}`) on form submit or AJAX action methods (`action="#{gridBean.saveGrid}"`).
+- 🌐 **Global Client State Sync (`window.dhGridData`)**: Maintains real-time active JSON matrix contents in `window.dhGridData[gridId]` and `window.dhGridDataContent` whenever cells are edited, rows added, or columns expanded.
 - ⌨️ **Keyboard Navigation & Focus Control**: Full keyboard movement with `Arrow Keys` (Up/Down/Left/Right), `Tab` / `Shift+Tab` (move right/left & wrap rows), `Enter` (launch editor / commit & move down), and `Escape` (cancel edit & restore focus).
 - 🎨 **PrimeFaces Theme Compatibility (`css-compatible="primethemes"`)**: Seamlessly binds Shadow DOM table styles (`--dh-table-bg`, `--dh-border-color`, `--dh-cell-color`) to active PrimeFaces CSS variables (`--surface-a`, `--surface-border`, `--text-color`, `--primary-color`).
 - 🌳 **Composite Parent-Child Tree Captions**: Define multi-level hierarchical headers compactly using path notation (`"Sales / H1 / Q1"`, `"Sales / H1 / Q2"`), 2D arrays, or nested tree objects.
@@ -37,7 +39,7 @@ It features intuitive inline editing, keyboard-driven cell navigation (`Arrow Ke
 
 ### 🅰️ Method 1: GitHub Pages Maven Repository (Recommended)
 
-Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatically download `dhgrid-component-1.0.0-delta.jar` (no manual CLI commands required!):
+Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatically download `dhgrid-component-1.0.0-RC1.jar`:
 
 ```xml
 <repositories>
@@ -52,7 +54,7 @@ Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatical
     <dependency>
         <groupId>com.dadhawk.faces</groupId>
         <artifactId>dhgrid-component</artifactId>
-        <version>1.0.0-delta</version>
+        <version>1.0.0-RC1</version>
     </dependency>
 </dependencies>
 ```
@@ -61,16 +63,16 @@ Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatical
 
 ### 🅱️ Method 2: Direct JAR Download & Local Maven Install (`~/.m2`)
 
-> 📦 **Direct Download**: **[Download Maven JAR v1.0.0-delta (`dhgrid-component-1.0.0-delta.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0-delta.jar)**
+> 📦 **Direct Download**: **[Download Maven JAR v1.0.0-RC1 (`dhgrid-component-1.0.0-RC1.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0-RC1.jar)**
 
 If you downloaded the JAR manually, install it to your local Maven repository:
 
 ```bash
 mvn install:install-file \
-  -Dfile=dhgrid-component-1.0.0-delta.jar \
+  -Dfile=dhgrid-component-1.0.0-RC1.jar \
   -DgroupId=com.dadhawk.faces \
   -DartifactId=dhgrid-component \
-  -Dversion=1.0.0-delta \
+  -Dversion=1.0.0-RC1 \
   -Dpackaging=jar
 ```
 
@@ -312,6 +314,11 @@ Access local endpoints:
 
 ## 🏷️ Release History & Tags
 
+- **`v1.0.0-RC1`** ([Release Notes](releases/1.0.0-RC1.md)):
+  - Added **Backend Form Save & Automatic Model Binding** (`DhGridComponent` extends `UIInput` with `decode()` & `updateModel()`).
+  - Added zero-dependency JSON matrix parser `parseJsonMatrix(String json)`.
+  - Added **Global JavaScript State Sync (`window.dhGridData`)** and hidden input `#clientId_input` sync on all client-side data changes.
+  - Added backend action method `saveGrid()` in `GridBean.java` with AJAX notification status in demo.
 - **`v1.0.0-delta`** ([Release Notes](releases/1.0.0-delta.md)):
   - Added **Keyboard Navigation & Focus Management System** (`Arrow Keys`, `Tab`, `Shift+Tab`, `Enter`, `Escape`).
   - Added cell focus ring demarcation and automatic `scrollIntoView` for active cell focus.

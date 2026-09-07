@@ -224,6 +224,23 @@ public class GridBean implements Serializable {
         this.selectedPreset = selectedPreset;
     }
 
+    private String lastSaveStatus;
+
+    public String saveGrid() {
+        int r = (this.content != null) ? this.content.length : 0;
+        int c = (r > 0 && this.content[0] != null) ? this.content[0].length : 0;
+        this.lastSaveStatus = "💾 Grid data (" + r + " rows × " + c + " cols) saved to GridBean at " + java.time.LocalTime.now().toString().substring(0, 8);
+        return null;
+    }
+
+    public String getLastSaveStatus() {
+        return lastSaveStatus;
+    }
+
+    public void setLastSaveStatus(String lastSaveStatus) {
+        this.lastSaveStatus = lastSaveStatus;
+    }
+
     public String getCssCompatible() {
         return cssCompatible;
     }

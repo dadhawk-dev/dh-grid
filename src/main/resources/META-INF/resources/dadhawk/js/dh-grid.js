@@ -522,6 +522,27 @@ class DhGridElement extends HTMLElement {
         }
         const isFocusedInGrid = this.shadowRoot && (this.shadowRoot.contains(this.shadowRoot.activeElement) || this.shadowRoot.contains(document.activeElement));
         this.focusCell(this.focusedRow, this.focusedCol, Boolean(isFocusedInGrid));
+        this.syncGlobalState();
+    }
+
+    syncGlobalState() {
+        try {
+            const data = this.getData();
+            window.dhGridData = window.dhGridData || {};
+            const key = this.id || 'dhGrid';
+            window.dhGridData[key] = data;
+            window.dhGridDataContent = data;
+
+            let hiddenInput = document.getElementById(key + '_input');
+            if (!hiddenInput && key) {
+                hiddenInput = document.querySelector(`input[name="${key}_input"]`);
+            }
+            if (hiddenInput) {
+                hiddenInput.value = JSON.stringify(data);
+            }
+        } catch (e) {
+            console.error("Error syncing global state:", e);
+        }
     }
 
     attachEvents() {
@@ -821,6 +842,7 @@ class DhGridElement extends HTMLElement {
             composed: true,
             detail: { row, col, value }
         }));
+        this.syncGlobalState();
     }
 
     addRow(defaultRow) {
