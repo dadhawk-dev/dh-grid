@@ -369,35 +369,8 @@ Access local endpoints:
 ## 🏷️ Release History & Tags
 
 - **`v1.0.0`** ([Release Notes](releases/1.0.0.md)):
-  - Added comprehensive overall grid **`readOnly` / `readonly` property support** across Java (`DhGridComponent`), JS Web Component (`<dh-grid-element>`), Taglib (`dadhawk.taglib.xml`), and demo backing bean (`GridBean.java`).
-  - Added property aliases for both camelCase (`readOnly`) and lowercase (`readonly`) attributes and getters/setters in Java and JS.
-  - Added lock-shake animation feedback and cell read-only styling across all matrix cells when grid overall `readOnly` is enabled.
-- **`v1.0.0-RC2`** ([Release Notes](releases/1.0.0-RC2.md)):
-  - Fixed GitHub Pages Maven Repository metadata indexing (`maven-metadata.xml`) so external projects cleanly resolve `dhgrid-component`.
-  - Upgraded release candidate package to `v1.0.0-RC2`.
-- **`v1.0.0-RC1`** ([Release Notes](releases/1.0.0-RC1.md)):
-  - Added **Backend Form Save & Automatic Model Binding** (`DhGridComponent` extends `UIInput` with `decode()` & `updateModel()`).
-  - Added zero-dependency JSON matrix parser `parseJsonMatrix(String json)`.
-  - Added **Global JavaScript State Sync (`window.dhGridData`)** and hidden input `#clientId_input` sync on all client-side data changes.
-  - Added backend action method `saveGrid()` in `GridBean.java` with AJAX notification status in demo.
-- **`v1.0.0-delta`** ([Release Notes](releases/1.0.0-delta.md)):
-  - Added **Keyboard Navigation & Focus Management System** (`Arrow Keys`, `Tab`, `Shift+Tab`, `Enter`, `Escape`).
-  - Added cell focus ring demarcation and automatic `scrollIntoView` for active cell focus.
-  - Seamless editor hand-off on `Tab` (move right & wrap) and `Enter` (save & move down).
-- **`v1.0.0-gamma`** ([Release Notes](releases/1.0.0-gamma.md)):
-  - Added **PrimeFaces Theme Compatibility** (`css-compatible="primethemes"` / `cssCompatible="primethemes"`).
-  - Direct CSS variable binding between Shadow DOM host element and PrimeThemes variables (`--surface-a`, `--surface-b`, `--surface-border`, `--text-color`, `--primary-color`).
-  - Added live PrimeThemes theme switcher toolbar in interactive showcase.
-- **`v1.0.0-beta`** ([Release Notes](releases/1.0.0-beta.md)):
-  - Added **Cell ReadOnly Strategy** (`readOnly`, `readOnlyCells`) with lock-shake animation feedback.
-  - Added **Dynamic Cell Styling Strategy** (`cellStyles`) supporting per-cell/column background, text colors, and font styles.
-  - Expanded Jakarta Faces 4.0 `<dh:dhGrid>` taglib attributes with full EL binding support.
-- **`v1.0.0-alpha`** ([Release Notes](releases/1.0.0-alpha.md)):
-  - Initial open-source release under GNU LGPL v3.0 by Telman Shahbazov / Dadhawk.
-  - Dual-mode architecture: Jakarta Faces 4.0 `<dh:dhGrid>` taglib component & native W3C `<dh-grid-element>`.
-  - Composite parent-child tree captions with automated `colspan`/`rowspan` matrix calculation.
-  - Custom Web Component cell editors (`<status-selector>`, `<rating-editor>`).
-  - Interactive live demo preview modal.
+  - Official stable release of **Dadhawk DhGrid Component**.
+  - Features dual-mode JSF 4.0 (`<dh:dhGrid>`) & W3C Web Component (`<dh-grid-element>`) support, parent-child composite tree headers, intelligent input editors (`input-text`, `input-number`, `input-money`), locale-aware formatting, granular read-only matrix locking, dynamic styling strategies (`cellStyles`), keyboard navigation, PrimeFaces theme compatibility (`css-compatible="primethemes"`), and native JSF form model synchronization (`UIInput`).
 
 ---
 
