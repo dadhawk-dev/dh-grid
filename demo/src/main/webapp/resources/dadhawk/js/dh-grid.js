@@ -3,21 +3,56 @@
  * @author Telman Shahbazov / Dadhawk (with Google DeepMind Antigravity AI)
  * @license GNU LGPL v3.0
  */
-
 // Helper functions for locale-aware number & currency parsing/formatting
-function parseRawNumber(val) {
-    if (typeof val === 'number') return val;
+function parseRawNumber(val, loc) {
+    if (typeof val === 'number') return isNaN(val) ? 0 : val;
     if (!val) return 0;
-    let clean = String(val).replace(/[^0-9\.\,-]/g, '');
-    if (clean.includes(',') && clean.includes('.')) {
-        if (clean.indexOf('.') < clean.indexOf(',')) {
-            clean = clean.replace(/\./g, '').replace(',', '.');
-        } else {
+
+    let str = String(val).trim();
+    if (!str) return 0;
+
+    const isTurkish = loc && loc.toLowerCase().includes('tr');
+
+    let clean = str.replace(/[^0-9\.\,-]/g, '');
+    if (!clean) return 0;
+
+    const hasDot = clean.includes('.');
+    const hasComma = clean.includes(',');
+
+    if (hasDot && hasComma) {
+        const lastDot = clean.lastIndexOf('.');
+        const lastComma = clean.lastIndexOf(',');
+        if (lastDot > lastComma) {
             clean = clean.replace(/,/g, '');
+        } else {
+            clean = clean.replace(/\./g, '').replace(',', '.');
         }
-    } else if (clean.includes(',')) {
-        clean = clean.replace(',', '.');
+    } else if (hasDot && !hasComma) {
+        const dotsCount = (clean.match(/\./g) || []).length;
+        if (dotsCount > 1) {
+            clean = clean.replace(/\./g, '');
+        } else if (isTurkish) {
+            const parts = clean.split('.');
+            if (parts[1] && parts[1].length === 3 && !parts[0].includes('.')) {
+                clean = clean.replace('.', '');
+            }
+        }
+    } else if (hasComma && !hasDot) {
+        const commasCount = (clean.match(/,/g) || []).length;
+        if (commasCount > 1) {
+            clean = clean.replace(/,/g, '');
+        } else if (!isTurkish) {
+            const parts = clean.split(',');
+            if (parts[1] && parts[1].length === 3) {
+                clean = clean.replace(',', '');
+            } else {
+                clean = clean.replace(',', '.');
+            }
+        } else {
+            clean = clean.replace(',', '.');
+        }
     }
+
     const parsed = parseFloat(clean);
     return isNaN(parsed) ? 0 : parsed;
 }
@@ -32,7 +67,7 @@ function getCurrencyForLocale(loc) {
 }
 
 function formatNumber(val, loc) {
-    const num = parseRawNumber(val);
+    const num = parseRawNumber(val, loc);
     try {
         return new Intl.NumberFormat(loc || 'en-US', { maximumFractionDigits: 2 }).format(num);
     } catch(e) {
@@ -41,7 +76,7 @@ function formatNumber(val, loc) {
 }
 
 function formatMoney(val, loc) {
-    const num = parseRawNumber(val);
+    const num = parseRawNumber(val, loc);
     const currency = getCurrencyForLocale(loc);
     try {
         return new Intl.NumberFormat(loc || 'en-US', { style: 'currency', currency: currency }).format(num);
@@ -68,17 +103,17 @@ class DhEditorInputText extends HTMLElement {
                     color: #f8fafc;
                     border: 2px solid #38bdf8;
                     border-radius: 4px;
-                    padding: 4px 8px;
-                    font-family: inherit;
+                    padding: 0 6px;
+                    font-family: monospace;
                     font-size: 13px;
-                    font-weight: 500;
-                    box-sizing: border-box;
+                    font-weight: 700;
                     outline: none;
+                    box-sizing: border-box;
                 }
             </style>
-            <input type="text" id="inputEl" value="${val.replace(/"/g, '&quot;')}" />
+            <input type="text" id="textInput" value="${val.replace(/"/g, '&quot;')}" />
         `;
-        const input = this.shadowRoot.getElementById('inputEl');
+        const input = this.shadowRoot.getElementById('textInput');
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === 'Tab') {
                 this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: input.value } }));
@@ -100,7 +135,7 @@ class DhEditorInputNumber extends HTMLElement {
     connectedCallback() {
         const rawVal = this.getAttribute('value') || '0';
         const locale = this.getAttribute('locale') || 'en-US';
-        const numVal = parseRawNumber(rawVal);
+        const numVal = parseRawNumber(rawVal, locale);
         
         this.shadowRoot.innerHTML = `
             <style>
@@ -160,7 +195,7 @@ class DhEditorInputNumber extends HTMLElement {
         const btnDown = this.shadowRoot.getElementById('btnDown');
 
         const step = (delta) => {
-            let v = parseRawNumber(input.value) + delta;
+            let v = parseRawNumber(input.value, locale) + delta;
             input.value = v;
         };
 
@@ -171,7 +206,7 @@ class DhEditorInputNumber extends HTMLElement {
             if (e.key === 'ArrowUp') { e.preventDefault(); step(1); }
             else if (e.key === 'ArrowDown') { e.preventDefault(); step(-1); }
             else if (e.key === 'Enter' || e.key === 'Tab') {
-                const finalNum = parseRawNumber(input.value);
+                const finalNum = parseRawNumber(input.value, locale);
                 const formatted = formatNumber(finalNum, locale);
                 this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: formatted } }));
             }
@@ -193,7 +228,7 @@ class DhEditorInputMoney extends HTMLElement {
     connectedCallback() {
         const rawVal = this.getAttribute('value') || '0';
         const locale = this.getAttribute('locale') || 'en-US';
-        const numVal = parseRawNumber(rawVal);
+        const numVal = parseRawNumber(rawVal, locale);
         const currencySymbol = (function(loc) {
             const formatted = formatMoney(0, loc);
             return formatted.replace(/[0-9\.\,\s]/g, '') || '$';
@@ -241,7 +276,7 @@ class DhEditorInputMoney extends HTMLElement {
 
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === 'Tab') {
-                const finalNum = parseRawNumber(input.value);
+                const finalNum = parseRawNumber(input.value, locale);
                 const formatted = formatMoney(finalNum, locale);
                 this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: formatted } }));
             }
