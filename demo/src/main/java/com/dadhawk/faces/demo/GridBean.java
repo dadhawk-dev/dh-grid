@@ -28,6 +28,7 @@ public class GridBean implements Serializable {
     private Object cellStyles;
     private String selectedPreset = "financial";
     private String cssCompatible = "primethemes";
+    private String locale = "en-US";
 
     @PostConstruct
     public void init() {
@@ -47,13 +48,16 @@ public class GridBean implements Serializable {
         };
         this.content = new String[][] {
             {"Quarter", "Revenue ($)", "Expenses ($)", "Margin (%)", "Performance"},
-            {"Q1 2026", "$120,000", "$85,000", "29.1%", "Completed"},
-            {"Q2 2026", "$145,000", "$92,000", "36.5%", "Active"},
-            {"Q3 2026", "$160,000", "$98,000", "38.7%", "Pending"},
-            {"Q4 2026", "$210,000", "$110,000", "47.6%", "In Review"}
+            {"Q1 2026", "120000", "85000", "29.1", "Completed"},
+            {"Q2 2026", "145000", "92000", "36.5", "Active"},
+            {"Q3 2026", "160000", "98000", "38.7", "Pending"},
+            {"Q4 2026", "210000", "110000", "47.6", "In Review"}
         };
 
         this.componentMap = new HashMap<>();
+        this.componentMap.put("c1", "input-money");
+        this.componentMap.put("c2", "input-money");
+        this.componentMap.put("c3", "input-number");
         this.componentMap.put("r1_c4", "status-selector");
         this.componentMap.put("r2_c4", "status-selector");
         this.componentMap.put("r3_c4", "status-selector");
@@ -269,5 +273,13 @@ public class GridBean implements Serializable {
     public String toggleReadOnly() {
         this.readOnly = !isReadOnly();
         return null;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }

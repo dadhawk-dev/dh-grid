@@ -61,6 +61,11 @@
             <type>java.lang.String</type>
             <description>CSS theme compatibility strategy mode (e.g. primethemes, true, auto)</description>
         </attribute>
+        <attribute>
+            <name>locale</name>
+            <type>java.lang.String</type>
+            <description>Locale identifier for number and currency formatting (e.g. en-US, tr-TR, de-DE, ja-JP)</description>
+        </attribute>
     </tag>
 
 </facelet-taglib>

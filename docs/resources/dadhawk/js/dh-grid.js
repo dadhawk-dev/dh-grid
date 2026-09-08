@@ -3,6 +3,257 @@
  * @author Telman Shahbazov / Dadhawk (with Google DeepMind Antigravity AI)
  * @license GNU LGPL v3.0
  */
+
+// Helper functions for locale-aware number & currency parsing/formatting
+function parseRawNumber(val) {
+    if (typeof val === 'number') return val;
+    if (!val) return 0;
+    let clean = String(val).replace(/[^0-9\.\,-]/g, '');
+    if (clean.includes(',') && clean.includes('.')) {
+        if (clean.indexOf('.') < clean.indexOf(',')) {
+            clean = clean.replace(/\./g, '').replace(',', '.');
+        } else {
+            clean = clean.replace(/,/g, '');
+        }
+    } else if (clean.includes(',')) {
+        clean = clean.replace(',', '.');
+    }
+    const parsed = parseFloat(clean);
+    return isNaN(parsed) ? 0 : parsed;
+}
+
+function getCurrencyForLocale(loc) {
+    const l = (loc || 'en-US').toLowerCase();
+    if (l.includes('tr')) return 'TRY';
+    if (l.includes('de') || l.includes('fr') || l.includes('es') || l.includes('it') || l.includes('nl') || l.includes('eu')) return 'EUR';
+    if (l.includes('gb')) return 'GBP';
+    if (l.includes('jp')) return 'JPY';
+    return 'USD';
+}
+
+function formatNumber(val, loc) {
+    const num = parseRawNumber(val);
+    try {
+        return new Intl.NumberFormat(loc || 'en-US', { maximumFractionDigits: 2 }).format(num);
+    } catch(e) {
+        return num.toLocaleString();
+    }
+}
+
+function formatMoney(val, loc) {
+    const num = parseRawNumber(val);
+    const currency = getCurrencyForLocale(loc);
+    try {
+        return new Intl.NumberFormat(loc || 'en-US', { style: 'currency', currency: currency }).format(num);
+    } catch(e) {
+        return `$${num.toFixed(2)}`;
+    }
+}
+
+// Custom Editor 1: <dh-editor-input-text> / "input-text"
+class DhEditorInputText extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+    connectedCallback() {
+        const val = this.getAttribute('value') || '';
+        this.shadowRoot.innerHTML = `
+            <style>
+                :host { display: block; width: 100%; height: 100%; }
+                input {
+                    width: 100%;
+                    height: 100%;
+                    background: #0f172a;
+                    color: #f8fafc;
+                    border: 2px solid #38bdf8;
+                    border-radius: 4px;
+                    padding: 4px 8px;
+                    font-family: inherit;
+                    font-size: 13px;
+                    font-weight: 500;
+                    box-sizing: border-box;
+                    outline: none;
+                }
+            </style>
+            <input type="text" id="inputEl" value="${val.replace(/"/g, '&quot;')}" />
+        `;
+        const input = this.shadowRoot.getElementById('inputEl');
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === 'Tab') {
+                this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: input.value } }));
+            }
+        });
+        setTimeout(() => { input.focus(); input.select(); }, 10);
+    }
+}
+if (!customElements.get('dh-editor-input-text')) {
+    customElements.define('dh-editor-input-text', DhEditorInputText);
+}
+
+// Custom Editor 2: <dh-editor-input-number> / "input-number"
+class DhEditorInputNumber extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+    connectedCallback() {
+        const rawVal = this.getAttribute('value') || '0';
+        const locale = this.getAttribute('locale') || 'en-US';
+        const numVal = parseRawNumber(rawVal);
+        
+        this.shadowRoot.innerHTML = `
+            <style>
+                :host { display: block; width: 100%; height: 100%; }
+                .wrapper {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                    background: #0f172a;
+                    border: 2px solid #34d399;
+                    border-radius: 4px;
+                    overflow: hidden;
+                    box-sizing: border-box;
+                }
+                input {
+                    flex: 1;
+                    height: 100%;
+                    background: transparent;
+                    color: #34d399;
+                    border: none;
+                    padding: 2px 6px;
+                    font-family: monospace;
+                    font-size: 13px;
+                    font-weight: 700;
+                    outline: none;
+                    box-sizing: border-box;
+                }
+                .btn-group {
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+                    border-left: 1px solid rgba(255, 255, 255, 0.1);
+                }
+                button {
+                    flex: 1;
+                    background: rgba(255, 255, 255, 0.08);
+                    color: #94a3b8;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 9px;
+                    padding: 0 4px;
+                    line-height: 1;
+                }
+                button:hover { background: rgba(52, 211, 153, 0.2); color: #ffffff; }
+            </style>
+            <div class="wrapper">
+                <input type="text" id="numInput" value="${numVal}" />
+                <div class="btn-group">
+                    <button type="button" id="btnUp">▲</button>
+                    <button type="button" id="btnDown">▼</button>
+                </div>
+            </div>
+        `;
+        const input = this.shadowRoot.getElementById('numInput');
+        const btnUp = this.shadowRoot.getElementById('btnUp');
+        const btnDown = this.shadowRoot.getElementById('btnDown');
+
+        const step = (delta) => {
+            let v = parseRawNumber(input.value) + delta;
+            input.value = v;
+        };
+
+        btnUp.addEventListener('click', () => step(1));
+        btnDown.addEventListener('click', () => step(-1));
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') { e.preventDefault(); step(1); }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); step(-1); }
+            else if (e.key === 'Enter' || e.key === 'Tab') {
+                const finalNum = parseRawNumber(input.value);
+                const formatted = formatNumber(finalNum, locale);
+                this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: formatted } }));
+            }
+        });
+
+        setTimeout(() => { input.focus(); input.select(); }, 10);
+    }
+}
+if (!customElements.get('dh-editor-input-number')) {
+    customElements.define('dh-editor-input-number', DhEditorInputNumber);
+}
+
+// Custom Editor 3: <dh-editor-input-money> / "input-money"
+class DhEditorInputMoney extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+    connectedCallback() {
+        const rawVal = this.getAttribute('value') || '0';
+        const locale = this.getAttribute('locale') || 'en-US';
+        const numVal = parseRawNumber(rawVal);
+        const currencySymbol = (function(loc) {
+            const formatted = formatMoney(0, loc);
+            return formatted.replace(/[0-9\.\,\s]/g, '') || '$';
+        })(locale);
+
+        this.shadowRoot.innerHTML = `
+            <style>
+                :host { display: block; width: 100%; height: 100%; }
+                .wrapper {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                    background: #0f172a;
+                    border: 2px solid #fbbf24;
+                    border-radius: 4px;
+                    padding: 0 6px;
+                    box-sizing: border-box;
+                }
+                .symbol {
+                    color: #fbbf24;
+                    font-weight: 800;
+                    font-size: 13px;
+                    margin-right: 4px;
+                    user-select: none;
+                }
+                input {
+                    flex: 1;
+                    height: 100%;
+                    background: transparent;
+                    color: #f8fafc;
+                    border: none;
+                    font-family: monospace;
+                    font-size: 13px;
+                    font-weight: 700;
+                    outline: none;
+                }
+            </style>
+            <div class="wrapper">
+                <span class="symbol">${currencySymbol}</span>
+                <input type="text" id="moneyInput" value="${numVal}" />
+            </div>
+        `;
+        const input = this.shadowRoot.getElementById('moneyInput');
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === 'Tab') {
+                const finalNum = parseRawNumber(input.value);
+                const formatted = formatMoney(finalNum, locale);
+                this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: formatted } }));
+            }
+        });
+
+        setTimeout(() => { input.focus(); input.select(); }, 10);
+    }
+}
+if (!customElements.get('dh-editor-input-money')) {
+    customElements.define('dh-editor-input-money', DhEditorInputMoney);
+}
+
 class DhGridElement extends HTMLElement {
     constructor() {
         super();
@@ -13,7 +264,7 @@ class DhGridElement extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ['rows', 'cols', 'content', 'components', 'captions', 'readonly', 'readOnly', 'read-only', 'readonly-cells', 'cell-styles', 'css-compatible'];
+        return ['rows', 'cols', 'content', 'components', 'captions', 'readonly', 'readOnly', 'read-only', 'readonly-cells', 'cell-styles', 'css-compatible', 'locale'];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -24,6 +275,15 @@ class DhGridElement extends HTMLElement {
 
     connectedCallback() {
         this.render();
+    }
+
+    get locale() {
+        return this.getAttribute('locale') || 'en-US';
+    }
+
+    set locale(val) {
+        if (val) this.setAttribute('locale', val);
+        else this.removeAttribute('locale');
     }
 
     get cssCompatible() {
@@ -519,12 +779,25 @@ class DhGridElement extends HTMLElement {
                             return `
                                 <tr>
                                     ${Array.from({ length: cols }, (_, c) => {
-                                        const val = (data[r] && data[r][c] !== undefined) ? data[r][c] : '';
+                                        const rawVal = (data[r] && data[r][c] !== undefined) ? data[r][c] : '';
+                                        const compMap = this.getComponentMap();
+                                        const keyCell = `r${r}_c${c}`;
+                                        const keyCol = `c${c}`;
+                                        const keyRow = `r${r}`;
+                                        let compTag = compMap[keyCell] || compMap[keyCol] || compMap[keyRow];
+                                        let displayVal = rawVal;
+                                        if (displayVal !== '' && displayVal !== null && displayVal !== undefined) {
+                                            if (compTag === 'input-number') {
+                                                displayVal = formatNumber(displayVal, this.locale);
+                                            } else if (compTag === 'input-money') {
+                                                displayVal = formatMoney(displayVal, this.locale);
+                                            }
+                                        }
                                         const customStyle = this.getCellStyle(r, c);
                                         const isReadOnly = this.isCellReadOnly(r, c);
                                         const readOnlyClass = isReadOnly ? ' grid-cell-readonly' : '';
                                         const readOnlyAttr = isReadOnly ? ' data-readonly="true"' : '';
-                                        return `<td class="grid-cell${readOnlyClass}"${readOnlyAttr} tabindex="0" style="${customStyle}" data-row="${r}" data-col="${c}">${val}</td>`;
+                                        return `<td class="grid-cell${readOnlyClass}"${readOnlyAttr} tabindex="0" style="${customStyle}" data-row="${r}" data-col="${c}">${displayVal}</td>`;
                                     }).join('')}
                                 </tr>
                             `;
@@ -745,8 +1018,14 @@ class DhGridElement extends HTMLElement {
         overlay.style.height = `${cellRect.height}px`;
 
         const key = `r${row}_c${col}`;
+        const keyCol = `c${col}`;
+        const keyRow = `r${row}`;
         const compMap = this.getComponentMap();
-        const customCompTag = compMap[key];
+        let customCompTag = compMap[key] || compMap[keyCol] || compMap[keyRow];
+
+        if (customCompTag === 'input-text') customCompTag = 'dh-editor-input-text';
+        if (customCompTag === 'input-number') customCompTag = 'dh-editor-input-number';
+        if (customCompTag === 'input-money') customCompTag = 'dh-editor-input-money';
 
         const commitAndNavigate = (newVal, actionKey, isShift) => {
             cell.innerText = newVal;
@@ -774,6 +1053,7 @@ class DhGridElement extends HTMLElement {
             customEl.setAttribute('value', initialChar !== null ? initialChar : cell.innerText.trim());
             customEl.setAttribute('row', row);
             customEl.setAttribute('col', col);
+            customEl.setAttribute('locale', this.locale);
 
             const handleCustomSave = (val) => {
                 const newVal = String(val !== undefined ? val : (customEl.value || cell.innerText));

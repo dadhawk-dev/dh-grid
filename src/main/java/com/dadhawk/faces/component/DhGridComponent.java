@@ -33,7 +33,7 @@ public class DhGridComponent extends UIInput {
     public static final String COMPONENT_TYPE = "com.dadhawk.faces.component.DhGridComponent";
 
     enum PropertyKeys {
-        rowCount, colCount, content, componentMap, captions, readOnly, readonly, readOnlyCells, cellStyles, cssCompatible
+        rowCount, colCount, content, componentMap, captions, readOnly, readonly, readOnlyCells, cellStyles, cssCompatible, locale
     }
 
     public DhGridComponent() {
@@ -136,6 +136,22 @@ public class DhGridComponent extends UIInput {
         getStateHelper().put(PropertyKeys.cellStyles, cellStyles);
     }
 
+    public String getLocale() {
+        String loc = (String) getStateHelper().eval(PropertyKeys.locale, null);
+        if (loc != null && !loc.trim().isEmpty()) {
+            return loc;
+        }
+        FacesContext ctx = getFacesContext();
+        if (ctx != null && ctx.getViewRoot() != null && ctx.getViewRoot().getLocale() != null) {
+            return ctx.getViewRoot().getLocale().toString().replace('_', '-');
+        }
+        return "en-US";
+    }
+
+    public void setLocale(String locale) {
+        getStateHelper().put(PropertyKeys.locale, locale);
+    }
+
     public Object getCssCompatible() {
         return getStateHelper().eval(PropertyKeys.cssCompatible, null);
     }
@@ -203,6 +219,9 @@ public class DhGridComponent extends UIInput {
         }
         if (getCssCompatible() != null) {
             writer.writeAttribute("css-compatible", getCssCompatible().toString(), "cssCompatible");
+        }
+        if (getLocale() != null) {
+            writer.writeAttribute("locale", getLocale(), "locale");
         }
 
         // Render hidden input inside component for JSF form submission sync
