@@ -13,7 +13,7 @@ class DhGridElement extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ['rows', 'cols', 'content', 'components', 'captions', 'readonly', 'readonly-cells', 'cell-styles', 'css-compatible'];
+        return ['rows', 'cols', 'content', 'components', 'captions', 'readonly', 'readOnly', 'read-only', 'readonly-cells', 'cell-styles', 'css-compatible'];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -36,12 +36,34 @@ class DhGridElement extends HTMLElement {
     }
 
     get readOnly() {
-        return this.hasAttribute('readonly') && this.getAttribute('readonly') !== 'false';
+        const attrVal = this.getAttribute('readonly') || this.getAttribute('readOnly') || this.getAttribute('read-only');
+        return attrVal !== null && attrVal !== 'false';
     }
 
     set readOnly(val) {
-        if (val) this.setAttribute('readonly', 'true');
-        else this.removeAttribute('readonly');
+        if (val && val !== 'false' && val !== '0') {
+            this.setAttribute('readonly', 'true');
+        } else {
+            this.removeAttribute('readonly');
+            this.removeAttribute('readOnly');
+            this.removeAttribute('read-only');
+        }
+    }
+
+    get readonly() {
+        return this.readOnly;
+    }
+
+    set readonly(val) {
+        this.readOnly = val;
+    }
+
+    get ['read-only']() {
+        return this.readOnly;
+    }
+
+    set ['read-only'](val) {
+        this.readOnly = val;
     }
 
     get readOnlyCells() {
@@ -533,10 +555,9 @@ class DhGridElement extends HTMLElement {
             window.dhGridData[key] = data;
             window.dhGridDataContent = data;
 
-            let hiddenInput = document.getElementById(key + '_input');
-            if (!hiddenInput && key) {
-                hiddenInput = document.querySelector(`input[name="${key}_input"]`);
-            }
+            let hiddenInput = this.querySelector(`input[id="${key}_input"]`) ||
+                              document.getElementById(key + '_input') ||
+                              document.querySelector(`input[name="${key}_input"]`);
             if (hiddenInput) {
                 hiddenInput.value = JSON.stringify(data);
             }

@@ -1,7 +1,7 @@
 # ⚡ DhGrid — High-Performance Data Grid Component for Jakarta Faces 4.0 & W3C Web Components
 
 
-[![Version](https://img.shields.io/badge/version-1.0.0--RC2-blue.svg?style=for-the-badge)](releases/1.0.0-RC2.md)
+[![Version](https://img.shields.io/badge/version-1.0.0--RC3-blue.svg?style=for-the-badge)](releases/1.0.0-RC3.md)
 [![Jakarta Faces](https://img.shields.io/badge/Jakarta%20Faces-4.0-orange.svg?style=for-the-badge)](https://jakarta.ee/specifications/faces/4.0/)
 [![W3C Web Component](https://img.shields.io/badge/Web%20Component-W3C%20Standard-purple.svg?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Web_components)
 [![License](https://img.shields.io/badge/License-GNU_LGPL_v3.0-blue.svg?style=for-the-badge)](LICENSE)
@@ -40,7 +40,7 @@ It features intuitive inline editing, keyboard-driven cell navigation (`Arrow Ke
 
 ### 🅰️ Method 1: GitHub Pages Maven Repository (Recommended)
 
-Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatically download `dhgrid-component-1.0.0-RC2.jar`:
+Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatically download `dhgrid-component-1.0.0-RC3.jar`:
 
 ```xml
 <repositories>
@@ -55,7 +55,7 @@ Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatical
     <dependency>
         <groupId>com.dadhawk.faces</groupId>
         <artifactId>dhgrid-component</artifactId>
-        <version>1.0.0-RC2</version>
+        <version>1.0.0-RC3</version>
     </dependency>
 </dependencies>
 ```
@@ -64,16 +64,16 @@ Add the GitHub Pages Maven Repository to your project's `pom.xml` to automatical
 
 ### 🅱️ Method 2: Direct JAR Download & Local Maven Install (`~/.m2`)
 
-> 📦 **Direct Download**: **[Download Maven JAR v1.0.0-RC2 (`dhgrid-component-1.0.0-RC2.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0-RC2.jar)**
+> 📦 **Direct Download**: **[Download Maven JAR v1.0.0-RC3 (`dhgrid-component-1.0.0-RC3.jar`)](https://dadhawk-dev.github.io/dh-grid/downloads/dhgrid-component-1.0.0-RC3.jar)**
 
 If you downloaded the JAR manually, install it to your local Maven repository:
 
 ```bash
 mvn install:install-file \
-  -Dfile=dhgrid-component-1.0.0-RC2.jar \
+  -Dfile=dhgrid-component-1.0.0-RC3.jar \
   -DgroupId=com.dadhawk.faces \
   -DartifactId=dhgrid-component \
-  -Dversion=1.0.0-RC2 \
+  -Dversion=1.0.0-RC3 \
   -Dpackaging=jar
 ```
 
@@ -93,11 +93,11 @@ mvn install:install-file \
   <script src="resources/js/custom-editors.js"></script>
 </head>
 <body>
-  <!-- 1. Embedded Web Component (Declarative HTML Attributes) -->
+  <!-- 1. Embedded Web Component (Declarative HTML Attributes: readonly="true" / readOnly="true" / read-only="true") -->
   <dh-grid-element id="myGrid"
                    rows="5"
                    cols="5"
-                   readonly="false"
+                   readonly="true"
                    readonly-cells='{"r1_c0": true, "r3": true}'
                    cell-styles='{"r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;", "c1": "color: #0284c7; font-weight: 600;"}'>
   </dh-grid-element>
@@ -105,7 +105,10 @@ mvn install:install-file \
   <script>
     const grid = document.getElementById('myGrid');
 
-    // 2. Define Composite Parent-Child Tree Captions
+    // 🔒 2. Overall Grid ReadOnly Property API (grid.readOnly / grid.readonly)
+    grid.readOnly = true; // Lock all matrix cells grid-wide dynamically (set grid.readOnly = false to unlock)
+
+    // 3. Define Composite Parent-Child Tree Captions
     grid.setAttribute('captions', JSON.stringify([
       "Financial Performance / H1 (Q1-Q2) / Revenue ($)",
       "Financial Performance / H1 (Q1-Q2) / Expenses ($)",
@@ -114,7 +117,7 @@ mvn install:install-file \
       "Overall Status"
     ]));
 
-    // 3. Populate Grid Content Matrix
+    // 4. Populate Grid Content Matrix
     grid.setAttribute('content', JSON.stringify([
       ["Quarter", "Revenue ($)", "Expenses ($)", "Margin (%)", "Performance"],
       ["Q1 2026", "$120,000", "$85,000", "29.1%", "Completed"],
@@ -123,7 +126,7 @@ mvn install:install-file \
       ["Q4 2026", "$210,000", "$110,000", "47.6%", "In Review"]
     ]));
 
-    // 4. Map Custom Web Component Editors to Specific Cells
+    // 5. Map Custom Web Component Editors to Specific Cells
     grid.setAttribute('components', JSON.stringify({
       "r1_c4": "status-selector",
       "r2_c4": "status-selector",
@@ -131,7 +134,7 @@ mvn install:install-file \
       "r4_c4": "status-selector"
     }));
 
-    // 5. Configure Cell ReadOnly Rules & Custom Styling (Imperative JS Property API)
+    // 6. Configure Cell ReadOnly Rules & Custom Styling (Imperative JS Property API)
     // Note: {"r1_c0": true} locks single cell; {"r3": true} locks entire row 3; {"c0": true} locks column 0.
     grid.readOnlyCells = { "r1_c0": true, "r3": true };
     // Note: {"r1_c3": "..."} styles single cell; {"c1": "..."} styles entire column 1; {"r2": "..."} styles row 2.
@@ -153,7 +156,7 @@ mvn install:install-file \
 
 ### 🅱️ Jakarta Faces 4.0 (JSF View + Managed Bean)
 
-#### Facelets View (`index.xhtml`)
+#### 1. Facelets View (`index.xhtml`)
 
 ```xml
 <!DOCTYPE html>
@@ -162,92 +165,127 @@ mvn install:install-file \
       xmlns:f="jakarta.faces.core"
       xmlns:dh="http://dadhawk.com/faces">
 <h:head>
-    <title>Jakarta Faces 4.0 DhGrid Showcase</title>
+    <title>Jakarta Faces 4.0 DhGrid Integration</title>
 </h:head>
 <h:body>
     <h:form id="gridForm">
+        <!-- Global Feedback Messages -->
+        <h:messages id="messages" globalOnly="true"
+                    style="color: #4ade80; font-weight: 700; margin-bottom: 10px;" />
+
+        <!-- 1. DhGrid Component with Property EL Bindings -->
         <dh:dhGrid id="myGrid"
                    rowCount="#{gridBean.rowCount}"
                    colCount="#{gridBean.colCount}"
+                   cssCompatible="primethemes"
                    content="#{gridBean.content}"
                    captions="#{gridBean.captions}"
-                   componentMap="#{gridBean.componentMap}"
+                   readOnly="#{gridBean.readOnly}"
                    readOnlyCells="#{gridBean.readOnlyCells}"
-                   cellStyles="#{gridBean.cellStyles}" />
+                   cellStyles="#{gridBean.cellStyles}"
+                   componentMap="#{gridBean.componentMap}" />
 
-        <!-- Form Submit with Backend Save Action Method -->
-        <h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid()}">
-            <f:ajax execute="@form" render="saveMsg" />
-        </h:commandButton>
-        <h:outputText id="saveMsg" value="#{gridBean.lastSaveStatus}" />
+        <!-- 2. Action Toolbar: Lock/Unlock & Save to Backend DB -->
+        <div style="margin-top: 15px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <!-- Toggle Overall Grid ReadOnly State -->
+            <h:commandButton value="#{gridBean.readOnly ? '🔓 Unlock Grid' : '🔒 Lock Grid'}"
+                             action="#{gridBean.toggleReadOnly}">
+                <f:ajax execute="@form" render="gridForm:myGrid" />
+            </h:commandButton>
+
+            <!-- 💾 Save Grid Data Matrix to Backend DB -->
+            <h:commandButton value="💾 Save Grid Data to Backend"
+                             action="#{gridBean.saveData}"
+                             style="background: #10b981; color: #ffffff; font-weight: 700; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                <f:ajax execute="@form" render="messages saveMsg gridForm:myGrid" />
+            </h:commandButton>
+
+            <!-- Status Output -->
+            <h:outputText id="saveMsg" value="#{gridBean.lastSaveStatus}"
+                          style="color: #38bdf8; font-weight: 600;" />
+        </div>
     </h:form>
 </h:body>
 </html>
 ```
 
-#### CDI Managed Bean (`GridBean.java`)
+#### 2. CDI Managed Bean (`GridBean.java`)
 
 ```java
 package com.dadhawk.faces.demo;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import java.io.Serializable;
-import java.util.Map;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 @Named("gridBean")
 @SessionScoped
 public class GridBean implements Serializable {
 
+    private String content; // Updated bi-directionally by <dh:dhGrid> hidden input
+    private Boolean readOnly = false; // Overall grid read-only state flag
+    private String lastSaveStatus = "";
+
     private Integer rowCount = 5;
     private Integer colCount = 5;
-    private String[][] content;
-    private Object captions;
-    private Map<String, String> componentMap;
-    private Object readOnlyCells;
-    private Object cellStyles;
-    private String lastSaveStatus;
+    private String captions = "[\"Sales / H1 / Q1\", \"Sales / H1 / Q2\", \"Sales / H2 / Q3\", \"Sales / H2 / Q4\", \"Status\"]";
+    private String readOnlyCells = "{\"r1_c0\": true, \"r3\": true}";
+    private String cellStyles = "{\"r1_c3\": \"background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;\", \"c1\": \"color: #0284c7; font-weight: 600;\"}";
+    private String componentMap = "{\"r1_c4\": \"status-selector\"}";
 
     @PostConstruct
     public void init() {
-        this.captions = new String[] {
-            "Financial Performance / H1 / Revenue ($)",
-            "Financial Performance / H1 / Expenses ($)",
-            "Financial Performance / H2 / Revenue ($)",
-            "Financial Performance / H2 / Expenses ($)",
-            "Overall Status"
-        };
-        this.content = new String[][] {
-            {"Quarter", "Revenue ($)", "Expenses ($)", "Margin (%)", "Performance"},
-            {"Q1 2026", "$120,000", "$85,000", "29.1%", "Completed"},
-            {"Q2 2026", "$145,000", "$92,000", "36.5%", "Active"}
-        };
-        this.componentMap = Map.of("r1_c4", "status-selector", "r2_c4", "status-selector");
-        this.readOnlyCells = Map.of("r1_c0", true, "r2_c0", true);
-        this.cellStyles = Map.of(
-            "r1_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;",
-            "r2_c3", "background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;"
-        );
+        this.content = "[" +
+            "[\"Quarter\", \"Revenue ($)\", \"Expenses ($)\", \"Margin (%)\", \"Performance\"]," +
+            "[\"Q1 2026\", \"$120,000\", \"$85,000\", \"29.1%\", \"Completed\"]," +
+            "[\"Q2 2026\", \"$145,000\", \"$92,000\", \"36.5%\", \"Active\"]" +
+        "]";
     }
 
-    // Backend Action Method invoked on form submission / AJAX save button
-    public String saveGrid() {
-        int r = (content != null) ? content.length : 0;
-        int c = (r > 0 && content[0] != null) ? content[0].length : 0;
-        this.lastSaveStatus = "Saved " + r + "x" + c + " grid matrix to GridBean!";
+    /**
+     * 💾 Action method to process and persist grid data to backend DB.
+     * Invoked via <h:commandButton action="#{gridBean.saveData}"> with <f:ajax execute="@form">
+     */
+    public String saveData() {
+        System.out.println("Saving modified grid matrix to backend DB: " + this.content);
+
+        // PERSISTENCE LOGIC (e.g. JPA / Hibernate / Spring Data Repository):
+        // myGridRepository.save(this.content);
+
+        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        this.lastSaveStatus = "Saved grid matrix to backend DB at " + time + "!";
+
+        FacesContext.getCurrentInstance().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Backend Saved", this.lastSaveStatus));
+
         return null;
     }
 
+    /**
+     * 🔒 Action method to toggle overall grid read-only state.
+     */
+    public void toggleReadOnly() {
+        this.readOnly = !this.readOnly;
+    }
+
+    // Getters & Setters for JSF EL
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+    public Boolean isReadOnly() { return readOnly; }
+    public Boolean getReadOnly() { return readOnly; }
+    public void setReadOnly(Boolean readOnly) { this.readOnly = readOnly; }
+    public String getLastSaveStatus() { return lastSaveStatus; }
     public Integer getRowCount() { return rowCount; }
     public Integer getColCount() { return colCount; }
-    public String[][] getContent() { return content; }
-    public void setContent(String[][] content) { this.content = content; }
-    public Object getCaptions() { return captions; }
-    public Map<String, String> getComponentMap() { return componentMap; }
-    public Object getReadOnlyCells() { return readOnlyCells; }
-    public Object getCellStyles() { return cellStyles; }
-    public String getLastSaveStatus() { return lastSaveStatus; }
+    public String getCaptions() { return captions; }
+    public String getReadOnlyCells() { return readOnlyCells; }
+    public String getCellStyles() { return cellStyles; }
+    public String getComponentMap() { return componentMap; }
 }
 ```
 
@@ -330,6 +368,10 @@ Access local endpoints:
 
 ## 🏷️ Release History & Tags
 
+- **`v1.0.0-RC3`** ([Release Notes](releases/1.0.0-RC3.md)):
+  - Added comprehensive overall grid **`readOnly` / `readonly` property support** across Java (`DhGridComponent`), JS Web Component (`<dh-grid-element>`), Taglib (`dadhawk.taglib.xml`), and demo backing bean (`GridBean.java`).
+  - Added property aliases for both camelCase (`readOnly`) and lowercase (`readonly`) attributes and getters/setters in Java and JS.
+  - Added lock-shake animation feedback and cell read-only styling across all matrix cells when grid overall `readOnly` is enabled.
 - **`v1.0.0-RC2`** ([Release Notes](releases/1.0.0-RC2.md)):
   - Fixed GitHub Pages Maven Repository metadata indexing (`maven-metadata.xml`) so external projects cleanly resolve `dhgrid-component`.
   - Upgraded release candidate package to `v1.0.0-RC2`.

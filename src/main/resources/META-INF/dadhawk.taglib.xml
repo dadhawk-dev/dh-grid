@@ -42,6 +42,11 @@
             <description>Global read-only flag for grid matrix</description>
         </attribute>
         <attribute>
+            <name>readonly</name>
+            <type>java.lang.Boolean</type>
+            <description>Global read-only flag for grid matrix (alias)</description>
+        </attribute>
+        <attribute>
             <name>readOnlyCells</name>
             <type>java.lang.Object</type>
             <description>Per-cell or per-column read-only rule map or list (e.g. Map or JSON string)</description>

@@ -345,16 +345,26 @@
                                    content="#{gridBean.content}"
                                    captions="#{gridBean.captions}"
                                    componentMap="#{gridBean.componentMap}"
+                                   readOnly="#{gridBean.readOnly}"
                                    readOnlyCells="#{gridBean.readOnlyCells}"
                                    cellStyles="#{gridBean.cellStyles}"
                                    cssCompatible="#{gridBean.cssCompatible}" />
 
-                        <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 14px;">
-                            <h:commandButton value="💾 Save Grid to Backend (gridBean.saveGrid)"
-                                             action="#{gridBean.saveGrid()}"
-                                             style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
-                                <f:ajax execute="@form" render=":gridForm:saveStatusMsg :statsPanel" />
-                            </h:commandButton>
+                        <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 14px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <h:commandButton value="💾 Save Grid to Backend"
+                                                 action="#{gridBean.saveGrid}"
+                                                 style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
+                                    <f:ajax execute="@form" render=":gridForm:saveStatusMsg :statsPanel" />
+                                </h:commandButton>
+
+                                <h:commandButton value="#{gridBean.readOnly ? '🔓 Unlock Grid (readOnly=false)' : '🔒 Lock Grid (readOnly=true)'}"
+                                                 action="#{gridBean.toggleReadOnly}"
+                                                 style="background: #{gridBean.readOnly ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' : 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)'}; color: #ffffff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4); transition: all 0.15s ease;">
+                                    <f:ajax render=":gridForm:myGrid @this" />
+                                </h:commandButton>
+                            </div>
+
                             <h:outputText id="saveStatusMsg" value="#{gridBean.lastSaveStatus}"
                                           style="font-size: 13px; font-weight: 600; color: #34d399;" />
                         </div>
@@ -409,7 +419,7 @@
                     <a href="#{request.contextPath}/resources/dadhawk/js/dh-grid.js" download="dh-grid.js" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
                         <span>💾 Download JS Script (dh-grid.js)</span>
                     </a>
-                    <button type="button" onclick="openDemoModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
+                    <button type="button" onclick="openDemoModal(true)" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4); transition: transform 0.15s ease;">
                         ▶ RUN Live Example
                     </button>
                 </div>
@@ -420,10 +430,19 @@
   &lt;script src="resources/dadhawk/js/dh-grid.js"&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;dh-grid-element id="myGrid" rows="5" cols="5"&gt;&lt;/dh-grid-element&gt;
+  &lt;!-- 🔒 1. Declarative Attribute support: readonly="true" (or readOnly="true" / read-only="true") --&gt;
+  &lt;dh-grid-element id="myGrid" rows="5" cols="5" readonly="true" css-compatible="primethemes" readonly-cells='{"r1_c0": true, "r3": true}' cell-styles='{"r1_c3": "color:#4ade80;font-weight:700;", "c1": "color:#38bdf8;"}'&gt;&lt;/dh-grid-element&gt;
 
   &lt;script&gt;
     const grid = document.getElementById('myGrid');
+
+    // 🔒 2. Imperative JS Property API: Lock entire grid matrix grid-wide
+    grid.readOnly = true; // (or set grid.readOnly = false to unlock matrix)
+
+    // 🔒 3. Fine-grained cell locks &amp; custom styling
+    grid.readOnlyCells = { "r1_c0": true, "r3": true };
+    grid.cellStyles = { "r1_c3": "background-color: rgba(34, 197, 94, 0.15); color: #4ade80; font-weight: 700;", "c1": "color: #38bdf8; font-weight: 600;" };
+
     // Composite Tree Captions &amp; Custom Components
     grid.setAttribute('captions', JSON.stringify([
       "Sales / H1 / Q1", "Sales / H1 / Q2",
@@ -431,7 +450,8 @@
     ]));
     grid.setAttribute('content', JSON.stringify([
       ["Header", "Q1", "Q2", "Q3", "Status"],
-      ["2026", "$120k", "$85k", "29.1%", "Completed"]
+      ["2026 Q1", "$120k", "$85k", "29.1%", "Completed"],
+      ["2026 Q2", "$145k", "$92k", "36.5%", "Active"]
     ]));
     grid.setAttribute('components', JSON.stringify({
       "r1_c4": "status-selector"
@@ -444,100 +464,210 @@
 &lt;/html&gt;</pre>
         </div>
 
-        <!-- JSF 4.0 Developers Quick-Start Card -->
-        <div class="card" style="margin-top: 28px; border-color: rgba(99, 102, 241, 0.3);">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-                <div style="font-size: 14px; font-weight: 700; color: #a5b4fc;">
-                    🅱️ Minimal Quick-Start Examples for JSF Developers (JSF View + Bean)
+        <!-- Section B: JSF 4.0 Developers Quick-Start Section -->
+        <div style="margin-top: 36px; margin-bottom: 12px; font-size: 15px; font-weight: 800; color: #a5b4fc; display: flex; align-items: center; gap: 8px;">
+            <span>🅱️ Minimal Quick-Start Examples for JSF Developers (JSF View + Bean)</span>
+        </div>
+
+        <!-- Maven Repository & Dependency Integration Options -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div class="card" style="margin-top: 0; border-color: rgba(56, 189, 248, 0.3); padding: 16px;">
+                <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 8px;">
+                    🌐 Option 1: Add GitHub Maven Repository &amp; Dependency to pom.xml
                 </div>
+                <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 11.5px; color: #38bdf8; overflow-x: auto; white-space: pre-wrap; margin: 0;">&lt;!-- 1. Add GitHub Repository --&gt;
+&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;dadhawk-dhgrid-repo&lt;/id&gt;
+        &lt;url&gt;https://dadhawk-dev.github.io/dh-grid/maven-repo/&lt;/url&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;
+
+&lt;!-- 2. Add Dependency --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
+    &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-RC3&lt;/version&gt;
+&lt;/dependency&gt;</pre>
             </div>
-            <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #e2e8f0; overflow-x: auto; white-space: pre-wrap;"><!-- page.xhtml -->
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:dh="http://dadhawk.com/faces">
-<h:head><title>JSF Grid</title></h:head>
-<h:body>
-  <h:form id="gridForm">
-    <dh:dhGrid id="myGrid"
-               rowCount="#{gridBean.rowCount}"
-               colCount="#{gridBean.colCount}"
-               content="#{gridBean.content}"
-               captions="#{gridBean.captions}"
-               componentMap="#{gridBean.componentMap}" />
 
-    <!-- Save Grid to Backend Managed Bean -->
-    <h:commandButton value="💾 Save Grid to Backend" action="#{gridBean.saveGrid()}">
-      <f:ajax execute="@form" render="saveMsg" />
-    </h:commandButton>
-    <h:outputText id="saveMsg" value="#{gridBean.lastSaveStatus}" />
-  </h:form>
-</h:body>
-</html>
-
-// Java CDI Backing Bean (@Named @SessionScoped):
-@Named("gridBean")
-@SessionScoped
-public class GridBean implements Serializable {
-    private String[][] content;
-    private String lastSaveStatus;
-
-    public String saveGrid() {
-        // Save action method automatically receives updated matrix content
-        this.lastSaveStatus = "Saved grid matrix to GridBean!";
-        return null;
-    }
-}</pre>
-
-            <!-- Maven Repository & Dependency Integration Options -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
-                <div>
-                    <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">
-                        🌐 Option 1: Add GitHub Maven Repository &amp; Dependency to pom.xml
+            <div class="card" style="margin-top: 0; border-color: rgba(251, 191, 36, 0.3); padding: 16px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                    <div style="font-size: 13px; font-weight: 700; color: #fbbf24;">
+                        📦 Option 2: Download &amp; Mavenize Local JAR
                     </div>
-                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #38bdf8; overflow-x: auto; white-space: pre-wrap;"><!-- 1. Add GitHub Repository -->
-<repositories>
-    <repository>
-        <id>dadhawk-dhgrid-repo</id>
-        <url>https://dadhawk-dev.github.io/dh-grid/maven-repo/</url>
-    </repository>
-</repositories>
-
-<!-- 2. Add Dependency -->
-<dependency>
-    <groupId>com.dadhawk.faces</groupId>
-    <artifactId>dhgrid-component</artifactId>
-    <version>1.0.0-RC2</version>
-</dependency></pre>
+                    <a href="#{request.contextPath}/downloads/dhgrid-component-1.0.0-RC3.jar" download="dhgrid-component-1.0.0-RC3.jar" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                        <span>📦 Download Maven JAR (v1.0.0-RC3)</span>
+                    </a>
                 </div>
-
-                <div>
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
-                        <div style="font-size: 13px; font-weight: 700; color: #fbbf24;">
-                            📦 Option 2: Download &amp; Mavenize Local JAR
-                        </div>
-                        <a href="#{request.contextPath}/downloads/dhgrid-component-1.0.0-RC2.jar" download="dhgrid-component-1.0.0-RC2.jar" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
-                            <span>📦 Download Maven JAR (v1.0.0-RC2)</span>
-                        </a>
-                    </div>
-                    <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #34d399; overflow-x: auto; white-space: pre-wrap;"># 1. Mavenize (Install downloaded JAR into local ~/.m2 repo):
+                <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 11.5px; color: #fbbf24; overflow-x: auto; white-space: pre-wrap; margin: 0;"># 1. Mavenize (Install downloaded JAR into local ~/.m2 repo):
 mvn install:install-file \
-  -Dfile=dhgrid-component-1.0.0-RC2.jar \
+  -Dfile=dhgrid-component-1.0.0-RC3.jar \
   -DgroupId=com.dadhawk.faces \
   -DartifactId=dhgrid-component \
-  -Dversion=1.0.0-RC2 \
+  -Dversion=1.0.0-RC3 \
   -Dpackaging=jar
 
 # 2. Add Dependency to pom.xml:
 &lt;dependency&gt;
     &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
     &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0-RC2&lt;/version&gt;
+    &lt;version&gt;1.0.0-RC3&lt;/version&gt;
 &lt;/dependency&gt;</pre>
-                </div>
             </div>
         </div>
-    </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;" class="jsf-cards-container">
+
+            <!-- Card 1: Facelets XHTML View -->
+            <div class="card" style="margin-top: 0; border-color: rgba(99, 102, 241, 0.3); display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                    <div style="font-size: 13.5px; font-weight: 700; color: #a5b4fc; display: flex; align-items: center; gap: 6px;">
+                        <span>📄 1. Facelets View (page.xhtml)</span>
+                    </div>
+                    <button type="button" onclick="copyCode('jsfViewCodeBox', this)" style="background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                        <span>📋 Copy View Code</span>
+                    </button>
+                </div>
+                <pre id="jsfViewCodeBox" style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 11.5px; color: #e2e8f0; overflow-x: auto; white-space: pre-wrap; flex-grow: 1;">&lt;!DOCTYPE html&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:dh="http://dadhawk.com/faces"&gt;
+&lt;h:head&gt;
+  &lt;title&gt;Dadhawk DhGrid — JSF Integration&lt;/title&gt;
+&lt;/h:head&gt;
+&lt;h:body&gt;
+  &lt;h:form id="gridForm"&gt;
+    &lt;!-- Global Feedback Messages --&gt;
+    &lt;h:messages id="messages" globalOnly="true"
+                style="color: #4ade80; font-weight: 700; margin-bottom: 10px;" /&gt;
+
+    &lt;!-- 1. DhGrid Component with Property EL Bindings --&gt;
+    &lt;dh:dhGrid id="myGrid"
+               rowCount="#{'#'}{gridBean.rowCount}"
+               colCount="#{'#'}{gridBean.colCount}"
+               cssCompatible="primethemes"
+               content="#{'#'}{gridBean.content}"
+               captions="#{'#'}{gridBean.captions}"
+               readOnly="#{'#'}{gridBean.readOnly}"
+               readOnlyCells="#{'#'}{gridBean.readOnlyCells}"
+               cellStyles="#{'#'}{gridBean.cellStyles}"
+               componentMap="#{'#'}{gridBean.componentMap}" /&gt;
+
+    &lt;!-- 2. Toolbar Actions --&gt;
+    &lt;div style="margin-top: 15px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;"&gt;
+      &lt;!-- Toggle Overall Grid ReadOnly State --&gt;
+      &lt;h:commandButton value="#{'#'}{gridBean.readOnly ? '🔓 Unlock Grid' : '🔒 Lock Grid'}"
+                       action="#{'#'}{gridBean.toggleReadOnly}"&gt;
+        &lt;f:ajax execute="@form" render="gridForm:myGrid" /&gt;
+      &lt;/h:commandButton&gt;
+
+      &lt;!-- 💾 Save Grid Data Matrix to Backend DB --&gt;
+      &lt;h:commandButton value="💾 Save Grid Data to Backend"
+                       action="#{'#'}{gridBean.saveData}"
+                       style="background: #10b981; color: #ffffff; font-weight: 700; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;"&gt;
+        &lt;f:ajax execute="@form" render="messages saveMsg gridForm:myGrid" /&gt;
+      &lt;/h:commandButton&gt;
+
+      &lt;!-- Status Output --&gt;
+      &lt;h:outputText id="saveMsg" value="#{'#'}{gridBean.lastSaveStatus}"
+                    style="color: #38bdf8; font-weight: 600;" /&gt;
+    &lt;/div&gt;
+  &lt;/h:form&gt;
+&lt;/h:body&gt;
+&lt;/html&gt;</pre>
+            </div>
+
+            <!-- Card 2: CDI Managed Backing Bean -->
+            <div class="card" style="margin-top: 0; border-color: rgba(99, 102, 241, 0.3); display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                    <div style="font-size: 13.5px; font-weight: 700; color: #a5b4fc; display: flex; align-items: center; gap: 6px;">
+                        <span>☕ 2. CDI Backing Managed Bean (GridBean.java)</span>
+                    </div>
+                    <button type="button" onclick="copyCode('jsfBeanCodeBox', this)" style="background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                        <span>📋 Copy Bean Code</span>
+                    </button>
+                </div>
+                <pre id="jsfBeanCodeBox" style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 11.5px; color: #e2e8f0; overflow-x: auto; white-space: pre-wrap; flex-grow: 1;">package com.dadhawk.faces.demo;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Named;
+import java.io.Serializable;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
+@Named("gridBean")
+@SessionScoped
+public class GridBean implements Serializable {
+
+    private String content; // Updated bi-directionally by &lt;dh:dhGrid&gt; hidden input
+    private Boolean readOnly = false; // Overall grid read-only state flag
+    private String lastSaveStatus = "";
+
+    private Integer rowCount = 5;
+    private Integer colCount = 5;
+    private String captions = "[\"Sales / H1 / Q1\", \"Sales / H1 / Q2\", \"Sales / H2 / Q3\", \"Sales / H2 / Q4\", \"Status\"]";
+    private String readOnlyCells = "{\"r1_c0\": true, \"r3\": true}";
+    private String cellStyles = "{\"r1_c3\": \"background-color: rgba(34, 197, 94, 0.15); color: #15803d; font-weight: 700;\", \"c1\": \"color: #0284c7; font-weight: 600;\"}";
+    private String componentMap = "{\"r1_c4\": \"status-selector\"}";
+
+    @PostConstruct
+    public void init() {
+        this.content = "[" +
+            "[\"Quarter\", \"Revenue ($)\", \"Expenses ($)\", \"Margin (%)\", \"Performance\"]," +
+            "[\"Q1 2026\", \"$120,000\", \"$85,000\", \"29.1%\", \"Completed\"]," +
+            "[\"Q2 2026\", \"$145,000\", \"$92,000\", \"36.5%\", \"Active\"]" +
+        "]";
+    }
+
+    /**
+     * 💾 Action method to process and persist grid data to backend DB.
+     * Invoked via &lt;h:commandButton action="#{'#'}{gridBean.saveData}"&gt; with &lt;f:ajax execute="@form"&gt;
+     */
+    public String saveData() {
+        System.out.println("Saving modified grid matrix to backend DB: " + this.content);
+
+        // PERSISTENCE LOGIC (e.g. JPA / Hibernate / Spring Data Repository):
+        // myGridRepository.save(this.content);
+
+        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        this.lastSaveStatus = "Saved grid matrix to backend DB at " + time + "!";
+
+        FacesContext.getCurrentInstance().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Backend Saved", this.lastSaveStatus));
+
+        return null;
+    }
+
+    /**
+     * 🔒 Action method to toggle overall grid read-only state.
+     */
+    public void toggleReadOnly() {
+        this.readOnly = !this.readOnly;
+    }
+
+    // Getters &amp; Setters for JSF EL
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+    public Boolean isReadOnly() { return readOnly; }
+    public Boolean getReadOnly() { return readOnly; }
+    public void setReadOnly(Boolean readOnly) { this.readOnly = readOnly; }
+    public String getLastSaveStatus() { return lastSaveStatus; }
+    public Integer getRowCount() { return rowCount; }
+    public Integer getColCount() { return colCount; }
+    public String getCaptions() { return captions; }
+    public String getReadOnlyCells() { return readOnlyCells; }
+    public String getCellStyles() { return cellStyles; }
+    public String getComponentMap() { return componentMap; }
+}</pre>
+            </div>
+
+        </div>
+        </div>
 
     <!-- Live Demo Modal Dialog Overlay -->
     <div id="demoModal" style="display: none; position: fixed; inset: 0; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
@@ -580,12 +710,22 @@ mvn install:install-file \
     <script>
         let eventCount = 0;
 
-        function openDemoModal() {
+        function openDemoModal(isReadOnly) {
             const modal = document.getElementById('demoModal');
             const modalGrid = document.getElementById('modalDemoGrid');
             const modalLog = document.getElementById('modalEventLog');
 
             if (!modalGrid || !modal) return;
+
+            if (isReadOnly) {
+                modalGrid.setAttribute('readonly', 'true');
+                modalGrid.readOnly = true;
+            } else {
+                modalGrid.removeAttribute('readonly');
+                modalGrid.removeAttribute('readOnly');
+                modalGrid.removeAttribute('read-only');
+                modalGrid.readOnly = false;
+            }
 
             modalGrid.setAttribute('captions', JSON.stringify([
                 "Sales / H1 / Q1", "Sales / H1 / Q2",
@@ -621,6 +761,23 @@ mvn install:install-file \
         function closeDemoModal() {
             const modal = document.getElementById('demoModal');
             if (modal) modal.style.display = 'none';
+        }
+
+        function copyCode(elementId, btn) {
+            const codeEl = document.getElementById(elementId);
+            if (!codeEl) return;
+            const textToCopy = codeEl.innerText || codeEl.textContent;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const origHTML = btn.innerHTML;
+                btn.innerHTML = `<span>✓ Copied!</span>`;
+                btn.style.borderColor = '#4ade80';
+                setTimeout(() => {
+                    btn.innerHTML = origHTML;
+                    btn.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                }, 2000);
+            }).catch(err => {
+                console.error("Clipboard copy failed:", err);
+            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {

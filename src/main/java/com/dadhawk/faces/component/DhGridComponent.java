@@ -33,7 +33,7 @@ public class DhGridComponent extends UIInput {
     public static final String COMPONENT_TYPE = "com.dadhawk.faces.component.DhGridComponent";
 
     enum PropertyKeys {
-        rowCount, colCount, content, componentMap, captions, readOnly, readOnlyCells, cellStyles, cssCompatible
+        rowCount, colCount, content, componentMap, captions, readOnly, readonly, readOnlyCells, cellStyles, cssCompatible
     }
 
     public DhGridComponent() {
@@ -92,11 +92,32 @@ public class DhGridComponent extends UIInput {
     }
 
     public Boolean isReadOnly() {
-        return (Boolean) getStateHelper().eval(PropertyKeys.readOnly, false);
+        Boolean ro = (Boolean) getStateHelper().eval(PropertyKeys.readOnly, null);
+        if (ro != null) {
+            return ro;
+        }
+        ro = (Boolean) getStateHelper().eval(PropertyKeys.readonly, null);
+        return ro != null ? ro : false;
+    }
+
+    public Boolean getReadOnly() {
+        return isReadOnly();
+    }
+
+    public Boolean isReadonly() {
+        return isReadOnly();
+    }
+
+    public Boolean getReadonly() {
+        return isReadOnly();
     }
 
     public void setReadOnly(Boolean readOnly) {
         getStateHelper().put(PropertyKeys.readOnly, readOnly);
+    }
+
+    public void setReadonly(Boolean readonly) {
+        getStateHelper().put(PropertyKeys.readonly, readonly);
     }
 
     public Object getReadOnlyCells() {
@@ -161,15 +182,7 @@ public class DhGridComponent extends UIInput {
         String clientId = getClientId(context);
         String hiddenInputId = clientId + "_input";
 
-        // Render hidden input for JSF form submission sync
-        writer.startElement("input", this);
-        writer.writeAttribute("type", "hidden", null);
-        writer.writeAttribute("id", hiddenInputId, "id");
-        writer.writeAttribute("name", hiddenInputId, "name");
-        writer.writeAttribute("value", toJson(getContent()), "value");
-        writer.endElement("input");
-
-        // Render W3C Web Component <dh-grid-element>
+        // Render W3C Web Component <dh-grid-element> FIRST as root JSF component element
         writer.startElement("dh-grid-element", this);
         writer.writeAttribute("id", clientId, "id");
         writer.writeAttribute("rows", getRowCount(), "rows");
@@ -191,6 +204,14 @@ public class DhGridComponent extends UIInput {
         if (getCssCompatible() != null) {
             writer.writeAttribute("css-compatible", getCssCompatible().toString(), "cssCompatible");
         }
+
+        // Render hidden input inside component for JSF form submission sync
+        writer.startElement("input", this);
+        writer.writeAttribute("type", "hidden", null);
+        writer.writeAttribute("id", hiddenInputId, "id");
+        writer.writeAttribute("name", hiddenInputId, "name");
+        writer.writeAttribute("value", toJson(getContent()), "value");
+        writer.endElement("input");
     }
 
     @Override

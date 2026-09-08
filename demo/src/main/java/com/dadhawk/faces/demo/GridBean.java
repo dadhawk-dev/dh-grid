@@ -23,6 +23,7 @@ public class GridBean implements Serializable {
     private String[][] content;
     private Object captions;
     private Map<String, String> componentMap = new HashMap<>();
+    private Boolean readOnly = false;
     private Object readOnlyCells;
     private Object cellStyles;
     private String selectedPreset = "financial";
@@ -233,6 +234,10 @@ public class GridBean implements Serializable {
         return null;
     }
 
+    public String saveData() {
+        return saveGrid();
+    }
+
     public String getLastSaveStatus() {
         return lastSaveStatus;
     }
@@ -247,5 +252,22 @@ public class GridBean implements Serializable {
 
     public void setCssCompatible(String cssCompatible) {
         this.cssCompatible = cssCompatible;
+    }
+
+    public Boolean isReadOnly() {
+        return readOnly != null ? readOnly : false;
+    }
+
+    public Boolean getReadOnly() {
+        return isReadOnly();
+    }
+
+    public void setReadOnly(Boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+
+    public String toggleReadOnly() {
+        this.readOnly = !isReadOnly();
+        return null;
     }
 }
