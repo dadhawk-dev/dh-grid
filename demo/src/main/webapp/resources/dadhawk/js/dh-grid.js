@@ -365,7 +365,9 @@ class DhGridElement extends HTMLElement {
         const dataRows = Array.isArray(data) ? data.length : 0;
         const attrVal = this.getAttribute('rows');
         const attrRows = attrVal ? parseInt(attrVal, 10) : 0;
-        return Math.max(attrRows, dataRows, 5);
+        if (attrRows > 0) return Math.max(attrRows, dataRows);
+        if (dataRows > 0) return dataRows;
+        return 5;
     }
 
     get cols() {
@@ -380,7 +382,9 @@ class DhGridElement extends HTMLElement {
         }
         const attrVal = this.getAttribute('cols');
         const attrCols = attrVal ? parseInt(attrVal, 10) : 0;
-        return Math.max(attrCols, maxDataCols, 5);
+        if (attrCols > 0) return Math.max(attrCols, maxDataCols);
+        if (maxDataCols > 0) return maxDataCols;
+        return 5;
     }
 
     getCaptions() {
