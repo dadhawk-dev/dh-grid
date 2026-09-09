@@ -5,7 +5,7 @@
 
     <groupId>com.dadhawk.faces</groupId>
     <artifactId>dhgrid-component</artifactId>
-    <version>1.0.1-beta</version>
+    <version>1.0.0-alpha</version>
     <packaging>jar</packaging>
 
     <name>dhgrid-component</name>
