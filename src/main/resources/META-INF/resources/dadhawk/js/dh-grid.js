@@ -459,6 +459,21 @@ class DhGridElement extends HTMLElement {
         return Array.from({ length: maxCols }, (_, i) => `Col ${i + 1}`);
     }
 
+    hasExplicitCaptions() {
+        const raw = this.getAttribute('captions');
+        if (raw && raw.trim() !== '' && raw.trim() !== 'null' && raw.trim() !== 'undefined') {
+            try {
+                const clean = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+                const parsed = JSON.parse(clean);
+                if (Array.isArray(parsed) && parsed.length > 0) return true;
+                if (typeof parsed === 'object' && parsed !== null) return true;
+            } catch (e) {
+                if (typeof raw === 'string' && raw.trim().length > 0) return true;
+            }
+        }
+        return false;
+    }
+
     getData() {
         try {
             const raw = this.getAttribute('content');
@@ -681,7 +696,7 @@ class DhGridElement extends HTMLElement {
         const cols = this.cols;
         const data = this.getData();
         const captions = this.getCaptions();
-        const startRow = 1;
+        const startRow = this.hasExplicitCaptions() ? 0 : 1;
 
         const endRow = Math.max(this.rows, Array.isArray(data) ? data.length : 0);
         const headerStructure = this.parseHeaderStructure(captions, cols);
@@ -860,7 +875,7 @@ class DhGridElement extends HTMLElement {
         `;
 
         this.attachEvents();
-        const minRow = 1;
+        const minRow = this.hasExplicitCaptions() ? 0 : 1;
         if (this.focusedRow === undefined || this.focusedRow < minRow) {
             this.focusedRow = minRow;
         }
@@ -986,7 +1001,7 @@ class DhGridElement extends HTMLElement {
 
     focusCell(row, col, forceFocus = true) {
         const data = this.getData();
-        const minRow = 1;
+        const minRow = this.hasExplicitCaptions() ? 0 : 1;
         const maxRow = Math.max(minRow, data.length - 1);
         const maxCol = Math.max(0, this.cols - 1);
 
@@ -1014,7 +1029,7 @@ class DhGridElement extends HTMLElement {
 
     getNextTabPosition(direction, fromRow, fromCol) {
         const data = this.getData();
-        const minRow = 1;
+        const minRow = this.hasExplicitCaptions() ? 0 : 1;
         const maxRow = Math.max(minRow, data.length - 1);
         const totalCols = this.cols;
 
