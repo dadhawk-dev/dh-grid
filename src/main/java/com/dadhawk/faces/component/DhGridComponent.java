@@ -171,12 +171,20 @@ public class DhGridComponent extends UIInput {
         String inputParam = clientId + "_input";
         Map<String, String> requestMap = context.getExternalContext().getRequestParameterMap();
 
-        if (requestMap.containsKey(inputParam)) {
-            String submittedJson = requestMap.get(inputParam);
-            if (submittedJson != null && !submittedJson.trim().isEmpty()) {
-                String[][] parsedMatrix = parseJsonMatrix(submittedJson);
-                setSubmittedValue(parsedMatrix);
+        String submittedJson = requestMap.get(inputParam);
+        if (submittedJson == null) {
+            String suffix = ":" + getId() + "_input";
+            for (Map.Entry<String, String> entry : requestMap.entrySet()) {
+                if (entry.getKey() != null && (entry.getKey().endsWith(suffix) || entry.getKey().endsWith(getId() + "_input"))) {
+                    submittedJson = entry.getValue();
+                    break;
+                }
             }
+        }
+
+        if (submittedJson != null && !submittedJson.trim().isEmpty()) {
+            String[][] parsedMatrix = parseJsonMatrix(submittedJson);
+            setSubmittedValue(parsedMatrix);
         }
     }
 

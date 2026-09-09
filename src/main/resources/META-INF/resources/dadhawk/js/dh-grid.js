@@ -113,12 +113,15 @@ class DhEditorInputText extends HTMLElement {
             </style>
             <input type="text" id="textInput" value="${val.replace(/"/g, '&quot;')}" />
         `;
-        const input = this.shadowRoot.getElementById('textInput');
+        const notifyChange = () => {
+            this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: input.value } }));
+        };
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === 'Tab') {
-                this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: input.value } }));
+                notifyChange();
             }
         });
+        input.addEventListener('blur', () => notifyChange());
         setTimeout(() => { input.focus(); input.select(); }, 10);
     }
 }
@@ -202,15 +205,20 @@ class DhEditorInputNumber extends HTMLElement {
         btnUp.addEventListener('click', () => step(1));
         btnDown.addEventListener('click', () => step(-1));
 
+        const notifyChange = () => {
+            const finalNum = parseRawNumber(input.value, locale);
+            const formatted = formatNumber(finalNum, locale);
+            this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: formatted } }));
+        };
+
         input.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowUp') { e.preventDefault(); step(1); }
             else if (e.key === 'ArrowDown') { e.preventDefault(); step(-1); }
             else if (e.key === 'Enter' || e.key === 'Tab') {
-                const finalNum = parseRawNumber(input.value, locale);
-                const formatted = formatNumber(finalNum, locale);
-                this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: formatted } }));
+                notifyChange();
             }
         });
+        input.addEventListener('blur', () => notifyChange());
 
         setTimeout(() => { input.focus(); input.select(); }, 10);
     }
@@ -274,13 +282,18 @@ class DhEditorInputMoney extends HTMLElement {
         `;
         const input = this.shadowRoot.getElementById('moneyInput');
 
+        const notifyChange = () => {
+            const finalNum = parseRawNumber(input.value, locale);
+            const formatted = formatMoney(finalNum, locale);
+            this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: formatted } }));
+        };
+
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === 'Tab') {
-                const finalNum = parseRawNumber(input.value, locale);
-                const formatted = formatMoney(finalNum, locale);
-                this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: formatted } }));
+                notifyChange();
             }
         });
+        input.addEventListener('blur', () => notifyChange());
 
         setTimeout(() => { input.focus(); input.select(); }, 10);
     }
@@ -1066,7 +1079,10 @@ class DhGridElement extends HTMLElement {
         if (customCompTag === 'input-number') customCompTag = 'dh-editor-input-number';
         if (customCompTag === 'input-money') customCompTag = 'dh-editor-input-money';
 
+        let isCommitted = false;
         const commitAndNavigate = (newVal, actionKey, isShift) => {
+            if (isCommitted) return;
+            isCommitted = true;
             cell.innerText = newVal;
             let nextR = row;
             let nextC = col;
@@ -1079,12 +1095,11 @@ class DhGridElement extends HTMLElement {
                 nextC = nextPos.c;
             }
 
-            this.focusedRow = nextR;
-            this.focusedCol = nextC;
-
             this.closeEditor();
             this.notifyChange(row, col, newVal);
-            this.focusCell(nextR, nextC, true);
+            if (actionKey === 'Enter' || actionKey === 'Tab') {
+                this.focusCell(nextR, nextC, true);
+            }
         };
 
         if (customCompTag && customElements.get(customCompTag)) {
@@ -1142,6 +1157,9 @@ class DhGridElement extends HTMLElement {
                     this.closeEditor();
                     this.focusCell(row, col, true);
                 }
+            });
+            input.addEventListener('blur', () => {
+                commitAndNavigate(input.value, 'Blur', false);
             });
 
             overlay.appendChild(input);
