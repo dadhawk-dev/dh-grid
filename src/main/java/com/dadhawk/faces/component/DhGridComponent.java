@@ -7,6 +7,7 @@ import jakarta.faces.component.UIInput;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 
+import jakarta.el.ValueExpression;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -181,10 +182,33 @@ public class DhGridComponent extends UIInput {
 
     @Override
     public void updateModel(FacesContext context) {
-        super.updateModel(context);
+        if (context == null) {
+            return;
+        }
+
         Object submitted = getSubmittedValue();
+        if (submitted == null && isLocalValueSet()) {
+            submitted = getLocalValue();
+        }
+
         if (submitted != null) {
+            ValueExpression ve = getValueExpression(PropertyKeys.content.toString());
+            if (ve == null) {
+                ve = getValueExpression("value");
+            }
+
+            if (ve != null) {
+                try {
+                    ve.setValue(context.getELContext(), submitted);
+                } catch (Exception e) {
+                    context.getExternalContext().log("DhGridComponent: Error updating model ValueExpression", e);
+                }
+            }
+
             setContent(submitted);
+            setValue(null);
+            setSubmittedValue(null);
+            setLocalValueSet(false);
         }
     }
 
@@ -273,13 +297,17 @@ public class DhGridComponent extends UIInput {
                     continue;
                 }
 
-                if (c == '"') {
-                    inString = !inString;
+                if (inString) {
+                    if (c == '"') {
+                        inString = false;
+                    } else {
+                        sb.append(c);
+                    }
                     continue;
                 }
 
-                if (inString) {
-                    sb.append(c);
+                if (c == '"') {
+                    inString = true;
                     continue;
                 }
 
@@ -289,16 +317,26 @@ public class DhGridComponent extends UIInput {
                     sb.setLength(0);
                 } else if (c == ']') {
                     if (inRow && currentRow != null) {
-                        currentRow.add(sb.toString());
+                        String val = sb.toString().trim();
+                        if (val.startsWith("\"") && val.endsWith("\"") && val.length() >= 2) {
+                            val = val.substring(1, val.length() - 1);
+                        }
+                        currentRow.add(val);
                         rows.add(currentRow);
                         inRow = false;
                         sb.setLength(0);
                     }
                 } else if (c == ',') {
                     if (inRow && currentRow != null) {
-                        currentRow.add(sb.toString());
+                        String val = sb.toString().trim();
+                        if (val.startsWith("\"") && val.endsWith("\"") && val.length() >= 2) {
+                            val = val.substring(1, val.length() - 1);
+                        }
+                        currentRow.add(val);
                         sb.setLength(0);
                     }
+                } else if (!Character.isWhitespace(c)) {
+                    sb.append(c);
                 }
             }
 
