@@ -475,7 +475,7 @@
         </div>
 
         <!-- Maven Repository & Dependency Integration Options -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 20px;">
             <div class="card" style="margin-top: 0; border-color: rgba(56, 189, 248, 0.3); padding: 16px;">
                 <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 8px;">
                     🌐 Option 1: Add GitHub Maven Repository &amp; Dependency to pom.xml
@@ -492,7 +492,7 @@
 &lt;dependency&gt;
     &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
     &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;version&gt;1.0.0-RC1&lt;/version&gt;
 &lt;/dependency&gt;</pre>
             </div>
 
@@ -501,24 +501,33 @@
                     <div style="font-size: 13px; font-weight: 700; color: #fbbf24;">
                         📦 Option 2: Download &amp; Mavenize Local JAR
                     </div>
-                    <a href="#{request.contextPath}/downloads/dhgrid-component-1.0.0.jar" download="dhgrid-component-1.0.0.jar" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
-                        <span>📦 Download Maven JAR (v1.0.0)</span>
+                    <a href="#{request.contextPath}/downloads/dhgrid-component-1.0.0-RC1.jar" download="dhgrid-component-1.0.0-RC1.jar" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+                        <span>📦 Download Maven JAR (v1.0.0-RC1)</span>
                     </a>
                 </div>
                 <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 11.5px; color: #fbbf24; overflow-x: auto; white-space: pre-wrap; margin: 0;"># 1. Mavenize (Install downloaded JAR into local ~/.m2 repo):
 mvn install:install-file \
-  -Dfile=dhgrid-component-1.0.0.jar \
+  -Dfile=dhgrid-component-1.0.0-RC1.jar \
   -DgroupId=com.dadhawk.faces \
   -DartifactId=dhgrid-component \
-  -Dversion=1.0.0 \
+  -Dversion=1.0.0-RC1 \
   -Dpackaging=jar
 
 # 2. Add Dependency to pom.xml:
 &lt;dependency&gt;
     &lt;groupId&gt;com.dadhawk.faces&lt;/groupId&gt;
     &lt;artifactId&gt;dhgrid-component&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;version&gt;1.0.0-RC1&lt;/version&gt;
 &lt;/dependency&gt;</pre>
+            </div>
+
+            <div class="card" style="margin-top: 0; border-color: rgba(52, 211, 153, 0.3); padding: 16px;">
+                <div style="font-size: 13px; font-weight: 700; color: #34d399; margin-bottom: 8px;">
+                    🚀 Option 3: Run Local Jakarta Faces 4.0 Showcase Server
+                </div>
+                <pre style="background: #060911; border: 1px solid var(--border-card); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 11.5px; color: #34d399; overflow-x: auto; white-space: pre-wrap; margin: 0;">git clone https://github.com/dadhawk-dev/dh-grid.git
+cd dh-grid
+./run-app.sh</pre>
             </div>
         </div>
 
