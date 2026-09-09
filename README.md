@@ -362,7 +362,6 @@ mvn jetty:run
 
 Access local endpoints:
 - **Jakarta Faces 4.0 Showcase**: `http://localhost:8085/index.xhtml`
-- **Standalone Web Component Showcase**: `http://localhost:8085/standalone-demo.html`
 
 ---
 
