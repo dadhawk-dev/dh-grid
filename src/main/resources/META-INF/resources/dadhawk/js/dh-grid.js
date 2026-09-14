@@ -478,25 +478,13 @@ class DhGridElement extends HTMLElement {
         try {
             const raw = this.getAttribute('content');
             if (!raw || raw === '[]' || raw === '') {
-                return [
-                    ["Quarter", "Revenue ($)", "Expenses ($)", "Margin (%)", "Performance"],
-                    ["Q1 2026", "$120,000", "$85,000", "29.1%", "Completed"],
-                    ["Q2 2026", "$145,000", "$92,000", "36.5%", "Active"],
-                    ["Q3 2026", "$160,000", "$98,000", "38.7%", "Pending"],
-                    ["Q4 2026", "$210,000", "$110,000", "47.6%", "In Review"]
-                ];
+                return [];
             }
             const clean = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
             return JSON.parse(clean);
         } catch (e) {
-            console.error("Error parsing content:", e);
-            return [
-                ["Quarter", "Revenue ($)", "Expenses ($)", "Margin (%)", "Performance"],
-                ["Q1 2026", "$120,000", "$85,000", "29.1%", "Completed"],
-                ["Q2 2026", "$145,000", "$92,000", "36.5%", "Active"],
-                ["Q3 2026", "$160,000", "$98,000", "38.7%", "Pending"],
-                ["Q4 2026", "$210,000", "$110,000", "47.6%", "In Review"]
-            ];
+            console.error("dh-grid: failed to parse 'content' attribute as JSON:", e);
+            return [["⚠ dh-grid: invalid 'content' attribute — see browser console"]];
         }
     }
 
