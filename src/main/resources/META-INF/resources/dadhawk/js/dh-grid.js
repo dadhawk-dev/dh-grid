@@ -85,6 +85,41 @@ function formatMoney(val, loc) {
     }
 }
 
+// RFC 8259 §7 forbids raw U+0000..U+001F inside JSON string literals.
+// Producers that hand-roll JSON often let tabs/newlines from user data or DB
+// slip through unescaped. Escape only chars that appear *inside* a string
+// literal — chars between tokens are legal JSON whitespace and must be left alone.
+function escapeJsonStringControls(raw) {
+    let out = '';
+    let inString = false;
+    let escaped = false;
+    for (let i = 0; i < raw.length; i++) {
+        const ch = raw[i];
+        if (inString) {
+            if (escaped) { out += ch; escaped = false; continue; }
+            if (ch === '\\') { out += ch; escaped = true; continue; }
+            if (ch === '"')  { out += ch; inString = false; continue; }
+            const code = ch.charCodeAt(0);
+            if (code < 0x20) {
+                switch (ch) {
+                    case '\t': out += '\\t'; break;
+                    case '\n': out += '\\n'; break;
+                    case '\r': out += '\\r'; break;
+                    case '\b': out += '\\b'; break;
+                    case '\f': out += '\\f'; break;
+                    default:   out += '\\u' + code.toString(16).padStart(4, '0');
+                }
+                continue;
+            }
+            out += ch;
+        } else {
+            out += ch;
+            if (ch === '"') inString = true;
+        }
+    }
+    return out;
+}
+
 // Custom Editor 1: <dh-editor-input-text> / "input-text"
 class DhEditorInputText extends HTMLElement {
     constructor() {
@@ -479,7 +514,8 @@ class DhGridElement extends HTMLElement {
         if (!raw || raw === '[]' || raw === '') {
             return [];
         }
-        const clean = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+        const decoded = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+        const clean = escapeJsonStringControls(decoded);
         try {
             return JSON.parse(clean);
         } catch (cause) {
