@@ -475,16 +475,23 @@ class DhGridElement extends HTMLElement {
     }
 
     getData() {
+        const raw = this.getAttribute('content');
+        if (!raw || raw === '[]' || raw === '') {
+            return [];
+        }
+        const clean = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
         try {
-            const raw = this.getAttribute('content');
-            if (!raw || raw === '[]' || raw === '') {
-                return [];
-            }
-            const clean = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
             return JSON.parse(clean);
-        } catch (e) {
-            console.error("dh-grid: failed to parse 'content' attribute as JSON:", e);
-            return [["⚠ dh-grid: invalid 'content' attribute — see browser console"]];
+        } catch (cause) {
+            const idPart = this.id ? `#${this.id}` : '(no id)';
+            const snippet = clean.length > 160 ? clean.slice(0, 157) + '…' : clean;
+            const err = new Error(
+                `dh-grid ${idPart}: 'content' attribute is not valid JSON — ` +
+                `${cause.message}. Value was: ${snippet}`
+            );
+            err.name = 'DhGridContentParseError';
+            err.cause = cause;
+            throw err;
         }
     }
 
@@ -681,6 +688,40 @@ class DhGridElement extends HTMLElement {
     }
 
     render() {
+        try {
+            this._renderInternal();
+        } catch (err) {
+            console.error(err);
+            this._renderErrorBanner(err);
+        }
+    }
+
+    _renderErrorBanner(err) {
+        const message = (err && err.message) ? err.message : String(err);
+        const escaped = message
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        if (!this.shadowRoot) return;
+        this.shadowRoot.innerHTML = `
+            <div role="alert" style="
+                border: 2px solid #dc2626;
+                background: #fef2f2;
+                color: #7f1d1d;
+                padding: 12px 16px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                font-size: 13px;
+                line-height: 1.5;
+                border-radius: 4px;
+            ">
+                <div style="font-weight: 700; margin-bottom: 4px;">⚠ dh-grid render error</div>
+                <div style="white-space: pre-wrap; word-break: break-word;">${escaped}</div>
+                <div style="margin-top: 6px; opacity: 0.8; font-size: 12px;">See browser console for full stack trace.</div>
+            </div>
+        `;
+    }
+
+    _renderInternal() {
         const cols = this.cols;
         const data = this.getData();
         const captions = this.getCaptions();
